@@ -1,0 +1,10 @@
+version: '3'
+services:
+  rust_app:
+    image: portfolio
+    build:
+      context: .
+    ports:
+      - "8085:8085"  # Modify this if your app uses a different port
+    environment:
+      RUST_LOG: info  # Any environment variables needed by your app
