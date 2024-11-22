@@ -120,8 +120,8 @@ a:hover {
   }
 }
 
-/* Hero Style */
-.cta-btn--hero {
+/* Intro Style */
+.cta-btn--intro {
   color: #5b86e5;
   -webkit-text-fill-color: #5b86e5;
   border: 2px solid transparent;
@@ -129,7 +129,7 @@ a:hover {
   border-image-slice: 1;
 }
 @supports (background-clip: text) or (-webkit-background-clip: text) {
-  .cta-btn--hero {
+  .cta-btn--intro {
     background-image: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -138,36 +138,36 @@ a:hover {
   }
 }
 @media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
-  .cta-btn--hero {
+  .cta-btn--intro {
     color: #5b86e5;
   }
-  .cta-btn--hero:hover {
+  .cta-btn--intro:hover {
     color: #ffffff;
   }
 }
 @media (max-width: 37.5em) {
-  .cta-btn--hero {
+  .cta-btn--intro {
     background-image: none;
     border: 2px solid #5b86e5;
     box-shadow: none;
     -webkit-text-fill-color: #5b86e5;
   }
 }
-.cta-btn--hero::after {
+.cta-btn--intro::after {
   height: 410%;
   width: 150%;
   transform: translate(-98%, -25%) rotate(45deg);
 }
-.cta-btn--hero:hover {
+.cta-btn--intro:hover {
   -webkit-text-fill-color: #ffffff;
   text-decoration: none;
 }
 @media (max-width: 37.5em) {
-  .cta-btn--hero:hover {
+  .cta-btn--intro:hover {
     -webkit-text-fill-color: #5b86e5;
   }
 }
-.cta-btn--hero:hover::after {
+.cta-btn--intro:hover::after {
   transform: translate(-9%, -25%) rotate(45deg);
 }
 
@@ -264,16 +264,13 @@ a:hover {
 .social-links a:hover {
   transform: scale(1.1) translateY(-2px);
 }
-.social-links a:hover .fa-twitter {
+.social-links a:hover .fa-envelope {
   color: #00acee;
 }
-.social-links a:hover .fa-instagram {
-  color: #c13584;
-}
 .social-links a:hover .fa-linkedin {
-  color: #4875b4;
+  color: #0072b1;
 }
-.social-links a:hover .fa-codepen {
+.social-links a:hover .fa-github {
   color: #212121;
 }
 
@@ -448,7 +445,7 @@ section .row span {
   }
 }
 
-#hero {
+#intro {
   min-height: 100vh;
   height: 100vh;
   display: flex;
@@ -469,60 +466,60 @@ section .row span {
     background-size: cover; */
 }
 @media (max-width: 56.25em) {
-  #hero {
+  #intro {
     justify-content: center;
   }
 }
 @media (max-width: 37.5em) {
-  #hero {
+  #intro {
     padding: 0rem 1.6rem;
   }
 }
-#hero .hero-title {
+#intro .intro-title {
   font-size: 5.6rem;
   font-weight: 700;
   margin-bottom: 3.2rem;
   text-align: left;
 }
-#hero .hero-title span {
+#intro .intro-title span {
   margin: 0;
   display: inline-block;
 }
 @media (max-width: 75em) {
-  #hero .hero-title {
+  #intro .intro-title {
     font-size: 4rem;
   }
 }
 @media (max-width: 56.25em) {
-  #hero .hero-title {
+  #intro .intro-title {
     font-size: 3.6rem;
     text-align: center;
   }
 }
 @media (max-width: 37.5em) {
-  #hero .hero-title {
+  #intro .intro-title {
     font-size: 3.5rem;
     line-height: 1.5;
   }
 }
 @media (max-width: 20em) {
-  #hero .hero-title {
+  #intro .intro-title {
     font-size: 2.8rem;
   }
 }
-#hero .hero-cta {
+#intro .intro-cta {
   display: flex;
 }
 @media (max-width: 56.25em) {
-  #hero .hero-cta {
+  #intro .intro-cta {
     justify-content: center;
   }
 }
-#hero .hero-cta a {
+#intro .intro-cta a {
   font-size: 2.4rem;
 }
 @media (max-width: 37.5em) {
-  #hero .hero-cta a {
+  #intro .intro-cta a {
     font-size: 2rem;
   }
 }

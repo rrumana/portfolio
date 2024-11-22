@@ -1,4 +1,4 @@
-#hero {
+#intro {
   min-height: 100vh;
   height: 100vh;
   display: flex;
@@ -15,7 +15,7 @@
   line-height: 1.2;
   animation: hidden 1000ms linear forwards;
 
-  // If you want to set a background image on the hero section, uncomment these with yout custom image
+  // If you want to set a background image on the intro section, uncomment these with yout custom image
 
   /* background: url("/src/assets/[your-image].png");
     background-position: center;
@@ -28,7 +28,7 @@
     padding: 0rem $default-font-size;
   }
 
-  .hero-title {
+  .intro-title {
     font-size: 5.6rem;
     font-weight: 700;
     margin-bottom: 3.2rem;
@@ -54,7 +54,7 @@
     }
   }
 
-  .hero-cta {
+  .intro-cta {
     display: flex;
 
     @include respond(tab-port) {

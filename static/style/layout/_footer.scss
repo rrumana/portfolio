@@ -43,16 +43,13 @@
     }
     &:hover {
       transform: scale(1.1) translateY(-2px);
-      .fa-twitter {
+      .fa-envelope {
         color: #00acee;
       }
-      .fa-instagram {
-        color: #c13584;
-      }
       .fa-linkedin {
-        color: #4875b4;
+        color: #0072b1;
       }
-      .fa-codepen {
+      .fa-github {
         color: #212121;
       }
     }
