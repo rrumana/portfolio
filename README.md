@@ -10,3 +10,5 @@ Currently, it is just a template with no real content, no error handling, no tes
 I have also containerized this project so that I can integrate it into my current docker stack. The dockerfile and docker compose file that I use are included as well.
 
 This is mostly for fun and to show off my cool projects. I will probably add a blog at some point, but I am not sure when that will be.
+
+I am picking this project back up for the time being, stay tuned for updates.
