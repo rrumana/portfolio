@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+        <title>About this Website</title>
+        <meta name="keywords" content="[rcrumana], [Ryan], [Rumana], [Ryan Rumana], C++, Rust, Java, Python, Software engineering, Machine learning" />
+        <meta name="description" content="I am a software engineer passionate about tech, learning, and adventure. From building custom projects to exploring the outdoors, I thrive on challenges and innovation." />
+        <link rel="icon" type="image/png" href="./assets/favicon.ico" />
+        <meta name="theme-color" content="#36d1dc" />
+        <link rel="preload" as="style" href="./css/main.css" />
+        <link rel="stylesheet" href="./css/main.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+            integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <script defer src="./javascript/scrollreveal.min.js"></script>
+        <script defer type="text/javascript" src="./javascript/scrollveal.js"></script>        <script
+            defer
+            type="text/javascript"
+            src="./javascript/scrollveal.js"
+        ></script>
+        <style>
+            #future-work {
+                margin-bottom: 12em;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- About / Project Spotlight Section -->
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title">Project Spotlight: <br>This Website</h2>
+                <div class="row about-wrapper">
+                    <div class="about-wrapper__image">
+                        <img
+                            class="img-fluid"
+                            src="./images/hosting.png"
+                            alt="Hosting & Homelab"
+                            width="450"
+                            height="350"
+                        />
+                    </div>
+                    <div class="about-wrapper__info">
+                        <p class="about-wrapper__info-text">
+                            Welcome to my homelab! It may not seem like it, but I am self-hosting this website and everything on it,
+                            including the Game of Life simulation. This website serves as a personal portfolio and a playground for my projects,
+                            where I can showcase my work and share my journey as a software engineer.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            My goal with this project is to create a centralized place for all of my hobby projects, thoughts, and life updates
+                            that will grow as I do. A year ago I had absolutely no idea how to build a website, and since then I have learned so much
+                            about web development.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            I hope you find this website—and the explanation for why I decided to build and host it this way—to be both informative and entertaining!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Homelab Hardware Section -->
+        <section id="hardware">
+            <div class="container">
+                <h2 class="section-title">Homelab Hardware</h2>
+                <div class="row about-wrapper">
+                    <div class="about-wrapper__info">
+                        <p class="about-wrapper__info-text">
+                            My homelab is built from a combination of repurposed and custom-built hardware. It features dedicated servers, network-attached storage,
+                            and a high-performance router, all running on energy-efficient components. This setup allows me to self-host my website, run experiments,
+                            and deploy personal projects without relying on third-party services.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            The hardware is maintained in a controlled environment to ensure optimal performance and uptime, and I continually upgrade components as needed.
+                        </p>
+                    </div>
+                    <div class="about-wrapper__image">
+                        <img
+                            class="img-fluid"
+                            src="./images/homelab.jpg"
+                            alt="Homelab Hardware"
+                            width="450"
+                            height="350"
+                        />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Software Stack Section -->
+        <section id="software-stack">
+            <div class="container">
+                <h2 class="section-title">Software Stack</h2>
+                <div class="row about-wrapper">
+                    <div class="about-wrapper__image">
+                        <img
+                            class="img-fluid"
+                            src="./images/software-stack.png"
+                            alt="Software Stack"
+                            width="450"
+                            height="350"
+                        />
+                    </div>
+                    <div class="about-wrapper__info">
+                        <p class="about-wrapper__info-text">
+                            This website is built using a modern web development stack. The backend is written in Rust using the Axum framework,
+                            and it serves both static content and API endpoints. The front end is crafted with HTML, CSS (using SCSS for styling), and JavaScript.
+                            Additionally, WebAssembly is used to power the interactive Game of Life simulation.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            For version control, continuous integration, and deployment, I use GitHub along with various DevOps tools to streamline my workflow.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment & DevOps Section -->
+        <section id="deployment">
+            <div class="container">
+                <h2 class="section-title">Deployment & DevOps</h2>
+                <div class="row about-wrapper">
+                    <div class="about-wrapper__info">
+                        <p class="about-wrapper__info-text">
+                            The website is deployed using Docker and Docker Compose, allowing for easy scalability and management.
+                            I containerize the backend, WebAssembly modules, and static assets so that the entire application can run in a consistent environment across different platforms.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            Monitoring, logging, and automated backups are integrated into the deployment process.
+                            My DevOps pipeline includes automated testing and continuous integration, ensuring that every update is stable and reliable before it goes live.
+                        </p>
+                    </div>
+                    <div class="about-wrapper__image">
+                        <img
+                            class="img-fluid"
+                            src="./images/deployment.png"
+                            alt="Deployment & DevOps"
+                            width="450"
+                            height="350"
+                        />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Future Work Section -->
+        <section id="future-work">
+            <div class="container">
+                <h2 class="section-title">Future Work</h2>
+                <div class="row about-wrapper">
+                    <div class="about-wrapper__image">
+                        <img
+                            class="img-fluid"
+                            src="./images/future-work.png"
+                            alt="Future Work"
+                            width="450"
+                            height="350"
+                        />
+                    </div>
+                    <div class="about-wrapper__info">
+                        <p class="about-wrapper__info-text">
+                            I plan to expand this website with new interactive features, integrate more advanced analytics,
+                            and experiment with new web technologies. Future updates may include real-time collaboration tools,
+                            enhanced visualization of data, and deeper integration of WebAssembly for performance-critical tasks.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            In addition, I'll explore further optimizations for the Game of Life simulation and possibly extend its functionality
+                            to cover other cellular automata and complex systems.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section (with an 8em gap already added by the Future Work section margin) -->
+        <section id="contact">
+            <div class="container">
+                <h2 class="section-title">Get in Touch</h2>
+                <div class="contact-wrapper">
+                    <p class="contact-wrapper__text">
+                        Interested in collaborating or learning more about this project? Feel free to reach out!
+                    </p>
+                    <a href="mailto:ryan.rumana@gmail.com" class="cta-btn cta-btn--resume">Contact Me</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="container">
+                <a href="#intro" class="back-to-top" aria-label="go back to top">
+                    <i class="fa fa-angle-up fa-2x" aria-hidden="true"></i>
+                </a>
+                <div class="social-links">
+                    <a href="mailto:ryan.rumana@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Gmail">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/ryanrumana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/rrumana" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+                <hr />
+                <p class="footer__text">
+                    &copy; <span id="year"></span> - Developed by
+                    <a href="https://rcrumana.xyz" target="_blank" rel="noopener noreferrer">Ryan Rumana</a>.
+                </p>
+            </div>
+        </footer>
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+        <script src="./javascript/vanilla-tilt.min.js"></script>
+        <script type="text/javascript" src="./javascript/valtilt.js"></script>
+    </body>
+</html>

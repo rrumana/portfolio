@@ -1,10 +1,14 @@
-version: '3'
-services:
-  rust_app:
+version: '3.8'
+
+services:  
+  app_testing:
     image: portfolio
     build:
-      context: .
+      context: ./
+      dockerfile: Dockerfile
+    container_name: portfolio-testing
     ports:
-      - "8085:8085"  # Modify this if your app uses a different port
+      - "8086:8086"
     environment:
-      RUST_LOG: info  # Any environment variables needed by your app
+      RUST_LOG: info
+    restart: unless-stopped

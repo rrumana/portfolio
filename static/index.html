@@ -82,6 +82,13 @@
               rel="noopener noreferrer">
               View Resume
             </a>
+            <a 
+              href="./about.html" 
+              class="cta-btn cta-btn--resume" 
+              target="_blank" 
+              rel="noopener noreferrer">
+              About This Site
+            </a>
           </span>
         </div>
       </div>
@@ -95,22 +102,61 @@
 
         <article class="row">
           <div class="project-wrapper__text">
+            <h3 class="project-wrapper__text-title">Reverse Game of Life</h3>
+            <p class="project-wrapper__text-info">
+                This project leverages Rust to simulate Conway's Game of Life in reverse 
+                by transforming it into a Boolean satisfiability (SAT) problem. By encoding 
+                cellular states and rules into logical constraints, it uses a SAT solver to 
+                infer previous generations from a given pattern. 
+                <br />
+                <br />
+                This remains a challenging and ongoing effort, exploring computational limits, 
+                optimization techniques, and advanced logical modeling. The game and it's 
+                functionality are embedded in the project page using WASM.
+            </p>
+            <div class="project-wrapper__text-btns">
+              <a
+                href="./game_of_life.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="cta-btn cta-btn--intro cta-btn--projects"
+                >See Website</a
+              >
+              <a
+                href="https://github.com/rrumana/game_of_life"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="cta-btn cta-btn--intro cta-btn--projects"
+                >Github Link</a
+              >
+            </div>
+          </div>
+          <div class="project-wrapper__image">
+            <a href="./game_of_life.html" target="_blank" rel="noopener noreferrer">
+              <div class="thumbnail rounded">
+                <img
+                  src="./images/Gospers_glider_gun_crop.gif"
+                  class="img-fluid"
+                  alt="Project Image"
+                  width="1366"
+                  height="767"
+                />
+              </div>
+            </a>
+          </div>
+        </article>
+
+        <article class="row">
+          <div class="project-wrapper__text">
             <h3 class="project-wrapper__text-title">Multi-Camera Person <br> Re-identification</h3>
             <p class="project-wrapper__text-info">
-              A project that uses machine learning to track and identify 
+              A Stanford EE292D research project that uses machine learning to track and identify 
               individuals across multiple cameras in a distributed environment.
               Through quantization and low power edge computation we were able to
               create a scalable and flexible network of cameras that can communicate 
               efficiently and do not require a central server to operate.
             </p>
             <div class="project-wrapper__text-btns">
-              <a
-                href="./ReID.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="cta-btn cta-btn--intro cta-btn--projects"
-                >See Website</a
-              >
               <a
                 href="/assets/EE292D Final Project Report.pdf"
                 target="_blank"
@@ -125,6 +171,88 @@
               <div class="thumbnail rounded">
                 <img
                   src="./images/test2.png"
+                  class="img-fluid"
+                  alt="Project Image"
+                  width="1366"
+                  height="767"
+                />
+              </div>
+            </a>
+          </div>
+        </article>
+
+        <article class="row">
+          <div class="project-wrapper__text">
+            <h3 class="project-wrapper__text-title">Rust-Based <br> Portfolio Website</h3>
+            <p class="project-wrapper__text-info">
+                This portfolio website is an ever-evolving passion project built in Rust, 
+                showcasing my enthusiasm for performance, simplicity, and continual learning. 
+                <br />
+                <br />
+                As I grow, the website evolves too, reflecting new insights, technologies, and 
+                experiences, and capturing my journey through engineering, creativity, and personal growth.            
+            </p>
+            <div class="project-wrapper__text-btns">
+              <a
+                href="./about.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="cta-btn cta-btn--intro cta-btn--projects"
+                >See Info</a
+              >
+              <a
+                href="https://github.com/rrumana/portfolio"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="cta-btn cta-btn--intro cta-btn--projects"
+                >Github Link</a
+              >
+            </div>
+          </div>
+          <div class="project-wrapper__image">
+            <a href="./about.html" target="_blank" rel="noopener noreferrer">
+              <div class="thumbnail rounded">
+                <img
+                  src="./images/portfolio.png"
+                  class="img-fluid"
+                  alt="Project Image"
+                  width="1366"
+                  height="767"
+                />
+              </div>
+            </a>
+          </div>
+        </article>
+
+        <article class="row">
+          <div class="project-wrapper__text">
+            <h3 class="project-wrapper__text-title">Neovim Configuration</h3>
+            <p class="project-wrapper__text-info">
+                This is a Neovim configuration that I wrote from scratch and is 
+                tailored specifically to my taste as a growing software engineer,
+                emphasizing productivity, adaptability, and continuous learning.
+                <br />
+                <br />
+                There's no way to understand your development environment better than
+                to build it yourself. This configuration is a testament to that philosophy,
+                and through using it every day I have learned a great deal about 
+                building usable and maintainable software.
+            </p>
+            <div class="project-wrapper__text-btns">
+              <a
+                href="https://github.com/rrumana/Neovim"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="cta-btn cta-btn--intro cta-btn--projects"
+                >Github Link</a
+              >
+            </div>
+          </div>
+          <div class="project-wrapper__image">
+            <a href="https://github.com/rrumana/Neovim" target="_blank" rel="noopener noreferrer">
+              <div class="thumbnail rounded">
+                <img
+                  src="./images/Neovim.png"
                   class="img-fluid"
                   alt="Project Image"
                   width="1366"
@@ -166,7 +294,7 @@
             </div>
           </div>
           <div class="project-wrapper__image">
-            <a href="#" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/rrumana/password-manager" target="_blank" rel="noopener noreferrer">
               <div class="thumbnail rounded">
                 <img
                   src="./images/password.png"
@@ -191,7 +319,7 @@
               Not all of it will be public right away, but I will try to keep it updated.
               <br>
               <br>
-              Advent of Code is fast approaching! Will I choose Rust or Go this year?
+              Advent of Code is fast approaching! Will I choose Rust or Go this year? (I chose Rust)
             </p>
             <div class="project-wrapper__text-btns">
               <a
@@ -227,67 +355,47 @@
       </div>
     </div>
   </section>
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <h2 class="section-title">Get in Touch</h2>
+                <div class="contact-wrapper">
+                    <p class="contact-wrapper__text">
+                        Interested in collaborating or learning more about this project? Feel free to reach out!
+                    </p>
+                    <a href="mailto:ryan.rumana@gmail.com" class="cta-btn cta-btn--resume">Contact Me</a>
+                </div>
+            </div>
+        </section>
 
-  <section id="contact">
-    <div class="container">
-      <h2 class="section-title">Get in Touch</h2>
-      <div class="contact-wrapper">
-        <p class="contact-wrapper__text">
-          Interested in hiring or learning more about me? Feel free to reach out!
-        </p>
-        <a href="mailto:ryan.rumana@gmail.com" class="cta-btn cta-btn--resume">Contact Me</a>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="container">
-      <a href="#intro" class="back-to-top" aria-label="go back to top">
-        <i class="fa fa-angle-up fa-2x" aria-hidden="true"></i>
-      </a>
-      <div class="social-links">
-        <a
-          href="mailto:ryan.rumana@gmail.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Gmail"
-        >
-          <i class="fa fa-envelope"></i>
-        </a>
-        <a
-          href="https://linkedin.com/in/ryanrumana"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn"
-        >
-          <i class="fa-brands fa-linkedin"></i>
-        </a>
-        <a
-          href="https://github.com/rrumana"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="GitHub"
-        >
-          <i class="fa-brands fa-github"></i>
-        </a>
-      </div>
-      <hr />
-      <p class="footer__text">
-        &copy; <span id="year"></span> - Developed by
-        <a
-          href="https://rcrumana.xyz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >Ryan Rumana</a
-        >.
-      </p>
-    </div>
-  </footer>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear()
-  </script>
-  <script src="./javascript/vanilla-tilt.min.js"></script>
-  <script type="text/javascript" src="./javascript/valtilt.js"></script>
-</body>
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="container">
+                <a href="#intro" class="back-to-top" aria-label="go back to top">
+                    <i class="fa fa-angle-up fa-2x" aria-hidden="true"></i>
+                </a>
+                <div class="social-links">
+                    <a href="mailto:ryan.rumana@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Gmail">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/ryanrumana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/rrumana" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+                <hr />
+                <p class="footer__text">
+                    &copy; <span id="year"></span> - Developed by
+                    <a href="https://rcrumana.xyz" target="_blank" rel="noopener noreferrer">Ryan Rumana</a>.
+                </p>
+            </div>
+        </footer>
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+        <script src="./javascript/vanilla-tilt.min.js"></script>
+        <script type="text/javascript" src="./javascript/valtilt.js"></script>
+    </body>
 </html>

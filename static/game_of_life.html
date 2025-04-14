@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+        <title>Game of Life Simulation</title>
+        <meta name="keywords" content="[rcrumana], [Ryan], [Rumana], [Ryan Rumana], C++, Rust, Java, Python, Software engineering, Machine learning" />
+        <meta name="description" content="I am a software engineer passionate about tech, learning, and adventure. From building custom projects to exploring the outdoors, I thrive on challenges and innovation.." />
+        <link rel="icon" type="image/png" href="./assets/favicon.ico" />
+        <meta name="theme-color" content="#36d1dc" />
+        <link rel="preload" as="style" href="./css/main.css" />
+        <link rel="stylesheet" href="./css/main.css" />
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+              integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+              crossorigin="anonymous"
+              referrerpolicy="no-referrer" />
+        <script defer src="./javascript/scrollreveal.min.js"></script>
+        <script defer type="text/javascript" src="./javascript/scrollveal.js"></script>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js">
+        </script>
+        <style>
+            #proof {
+                padding-top: 0em;
+                padding-bottom: 8em;
+            }
+            #proof .proof-content {
+                background: transparent;
+                border: none;
+                padding: 1em 0;
+                font-size: 1.6em;
+                line-height: 1.8em;
+                color: inherit;
+                overflow-x: hidden;
+            }
+            .proof-text {
+                text-align: left;
+                margin: 1em 0;
+            }
+            .formula {
+                text-align: center;
+                margin: 1em 0;
+            }
+        </style>
+    </head>
+    <body>
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title">Project Spotlight: <br>Reversing Game Of Life</h2>
+                <div class="row about-wrapper">
+                    <div class="about-wrapper__image">
+                        <img class="img-fluid"
+                             src="./images/Gospers_glider_gun.gif"
+                             alt="Profile Image"
+                             width="450"
+                             height="350" />
+                    </div>
+                    <div class="about-wrapper__info">
+                        <p class="about-wrapper__info-text">
+                            Conway's Game of Life is a cellular automaton played on an infinite two-dimensional 
+                            grid of cells, each either alive or dead. Gameplay evolves through discrete time steps 
+                            governed by simple neighbor-based rules determining cell survival, death, or 
+                            reproduction. Widely explored in computer science, it demonstrates emergent complexity, 
+                            algorithmic efficiency, and self-organizing behaviors from minimalistic rule sets.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            My goal with this project is to devise a relatively efficient method of reversing Game
+                            of Life simulation by reconstructing the previous state of the grid from a given state.
+                            This challenge is interesting because it can be proven that reversing the Game of Life is an
+                            NP-Complete problem, and subsequently there exists no known method to efficiently do this.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            I will update my findings here!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulation Section -->
+        <section id="projects">
+            <div class="container">
+                <div class="project-wrapper">
+                    <h2 class="section-title dark-blue-text">Game of Life Simulation</h2>
+                    <p class="project-description">
+                        This interactive simulation allows you to visualize the Game of Life in action. You can step through 
+                        generations one at a time, or simulate multiple generations at once. The grid has a very simple glider 
+                        on it, but each cell can be toggled on or off simply by clicking it.
+                        <br/><br/>
+                        The simulation is built using WebAssembly leveraging Rust for the core logic. I probably won't add 
+                        the reversing feature into this demo because it'll be a computational nightmare. The worst case 
+                        time complexity for this problem is O(2^n) where n is the number of squares.
+                        <br/><br/> 
+                        You can find the full progress for the simulation on the github page.
+                    </p>
+                      <a
+                        href="https://github.com/rrumana/game_of_life"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="cta-btn cta-btn--intro cta-btn--projects"
+                        >Github Link</a
+                      >
+                    <p class="project-description">
+                        <br/>
+                    </p>
+                    <canvas id="lifeCanvas" width="400" height="400"></canvas>
+                    <div id="controls">
+                        <button id="stepBtn">Step Forward</button>
+                        <button id="backBtn">Step Back</button>
+                        <button id="resetBtn">Reset</button>
+                        <input type="range" id="speedRange" min="50" max="1000" value="200" />
+                        <label for="genInput">Generations:</label>
+                        <input type="number" id="genInput" min="1" max="100" value="1" />
+                        <button id="multiStepBtn">Multi-Step</button>
+                        <div id="delayDisplay">Frame Delay: 200ms</div>
+                    </div>
+                    <script type="module">
+                        // Import only the simulation initialization function.
+                        import { initGameOfLife } from "./javascript/game_of_life.js";
+                        
+                        // Call initGameOfLife once the page loads.
+                        initGameOfLife().catch((error) => {
+                            console.error("Failed to initialize simulation:", error);
+                        });
+                    </script>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proof Section -->
+        <section id="proof">
+            <div class="container">
+                <h2 class="section-title">Reversing Game of Life is NP-Complete</h2>
+                <div class="proof-content">
+                    <p class="proof-text">
+                        Let \( \Sigma = \{0,1\} \). For a finite grid of size \( N \times N \), a configuration is a function 
+                    </p>
+                    <div class="formula">
+                        \[ c: \{0,1,\dots,N-1\}^2 \to \{0,1\}. \]
+                    </div>
+                    <p class="proof-text">
+                        Define the local update rule 
+                    </p>
+                    <div class="formula">
+                        \[ f: \{0,1\}^{N \times N} \to \{0,1\}^{N \times N} \]
+                    </div>
+                    <p class="proof-text">
+                        of Conway’s Game of Life by
+                    </p>
+                    <div class="formula">
+                        \[
+                        f(c)(i,j) = \begin{cases} 
+                            1, & \text{if } c(i,j)=1 \text{ and } n(i,j) \in \{2,3\}, \\
+                            1, & \text{if } c(i,j)=0 \text{ and } n(i,j)=3, \\
+                            0, & \text{otherwise},
+                        \end{cases}
+                        \]
+                    </div>
+                    <p class="proof-text">
+                        where
+                    </p>
+                    <div class="formula">
+                        \[
+                        n(i,j) = \sum_{(d_1,d_2) \in \{-1,0,1\}^2 \setminus \{(0,0)\}} c(i+d_1,j+d_2).
+                        \]
+                    </div>
+                    <p class="proof-text">
+                        Define the decision problem
+                    </p>
+                    <div class="formula">
+                        \[
+                        \text{REV-GOL} = \{\, c \in \{0,1\}^{N \times N} \mid \exists\, p \in \{0,1\}^{N \times N} \text{ such that } f(p)=c \,\}.
+                        \]
+                    </div>
+                    <p class="proof-text">
+                        REV-GOL is in NP since a nondeterministic algorithm may guess a candidate \( p \) and verify in \( O(N^2) \) time that \( f(p)=c \).
+                    </p>
+                    <p class="proof-text">
+                        To prove NP-hardness, we reduce an arbitrary instance of 3-SAT to REV-GOL. Let
+                    </p>
+                    <div class="formula">
+                        \[
+                        \phi = \bigwedge_{i=1}^m (\ell_{i1} \vee \ell_{i2} \vee \ell_{i3})
+                        \]
+                    </div>
+                    <p class="proof-text">
+                        be an instance of 3-SAT with variables \( x_1, x_2, \ldots, x_n \). The reduction constructs, in polynomial time, a Game of Life configuration \( c_\phi \) such that
+                    </p>
+                    <div class="formula">
+                        \[
+                        c_\phi \in \text{REV-GOL} \iff \phi \text{ is satisfiable}.
+                        \]
+                    </div>
+                    <p class="proof-text">
+                        Gadgets used in the construction:
+                    </p>
+                    <p class="proof-text">
+                        1. <strong>Variable Gadgets:</strong> For each \( x_j \), design a gadget \( G_{x_j} \) in a block \( R_j \) with two predecessor states, \( P_{j,T} \) and \( P_{j,F} \), corresponding to \( x_j = \text{True} \) or \( x_j = \text{False} \).
+                    </p>
+                    <p class="proof-text">
+                        2. <strong>Clause Gadgets:</strong> For each clause 
+                    </p>
+                    <div class="formula">
+                        \[ C_i = (\ell_{i1} \vee \ell_{i2} \vee \ell_{i3}) \]
+                    </div>
+                    <p class="proof-text">
+                        build a gadget \( G_{C_i} \) in a block \( S_i \) that is reversible if and only if at least one literal in the clause is satisfied.
+                    </p>
+                    <p class="proof-text">
+                        3. <strong>Interconnection:</strong> Arrange the gadgets so that
+                    </p>
+                    <div class="formula">
+                        \[
+                        c_\phi = \left( \bigcup_{j=1}^n G_{x_j} \right) \cup \left( \bigcup_{i=1}^m G_{C_i} \right) \cup (\text{background})
+                        \]
+                    </div>
+                    <p class="proof-text">
+                        has a predecessor if and only if \( \phi \) is satisfiable.
+                    </p>
+                    <p class="proof-text">
+                        For example, consider
+                    </p>
+                    <div class="formula">
+                        \[ \phi = (x_1 \vee \neg x_2 \vee x_3) \wedge (\neg x_1 \vee x_2 \vee \neg x_3). \]
+                    </div>
+                    <p class="proof-text">
+                        Gadget \( G_{x_j} \) is constructed for each \( x_j \) (for \( j=1,2,3 \)). Clause gadget \( G_{C_1} \) for 
+                    </p>
+                    <div class="formula">
+                        \[ (x_1 \vee \neg x_2 \vee x_3) \]
+                    </div>
+                    <p class="proof-text">
+                        is wired so that it is reversible if at least one of:
+                    </p>
+                    <div class="formula">
+                        \[
+                        x_1 \text{ is True } (P_{1,T}), \quad x_2 \text{ is False } (P_{2,F}), \quad x_3 \text{ is True } (P_{3,T})
+                        \]
+                    </div>
+                    <p class="proof-text">
+                        holds. Similarly, \( G_{C_2} \) for 
+                    </p>
+                    <div class="formula">
+                        \[ (\neg x_1 \vee x_2 \vee \neg x_3) \]
+                    </div>
+                    <p class="proof-text">
+                        is reversible if at least one of:
+                    </p>
+                    <div class="formula">
+                        \[
+                        x_1 \text{ is False } (P_{1,F}), \quad x_2 \text{ is True } (P_{2,T}), \quad x_3 \text{ is False } (P_{3,F})
+                        \]
+                    </div>
+                    <p class="proof-text">
+                        holds.
+                    </p>
+                    <p class="proof-text">
+                        Thus, \( c_\phi \) has a predecessor if and only if \( \phi \) is satisfiable.
+                        Since 3-SAT is NP-complete and \( \text{REV-GOL} \in \text{NP} \), it follows that REV-GOL is NP-complete.
+                    </p>
+                    <h2 class="section-title">Conclusion</h2>
+                    <p>
+                        What can we do with this information? Where do we go next?
+                        <br/>
+                        <br/>
+                        My goal is to try to create a program that can convert an arbitrary grid into a SAT problem in polynomial time and then use a 
+                        SAT solver to find a suitable solution. This would allow me to, at the very least, approximate the number of states.
+                        I hope to be able to reverse an arbitrary game of life state back into a predecessor state that closely resembles random noise.
+                    </p>
+                    <p>
+                        All progress will be posted on my github first before making it's way here.
+                    </p>
+                      <a
+                        href="https://github.com/rrumana/game_of_life"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="cta-btn cta-btn--intro cta-btn--projects"
+                        >Github Link</a
+                      >
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <h2 class="section-title">Get in Touch</h2>
+                <div class="contact-wrapper">
+                    <p class="contact-wrapper__text">
+                        Interested in collaborating or learning more about this project? Feel free to reach out!
+                    </p>
+                    <a href="mailto:ryan.rumana@gmail.com" class="cta-btn cta-btn--resume">Contact Me</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="container">
+                <a href="#intro" class="back-to-top" aria-label="go back to top">
+                    <i class="fa fa-angle-up fa-2x" aria-hidden="true"></i>
+                </a>
+                <div class="social-links">
+                    <a href="mailto:ryan.rumana@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Gmail">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/ryanrumana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/rrumana" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+                <hr />
+                <p class="footer__text">
+                    &copy; <span id="year"></span> - Developed by
+                    <a href="https://rcrumana.xyz" target="_blank" rel="noopener noreferrer">Ryan Rumana</a>.
+                </p>
+            </div>
+        </footer>
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+        <script src="./javascript/vanilla-tilt.min.js"></script>
+        <script type="text/javascript" src="./javascript/valtilt.js"></script>
+    </body>
+</html>

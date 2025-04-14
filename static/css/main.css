@@ -23,6 +23,7 @@ html {
 body {
   text-align: center;
   line-height: 1.5;
+  background-color: #ffffff;
 }
 
 h1 {
@@ -277,7 +278,7 @@ a:hover {
 .back-to-top i {
   color: #ffffff;
   margin: 1rem 0 1.6rem;
-  transition: all 200ms ease;
+  transition: all ease 0.2s;
 }
 .back-to-top i:hover {
   transform: translateY(-2px);
@@ -355,8 +356,8 @@ section .row span {
   background-image: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
   color: #ffffff;
   height: 100%;
-  -webkit-clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
-  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
   padding-bottom: 10%;
 }
 @media (max-width: 75em) {
@@ -411,8 +412,8 @@ section .row span {
 
 #contact {
   background-image: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
-  -webkit-clip-path: polygon(0 15vh, 100% 0, 100% 100%, 0 100%);
-  clip-path: polygon(0 15vh, 100% 0, 100% 100%, 0 100%);
+  -webkit-clip-path: polygon(0 10vh, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 10vh, 100% 0, 100% 100%, 0 100%);
   padding: 15rem 0 10rem 0;
   margin-top: -15rem;
   margin-bottom: -1px;
