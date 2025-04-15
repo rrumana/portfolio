@@ -1,4 +1,3 @@
-// backend/src/main.rs
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use axum::Server;
@@ -11,13 +10,11 @@ use log4rs;
 #[tokio::main]
 async fn main() {
 
-    // Initialize logging
     log4rs::init_file("log4rs.yaml", Default::default())
         .expect("Failed to initialize log4rs");
 
     info!("Starting the portfolio server...");
 
-    // Initialize the simulation state.
     let initial_state = [
         "00100000000000000000",
         "10100000000000000111",
@@ -43,9 +40,7 @@ async fn main() {
     let initial_grid = parse_initial_state(&initial_state);
     let game_state = Arc::new(Mutex::new(GameOfLife::new(initial_grid)));
 
-    // Build the Game of Life API and attach the shared state.
     let api = game_api().layer(axum::extract::Extension(game_state));
-    // Build the full application router, serving static files from "static".
     let app = app("static", api);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 8086));
