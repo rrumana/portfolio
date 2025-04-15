@@ -61,6 +61,22 @@
                         <p class="about-wrapper__info-text">
                             I hope you find this website—and the explanation for why I decided to build and host it this way—to be both informative and entertaining!
                         </p>
+                        <span class="about-wrapper__cta">
+                            <a 
+                                href="/assets/resume.pdf" 
+                                class="cta-btn cta-btn--resume" 
+                                target="_blank" 
+                                rel="noopener noreferrer">
+                                View Resume
+                            </a>
+                            <a 
+                                href="https://github.com/rrumana/portfolio" 
+                                class="cta-btn cta-btn--resume" 
+                                target="_blank" 
+                                rel="noopener noreferrer">
+                                Site Github
+                            </a>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -70,27 +86,30 @@
         <section id="hardware">
             <div class="container">
                 <h2 class="section-title">Homelab Hardware</h2>
-                <div class="row about-wrapper">
-                    <div class="about-wrapper__info">
-                        <p class="about-wrapper__info-text">
-                            My homelab is built from a combination of repurposed and custom-built hardware. It features dedicated servers, network-attached storage,
-                            and a high-performance router, all running on energy-efficient components. This setup allows me to self-host my website, run experiments,
-                            and deploy personal projects without relying on third-party services.
-                        </p>
-                        <p class="about-wrapper__info-text">
-                            The hardware is maintained in a controlled environment to ensure optimal performance and uptime, and I continually upgrade components as needed.
+                <article class="row-mid">
+                    <div class="project-wrapper__text">
+                        <p class="project-wrapper__text-info">
+                            This website is hosted on a Minisforum Elitemini AI370 mini-PC featuring a powerful 12-core AMD Ryzen AI 370HX 
+                            CPU and running Arch Linux. Data integrity and redundancy are ensured through a robust BTRFS RAID 1 filesystem, 
+                            complemented by frequent snapshots and backups to a dedicated cold spare drive. Networking is secured by a 
+                            Partaker 1U firewall appliance running OPNsense on an Intel Atom C3958, effectively protecting and managing 
+                            internal traffic through a centrally managed switch. In addition to serving the website, this multifunctional 
+                            server operates around 37 Docker containers, functioning as a media center, phone backup solution, personal cloud 
+                            instance, and primary development workstation.
                         </p>
                     </div>
-                    <div class="about-wrapper__image">
-                        <img
-                            class="img-fluid"
-                            src="./images/homelab.jpg"
-                            alt="Homelab Hardware"
-                            width="450"
-                            height="350"
-                        />
+                    <div class="project-wrapper__image">
+                        <div class="thumbnail rounded">
+                            <img
+                                class="img-fluid"
+                                src="./images/homelab.jpg"
+                                alt="Homelab Hardware"
+                                width="1366"
+                                height="767"
+                            />
+                        </div>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -98,27 +117,29 @@
         <section id="software-stack">
             <div class="container">
                 <h2 class="section-title">Software Stack</h2>
-                <div class="row about-wrapper">
-                    <div class="about-wrapper__image">
-                        <img
-                            class="img-fluid"
-                            src="./images/software-stack.png"
-                            alt="Software Stack"
-                            width="450"
-                            height="350"
-                        />
+                <article class="row-reverse-mid">
+                    <div class="project-wrapper__image">
+                        <div class="thumbnail rounded">
+                            <img
+                                class="img-fluid"
+                                src="./images/software.jpg"
+                                alt="Homelab Hardware"
+                                width="1366"
+                                height="767"
+                            />
+                        </div>
                     </div>
-                    <div class="about-wrapper__info">
-                        <p class="about-wrapper__info-text">
-                            This website is built using a modern web development stack. The backend is written in Rust using the Axum framework,
-                            and it serves both static content and API endpoints. The front end is crafted with HTML, CSS (using SCSS for styling), and JavaScript.
-                            Additionally, WebAssembly is used to power the interactive Game of Life simulation.
-                        </p>
-                        <p class="about-wrapper__info-text">
-                            For version control, continuous integration, and deployment, I use GitHub along with various DevOps tools to streamline my workflow.
+                    <div class="project-wrapper__text">
+                        <p class="project-wrapper__text-info">
+                            The website leverages Rust’s performant Axum framework to serve static HTML and SCSS-generated stylesheets efficiently. 
+                            Interactivity, including animations and transitions, is achieved through minimal JavaScript usage. Performance-intensive 
+                            components, particularly the interactive Game of Life simulation, are developed in Rust and compiled to WebAssembly 
+                            (WASM), effectively utilizing client-side resources for computation. The host system uses Hyprland as a lightweight 
+                            Wayland compositor, optimizing resource usage and enhancing responsiveness. Development was done on a Neovim setup I 
+                            made my self.
                         </p>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -126,27 +147,29 @@
         <section id="deployment">
             <div class="container">
                 <h2 class="section-title">Deployment & DevOps</h2>
-                <div class="row about-wrapper">
-                    <div class="about-wrapper__info">
-                        <p class="about-wrapper__info-text">
-                            The website is deployed using Docker and Docker Compose, allowing for easy scalability and management.
-                            I containerize the backend, WebAssembly modules, and static assets so that the entire application can run in a consistent environment across different platforms.
-                        </p>
-                        <p class="about-wrapper__info-text">
-                            Monitoring, logging, and automated backups are integrated into the deployment process.
-                            My DevOps pipeline includes automated testing and continuous integration, ensuring that every update is stable and reliable before it goes live.
+                <article class="row-mid">
+                    <div class="project-wrapper__text">
+                        <p class="project-wrapper__text-info">
+                            Docker containerization ensures reliable and reproducible deployments, streamlining updates and minimizing downtime. 
+                            Nginx is configured as a reverse proxy, securely bridging containerized applications to the public internet. Domain 
+                            management and DNS services provided by Cloudflare deliver additional layers of security, including DDoS protection, 
+                            caching, and traffic filtering. Further, legitimate traffic passing Cloudflare’s checks is validated by a self-managed 
+                            proxy manager. Internal observability is provided by BTOP for system resource monitoring and Homarr dashboard, which 
+                            centralizes access to internal services behind WireGuard, ensuring secure, convenient, and remote management capabilities.
                         </p>
                     </div>
-                    <div class="about-wrapper__image">
-                        <img
-                            class="img-fluid"
-                            src="./images/deployment.png"
-                            alt="Deployment & DevOps"
-                            width="450"
-                            height="350"
-                        />
+                    <div class="project-wrapper__image">
+                        <div class="thumbnail rounded">
+                            <img
+                                class="img-fluid"
+                                src="./images/deployment.jpg"
+                                alt="Deployment & DevOps"
+                                width="1366"
+                                height="767"
+                            />
+                        </div>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -154,28 +177,32 @@
         <section id="future-work">
             <div class="container">
                 <h2 class="section-title">Future Work</h2>
-                <div class="row about-wrapper">
-                    <div class="about-wrapper__image">
-                        <img
-                            class="img-fluid"
-                            src="./images/future-work.png"
-                            alt="Future Work"
-                            width="450"
-                            height="350"
-                        />
+                <article class="row-reverse-mid">
+                    <div class="project-wrapper__image">
+                        <div class="thumbnail rounded">
+                            <img
+                                class="img-fluid"
+                                src="./images/future.jpg"
+                                alt="Future Work"
+                                width="1366"
+                                height="767"
+                            />
+                        </div>
                     </div>
-                    <div class="about-wrapper__info">
-                        <p class="about-wrapper__info-text">
-                            I plan to expand this website with new interactive features, integrate more advanced analytics,
-                            and experiment with new web technologies. Future updates may include real-time collaboration tools,
-                            enhanced visualization of data, and deeper integration of WebAssembly for performance-critical tasks.
-                        </p>
-                        <p class="about-wrapper__info-text">
-                            In addition, I'll explore further optimizations for the Game of Life simulation and possibly extend its functionality
-                            to cover other cellular automata and complex systems.
+                    <div class="project-wrapper__text">
+                        <p class="project-wrapper__text-info">
+                            Future expansions include migrating toward a clustered computing environment for increased redundancy, scalability, and 
+                            fault tolerance—reducing disruption during power outages, maintenance, or updates. Additionally, consideration is being 
+                            given to transitioning the site from primarily static content delivery to dynamic, feature-rich experiences. Potential 
+                            adoption of JavaScript frameworks such as React or Rust-based web technologies like Yew could provide advanced logging, 
+                            data management, and enhanced user interactions while maintaining stack efficiency and consistency.
+                            </br>
+                            </br>
+                            In addition to those service improvments I plan to further explore optimizations for the Game of Life simulation and 
+                            possibly extend its functionality to cover reveral and other complex behavior.
                         </p>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
 
@@ -195,7 +222,7 @@
         <!-- Footer Section -->
         <footer class="footer">
             <div class="container">
-                <a href="#intro" class="back-to-top" aria-label="go back to top">
+                <a href="#about" class="back-to-top" aria-label="go back to top">
                     <i class="fa fa-angle-up fa-2x" aria-hidden="true"></i>
                 </a>
                 <div class="social-links">

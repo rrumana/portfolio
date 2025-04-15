@@ -28,7 +28,50 @@ section {
       margin-top: 2rem;
     }
   }
+
+  .row-mid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    @include respond(tab-port) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+    padding: 0 1.5rem;
+    @include respond(phone) {
+      padding: 0;
+    }
+    & p + p {
+      margin-top: 1rem;
+    }
+    & span {
+      margin-top: 2rem;
+    }
+  }
+
+  .row-reverse-mid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    @include respond(tab-port) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+    padding: 0 1.5rem;
+    @include respond(phone) {
+      padding: 0;
+    }
+    & p + p {
+      margin-top: 1rem;
+    }
+    & span {
+      margin-top: 2rem;
+    }
+  }
 }
+
 .container {
   width: 100%;
   padding: 0 1.5rem;

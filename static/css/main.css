@@ -318,6 +318,54 @@ section .row p + p {
 section .row span {
   margin-top: 2rem;
 }
+section .row-mid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  padding: 0 1.5rem;
+}
+@media (max-width: 56.25em) {
+  section .row-mid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+}
+@media (max-width: 37.5em) {
+  section .row-mid {
+    padding: 0;
+  }
+}
+section .row-mid p + p {
+  margin-top: 1rem;
+}
+section .row-mid span {
+  margin-top: 2rem;
+}
+section .row-reverse-mid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  padding: 0 1.5rem;
+}
+@media (max-width: 56.25em) {
+  section .row-reverse-mid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+}
+@media (max-width: 37.5em) {
+  section .row-reverse-mid {
+    padding: 0;
+  }
+}
+section .row-reverse-mid p + p {
+  margin-top: 1rem;
+}
+section .row-reverse-mid span {
+  margin-top: 2rem;
+}
 
 .container {
   width: 100%;
