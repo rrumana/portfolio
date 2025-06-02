@@ -5,7 +5,7 @@ use axum::{
     Router,
     routing::get_service,
 };
-use std::convert::Infallible;
+
 use std::path::PathBuf;
 use tower_http::services::ServeDir;
 use axum::http::{StatusCode, Uri};

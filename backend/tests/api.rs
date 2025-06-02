@@ -2,11 +2,9 @@
 use axum::{
     body::Body,
     http::{Request, StatusCode},
-    Router,
 };
 use backend::game_of_life::{GameOfLife, HEIGHT, WIDTH};
-use backend::routes::{game_api, GameState};
-use backend::app;
+use backend::routes::{game_api};
 use std::{
     sync::{Arc, Mutex},
 };
