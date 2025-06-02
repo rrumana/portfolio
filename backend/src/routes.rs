@@ -2,9 +2,10 @@
 use crate::game_of_life::{GameOfLife, HEIGHT, WIDTH};
 use axum::{
     extract::{Extension, Query},
-    response::Json,
+    response::{Json, IntoResponse, Response},
     routing::{get, post},
     Router,
+    http::{header, StatusCode, HeaderMap},
 };
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
@@ -88,6 +89,44 @@ pub async fn reset(Extension(state): Extension<Arc<Mutex<GameOfLife>>>) -> Json<
     };
     info!("Responding with updated state");
     Json(response)
+}
+
+/// Generates XML sitemap for the portfolio website
+pub async fn sitemap() -> Response {
+    info!("Received sitemap request");
+    
+    let sitemap_xml = r#"<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://ryanrumana.com/</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://ryanrumana.com/about.html</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ryanrumana.com/game_of_life.html</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://ryanrumana.com/ReID.html</loc>
+        <lastmod>2025-01-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+</urlset>"#;
+
+    let mut headers = HeaderMap::new();
+    headers.insert(header::CONTENT_TYPE, "application/xml".parse().unwrap());
+    
+    (StatusCode::OK, headers, sitemap_xml).into_response()
 }
 
 /// Assembles the Game of Life API router.

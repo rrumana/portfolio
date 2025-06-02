@@ -3,7 +3,7 @@ pub mod routes;
 
 use axum::{
     Router,
-    routing::get_service,
+    routing::{get_service, get},
 };
 
 use std::path::PathBuf;
@@ -32,6 +32,7 @@ pub fn app(static_dir: &str, game_api: Router) -> Router {
         });
 
     Router::new()
+        .route("/sitemap.xml", get(routes::sitemap))
         .nest("/api/game-of-life", game_api)
         .nest_service("/", static_service)
         .fallback(fallback_handler)

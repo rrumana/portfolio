@@ -457,6 +457,24 @@ section .row-reverse-mid span {
     text-align: center;
   }
 }
+#about .project-wrapper__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+#about .project-wrapper__image .thumbnail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+#about .project-wrapper__image .thumbnail img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
 
 #contact {
   background-image: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
