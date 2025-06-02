@@ -23,29 +23,7 @@
         <script type="text/javascript" async
             src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js">
         </script>
-        <style>
-            #proof {
-                padding-top: 0em;
-                padding-bottom: 8em;
-            }
-            #proof .proof-content {
-                background: transparent;
-                border: none;
-                padding: 1em 0;
-                font-size: 1.6em;
-                line-height: 1.8em;
-                color: inherit;
-                overflow-x: hidden;
-            }
-            .proof-text {
-                text-align: left;
-                margin: 1em 0;
-            }
-            .formula {
-                text-align: center;
-                margin: 1em 0;
-            }
-        </style>
+        
     </head>
     <body>
         <section id="about">
@@ -133,154 +111,236 @@
 
         <!-- Proof Section -->
         <section id="proof">
-            <div class="container">
+            <div class="proof-container">
                 <h2 class="section-title">Reversing Game of Life is NP-Complete</h2>
-                <div class="proof-content">
-                    <p class="proof-text">
-                        Let \( \Sigma = \{0,1\} \). For a finite grid of size \( N \times N \), a configuration is a function 
-                    </p>
-                    <div class="formula">
-                        \[ c: \{0,1,\dots,N-1\}^2 \to \{0,1\}. \]
+                
+                <!-- Navigation -->
+                <div class="proof-nav">
+                    <h3>Proof Structure</h3>
+                    <ul>
+                        <li><a href="#definitions">1. Definitions & Setup</a></li>
+                        <li><a href="#theorem">2. Main Theorem</a></li>
+                        <li><a href="#np-membership">3. NP Membership</a></li>
+                        <li><a href="#np-hardness">4. NP-Hardness</a></li>
+                        <li><a href="#gadgets">5. Gadget Construction</a></li>
+                        <li><a href="#example">6. Example</a></li>
+                        <li><a href="#conclusion">7. Conclusion</a></li>
+                    </ul>
+                </div>
+
+                <!-- Definitions Section -->
+                <div id="definitions" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('definitions')">
+                        <div class="section-icon">1</div>
+                        <h3 class="section-title-text">Definitions & Setup</h3>
+                        <span class="collapse-indicator">▼</span>
                     </div>
-                    <p class="proof-text">
-                        Define the local update rule 
-                    </p>
-                    <div class="formula">
-                        \[ f: \{0,1\}^{N \times N} \to \{0,1\}^{N \times N} \]
+                    <div class="section-content">
+                        <p class="proof-text">
+                            Let <span class="math-term">Σ = {0,1}</span>. For a finite grid of size <span class="math-term">N × N</span>, a configuration is a function:
+                        </p>
+                        <div class="formula">
+                            \[ c: \{0,1,\dots,N-1\}^2 \to \{0,1\}. \]
+                        </div>
+                        
+                        <p class="proof-text">
+                            Define the local update rule of Conway's Game of Life:
+                        </p>
+                        <div class="formula">
+                            \[ f: \{0,1\}^{N \times N} \to \{0,1\}^{N \times N} \]
+                        </div>
+                        <p class="proof-text">by</p>
+                        <div class="formula">
+                            \[
+                            f(c)(i,j) = \begin{cases}
+                                1, & \text{if } c(i,j)=1 \text{ and } n(i,j) \in \{2,3\}, \\
+                                1, & \text{if } c(i,j)=0 \text{ and } n(i,j)=3, \\
+                                0, & \text{otherwise},
+                            \end{cases}
+                            \]
+                        </div>
+                        <p class="proof-text">where the neighbor count is:</p>
+                        <div class="formula">
+                            \[
+                            n(i,j) = \sum_{(d_1,d_2) \in \{-1,0,1\}^2 \setminus \{(0,0)\}} c(i+d_1,j+d_2).
+                            \]
+                        </div>
                     </div>
-                    <p class="proof-text">
-                        of Conway’s Game of Life by
-                    </p>
-                    <div class="formula">
-                        \[
-                        f(c)(i,j) = \begin{cases} 
-                            1, & \text{if } c(i,j)=1 \text{ and } n(i,j) \in \{2,3\}, \\
-                            1, & \text{if } c(i,j)=0 \text{ and } n(i,j)=3, \\
-                            0, & \text{otherwise},
-                        \end{cases}
-                        \]
+                </div>
+
+                <!-- Main Theorem Section -->
+                <div id="theorem" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('theorem')">
+                        <div class="section-icon">2</div>
+                        <h3 class="section-title-text">Main Theorem</h3>
+                        <span class="collapse-indicator">▼</span>
                     </div>
-                    <p class="proof-text">
-                        where
-                    </p>
-                    <div class="formula">
-                        \[
-                        n(i,j) = \sum_{(d_1,d_2) \in \{-1,0,1\}^2 \setminus \{(0,0)\}} c(i+d_1,j+d_2).
-                        \]
+                    <div class="section-content">
+                        <p class="proof-text">
+                            <strong>Theorem:</strong> The decision problem REV-GOL is NP-Complete.
+                        </p>
+                        <div class="formula">
+                            \[
+                            \text{REV-GOL} = \{\, c \in \{0,1\}^{N \times N} \mid \exists\, p \in \{0,1\}^{N \times N} \text{ such that } f(p)=c \,\}.
+                            \]
+                        </div>
+                        <p class="proof-text">
+                            In other words, REV-GOL asks: "Given a Game of Life configuration <span class="math-term">c</span>, does there exist a predecessor configuration <span class="math-term">p</span> such that applying one step of the Game of Life rules to <span class="math-term">p</span> produces <span class="math-term">c</span>?"
+                        </p>
                     </div>
-                    <p class="proof-text">
-                        Define the decision problem
-                    </p>
-                    <div class="formula">
-                        \[
-                        \text{REV-GOL} = \{\, c \in \{0,1\}^{N \times N} \mid \exists\, p \in \{0,1\}^{N \times N} \text{ such that } f(p)=c \,\}.
-                        \]
+                </div>
+
+                <!-- NP Membership Section -->
+                <div id="np-membership" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('np-membership')">
+                        <div class="section-icon">3</div>
+                        <h3 class="section-title-text">NP Membership</h3>
+                        <span class="collapse-indicator">▼</span>
                     </div>
-                    <p class="proof-text">
-                        REV-GOL is in NP since a nondeterministic algorithm may guess a candidate \( p \) and verify in \( O(N^2) \) time that \( f(p)=c \).
-                    </p>
-                    <p class="proof-text">
-                        To prove NP-hardness, we reduce an arbitrary instance of 3-SAT to REV-GOL. Let
-                    </p>
-                    <div class="formula">
-                        \[
-                        \phi = \bigwedge_{i=1}^m (\ell_{i1} \vee \ell_{i2} \vee \ell_{i3})
-                        \]
+                    <div class="section-content">
+                        <p class="proof-text">
+                            <strong>REV-GOL ∈ NP:</strong> A nondeterministic algorithm can guess a candidate predecessor <span class="math-term">p</span> and verify in <span class="math-term">O(N²)</span> time that <span class="math-term">f(p) = c</span>.
+                        </p>
+                        <p class="proof-text">
+                            The verification process simply applies the Game of Life rules to each cell in the guessed configuration and checks if the result matches the given configuration.
+                        </p>
                     </div>
-                    <p class="proof-text">
-                        be an instance of 3-SAT with variables \( x_1, x_2, \ldots, x_n \). The reduction constructs, in polynomial time, a Game of Life configuration \( c_\phi \) such that
-                    </p>
-                    <div class="formula">
-                        \[
-                        c_\phi \in \text{REV-GOL} \iff \phi \text{ is satisfiable}.
-                        \]
+                </div>
+
+                <!-- NP-Hardness Section -->
+                <div id="np-hardness" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('np-hardness')">
+                        <div class="section-icon">4</div>
+                        <h3 class="section-title-text">NP-Hardness Proof</h3>
+                        <span class="collapse-indicator">▼</span>
                     </div>
-                    <p class="proof-text">
-                        Gadgets used in the construction:
-                    </p>
-                    <p class="proof-text">
-                        1. <strong>Variable Gadgets:</strong> For each \( x_j \), design a gadget \( G_{x_j} \) in a block \( R_j \) with two predecessor states, \( P_{j,T} \) and \( P_{j,F} \), corresponding to \( x_j = \text{True} \) or \( x_j = \text{False} \).
-                    </p>
-                    <p class="proof-text">
-                        2. <strong>Clause Gadgets:</strong> For each clause 
-                    </p>
-                    <div class="formula">
-                        \[ C_i = (\ell_{i1} \vee \ell_{i2} \vee \ell_{i3}) \]
+                    <div class="section-content">
+                        <p class="proof-text">
+                            To prove NP-hardness, we reduce an arbitrary instance of <strong>3-SAT</strong> to REV-GOL.
+                        </p>
+                        <p class="proof-text">
+                            Let <span class="math-term">φ</span> be a 3-SAT formula:
+                        </p>
+                        <div class="formula">
+                            \[
+                            \phi = \bigwedge_{i=1}^m (\ell_{i1} \vee \ell_{i2} \vee \ell_{i3})
+                            \]
+                        </div>
+                        <p class="proof-text">
+                            with variables <span class="math-term">x₁, x₂, ..., xₙ</span>. The reduction constructs, in polynomial time, a Game of Life configuration <span class="math-term">c_φ</span> such that:
+                        </p>
+                        <div class="formula">
+                            \[
+                            c_\phi \in \text{REV-GOL} \iff \phi \text{ is satisfiable}.
+                            \]
+                        </div>
                     </div>
-                    <p class="proof-text">
-                        build a gadget \( G_{C_i} \) in a block \( S_i \) that is reversible if and only if at least one literal in the clause is satisfied.
-                    </p>
-                    <p class="proof-text">
-                        3. <strong>Interconnection:</strong> Arrange the gadgets so that
-                    </p>
-                    <div class="formula">
-                        \[
-                        c_\phi = \left( \bigcup_{j=1}^n G_{x_j} \right) \cup \left( \bigcup_{i=1}^m G_{C_i} \right) \cup (\text{background})
-                        \]
+                </div>
+
+                <!-- Gadgets Section -->
+                <div id="gadgets" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('gadgets')">
+                        <div class="section-icon">5</div>
+                        <h3 class="section-title-text">Gadget Construction</h3>
+                        <span class="collapse-indicator">▼</span>
                     </div>
-                    <p class="proof-text">
-                        has a predecessor if and only if \( \phi \) is satisfiable.
-                    </p>
-                    <p class="proof-text">
-                        For example, consider
-                    </p>
-                    <div class="formula">
-                        \[ \phi = (x_1 \vee \neg x_2 \vee x_3) \wedge (\neg x_1 \vee x_2 \vee \neg x_3). \]
+                    <div class="section-content">
+                        <p class="proof-text">
+                            The reduction uses three types of gadgets:
+                        </p>
+                        
+                        <p class="proof-text">
+                            <strong>1. Variable Gadgets:</strong> For each variable <span class="math-term">xⱼ</span>, design a gadget <span class="math-term">G_{xⱼ}</span> in a block <span class="math-term">Rⱼ</span> with two predecessor states:
+                            <br>• <span class="math-term">P_{j,T}</span> corresponding to <span class="math-term">xⱼ = True</span>
+                            <br>• <span class="math-term">P_{j,F}</span> corresponding to <span class="math-term">xⱼ = False</span>
+                        </p>
+
+                        <p class="proof-text">
+                            <strong>2. Clause Gadgets:</strong> For each clause:
+                        </p>
+                        <div class="formula">
+                            \[ C_i = (\ell_{i1} \vee \ell_{i2} \vee \ell_{i3}) \]
+                        </div>
+                        <p class="proof-text">
+                            build a gadget <span class="math-term">G_{Cᵢ}</span> in a block <span class="math-term">Sᵢ</span> that is reversible if and only if at least one literal in the clause is satisfied.
+                        </p>
+
+                        <p class="proof-text">
+                            <strong>3. Interconnection:</strong> Arrange the gadgets so that:
+                        </p>
+                        <div class="formula">
+                            \[
+                            c_\phi = \left( \bigcup_{j=1}^n G_{x_j} \right) \cup \left( \bigcup_{i=1}^m G_{C_i} \right) \cup (\text{background})
+                            \]
+                        </div>
+                        <p class="proof-text">
+                            has a predecessor if and only if <span class="math-term">φ</span> is satisfiable.
+                        </p>
                     </div>
-                    <p class="proof-text">
-                        Gadget \( G_{x_j} \) is constructed for each \( x_j \) (for \( j=1,2,3 \)). Clause gadget \( G_{C_1} \) for 
-                    </p>
-                    <div class="formula">
-                        \[ (x_1 \vee \neg x_2 \vee x_3) \]
+                </div>
+
+                <!-- Example Section -->
+                <div id="example" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('example')">
+                        <div class="section-icon">6</div>
+                        <h3 class="section-title-text">Concrete Example</h3>
+                        <span class="collapse-indicator">▼</span>
                     </div>
-                    <p class="proof-text">
-                        is wired so that it is reversible if at least one of:
-                    </p>
-                    <div class="formula">
-                        \[
-                        x_1 \text{ is True } (P_{1,T}), \quad x_2 \text{ is False } (P_{2,F}), \quad x_3 \text{ is True } (P_{3,T})
-                        \]
+                    <div class="section-content">
+                        <p class="proof-text">
+                            Consider the 3-SAT formula:
+                        </p>
+                        <div class="formula">
+                            \[ \phi = (x_1 \vee \neg x_2 \vee x_3) \wedge (\neg x_1 \vee x_2 \vee \neg x_3) \]
+                        </div>
+                        
+                        <p class="proof-text">
+                            <strong>Clause 1:</strong> <span class="math-term">(x₁ ∨ ¬x₂ ∨ x₃)</span> is satisfied when at least one of:
+                        </p>
+                        <div class="formula">
+                            \[
+                            x_1 \text{ is True } (P_{1,T}), \quad x_2 \text{ is False } (P_{2,F}), \quad x_3 \text{ is True } (P_{3,T})
+                            \]
+                        </div>
+                        
+                        <p class="proof-text">
+                            <strong>Clause 2:</strong> <span class="math-term">(¬x₁ ∨ x₂ ∨ ¬x₃)</span> is satisfied when at least one of:
+                        </p>
+                        <div class="formula">
+                            \[
+                            x_1 \text{ is False } (P_{1,F}), \quad x_2 \text{ is True } (P_{2,T}), \quad x_3 \text{ is False } (P_{3,F})
+                            \]
+                        </div>
                     </div>
-                    <p class="proof-text">
-                        holds. Similarly, \( G_{C_2} \) for 
-                    </p>
-                    <div class="formula">
-                        \[ (\neg x_1 \vee x_2 \vee \neg x_3) \]
+                </div>
+
+                <!-- Conclusion Section -->
+                <div id="conclusion" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('conclusion')">
+                        <div class="section-icon">7</div>
+                        <h3 class="section-title-text">Conclusion & Future Work</h3>
+                        <span class="collapse-indicator">▼</span>
                     </div>
-                    <p class="proof-text">
-                        is reversible if at least one of:
-                    </p>
-                    <div class="formula">
-                        \[
-                        x_1 \text{ is False } (P_{1,F}), \quad x_2 \text{ is True } (P_{2,T}), \quad x_3 \text{ is False } (P_{3,F})
-                        \]
+                    <div class="section-content">
+                        <p class="proof-text">
+                            Thus, <span class="math-term">c_φ</span> has a predecessor if and only if <span class="math-term">φ</span> is satisfiable.
+                            Since 3-SAT is NP-complete and REV-GOL ∈ NP, it follows that <strong>REV-GOL is NP-complete</strong>.
+                        </p>
+                        
+                        <h4 style="color: white; margin-top: 2rem; margin-bottom: 1rem;">What's Next?</h4>
+                        <p class="proof-text">
+                            My goal is to create a program that can convert an arbitrary grid into a SAT problem in polynomial time and then use a SAT solver to find a suitable solution. This would allow me to, at the very least, approximate the number of predecessor states.
+                        </p>
+                        <p class="proof-text">
+                            I hope to be able to reverse an arbitrary Game of Life state back into a predecessor state that closely resembles random noise, providing insights into the computational complexity of cellular automata.
+                        </p>
+                        <p class="proof-text">
+                            All progress will be posted on my GitHub first before making its way here.
+                        </p>
+                        <a href="https://github.com/rrumana/game_of_life" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn--intro cta-btn--projects">
+                            View GitHub Repository
+                        </a>
                     </div>
-                    <p class="proof-text">
-                        holds.
-                    </p>
-                    <p class="proof-text">
-                        Thus, \( c_\phi \) has a predecessor if and only if \( \phi \) is satisfiable.
-                        Since 3-SAT is NP-complete and \( \text{REV-GOL} \in \text{NP} \), it follows that REV-GOL is NP-complete.
-                    </p>
-                    <h2 class="section-title">Conclusion</h2>
-                    <p>
-                        What can we do with this information? Where do we go next?
-                        <br/>
-                        <br/>
-                        My goal is to try to create a program that can convert an arbitrary grid into a SAT problem in polynomial time and then use a 
-                        SAT solver to find a suitable solution. This would allow me to, at the very least, approximate the number of states.
-                        I hope to be able to reverse an arbitrary game of life state back into a predecessor state that closely resembles random noise.
-                    </p>
-                    <p>
-                        All progress will be posted on my github first before making it's way here.
-                    </p>
-                      <a
-                        href="https://github.com/rrumana/game_of_life"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="cta-btn cta-btn--intro cta-btn--projects"
-                        >Github Link</a
-                      >
                 </div>
             </div>
         </section>
@@ -324,6 +384,57 @@
         </footer>
         <script>
             document.getElementById("year").textContent = new Date().getFullYear();
+            
+            // Toggle function for collapsible proof sections
+            function toggleSection(sectionId) {
+                const section = document.getElementById(sectionId);
+                const content = section.querySelector('.section-content');
+                const indicator = section.querySelector('.collapse-indicator');
+                
+                if (content.classList.contains('collapsed')) {
+                    content.classList.remove('collapsed');
+                    indicator.textContent = '▼';
+                    indicator.style.transform = 'rotate(0deg)';
+                } else {
+                    content.classList.add('collapsed');
+                    indicator.textContent = '▶';
+                    indicator.style.transform = 'rotate(-90deg)';
+                }
+            }
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('.proof-nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        // Expand the target section if it's collapsed
+                        const content = targetElement.querySelector('.section-content');
+                        if (content && content.classList.contains('collapsed')) {
+                            toggleSection(targetId);
+                        }
+                        
+                        // Smooth scroll to the target
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Initialize MathJax after content loads
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                },
+                svg: {
+                    fontCache: 'global'
+                }
+            };
         </script>
         <script src="./javascript/vanilla-tilt.min.js"></script>
         <script type="text/javascript" src="./javascript/valtilt.js"></script>

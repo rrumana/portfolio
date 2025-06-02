@@ -123,11 +123,11 @@ a:hover {
 
 /* Intro Style */
 .cta-btn--intro {
-  color: #5b86e5;
-  -webkit-text-fill-color: #5b86e5;
   border: 2px solid transparent;
   border-image: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
   border-image-slice: 1;
+  color: #5b86e5;
+  -webkit-text-fill-color: #5b86e5;
 }
 @supports (background-clip: text) or (-webkit-background-clip: text) {
   .cta-btn--intro {
@@ -724,6 +724,189 @@ section .row-reverse-mid span {
     border: 1px solid #d2d2d2;
     margin-bottom: 3.2rem;
     transform: none;
+  }
+}
+
+/* Enhanced Proof Section Styling */
+#proof {
+  padding: 4rem 0 12rem 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+#proof .proof-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+#proof .proof-nav {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+#proof .proof-nav h3 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #272341;
+}
+#proof .proof-nav ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+#proof .proof-nav li {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 5px;
+  border-left: 4px solid #5b86e5;
+}
+#proof .proof-nav a {
+  color: #272341;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+#proof .proof-nav a:hover {
+  color: #5b86e5;
+}
+#proof .proof-section {
+  background: white;
+  border-radius: 10px;
+  padding: 3rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+#proof .proof-section.definition {
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+}
+#proof .proof-section.theorem {
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+}
+#proof .proof-section.example {
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+}
+#proof .section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+#proof .section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-weight: bold;
+  color: white;
+  background: #6c757d;
+  font-size: 1.4rem;
+}
+#proof .section-title-text {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #272341;
+  margin: 0;
+}
+#proof .collapse-indicator {
+  margin-left: auto;
+  font-size: 1.5rem;
+  color: #6c757d;
+  transition: transform 0.3s ease;
+}
+#proof .section-content {
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+#proof .section-content.collapsed {
+  max-height: 0;
+}
+#proof .proof-text {
+  text-align: left;
+  margin: 1.5rem 0;
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: #495057;
+}
+#proof .formula {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  position: relative;
+}
+#proof .formula::before {
+  content: "";
+}
+#proof .definition-box {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+#proof .theorem-box {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+#proof .example-box {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+#proof .math-term {
+  background: #e9ecef;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: "Courier New", monospace;
+  font-weight: 500;
+}
+#proof .step-number {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background: #5b86e5;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+#proof .MathJax {
+  font-size: 170% !important;
+}
+#proof mjx-container {
+  font-size: 170% !important;
+}
+@media (max-width: 768px) {
+  #proof .proof-container {
+    padding: 0 1rem;
+  }
+  #proof .proof-section {
+    padding: 2rem 1.5rem;
+  }
+  #proof .proof-nav ul {
+    grid-template-columns: 1fr;
+  }
+  #proof .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #proof .section-icon {
+    margin-bottom: 1rem;
   }
 }
 
