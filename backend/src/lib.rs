@@ -1,9 +1,11 @@
 pub mod game_of_life;
 pub mod routes;
+pub mod middleware;
 
 use axum::{
     Router,
     routing::{get_service, get},
+    middleware::from_fn,
 };
 
 use std::path::PathBuf;
@@ -36,5 +38,6 @@ pub fn app(static_dir: &str, game_api: Router) -> Router {
         .nest("/api/game-of-life", game_api)
         .nest_service("/", static_service)
         .fallback(fallback_handler)
+        .layer(from_fn(middleware::log_requests))
 }
 

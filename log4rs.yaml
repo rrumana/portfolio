@@ -10,6 +10,18 @@ appenders:
     path: "logs/app.log"
     encoder:
       pattern: "{d} - {l} - {m}{n}"
+  access:
+    kind: file
+    path: "logs/access.log"
+    encoder:
+      pattern: "[{d}] {m}{n}"
+
+loggers:
+  access:
+    level: info
+    appenders:
+      - access
+    additive: false
 
 root:
   level: info
