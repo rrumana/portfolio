@@ -3,7 +3,7 @@
   height: 100vh;
   display: flex;
   align-items: center;
-  background: $background_color;
+  background: $background-color;
   font-weight: 400;
   color: $dark-blue-text;
   padding: 0rem 5.6rem;
@@ -14,12 +14,6 @@
   z-index: -1;
   line-height: 1.2;
   animation: hidden 1000ms linear forwards;
-
-  // If you want to set a background image on the intro section, uncomment these with yout custom image
-
-  /* background: url("/src/assets/[your-image].png");
-    background-position: center;
-    background-size: cover; */
 
   @include respond(tab-port) {
     justify-content: center;

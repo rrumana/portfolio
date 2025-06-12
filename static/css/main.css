@@ -528,9 +528,6 @@ section .row-reverse-mid span {
   z-index: -1;
   line-height: 1.2;
   animation: hidden 1000ms linear forwards;
-  /* background: url("/src/assets/[your-image].png");
-    background-position: center;
-    background-size: cover; */
 }
 @media (max-width: 56.25em) {
   #intro {
@@ -747,8 +744,7 @@ section .row-reverse-mid span {
 
 /* Enhanced Proof Section Styling */
 #proof {
-  padding: 4rem 0 12rem 0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 4rem 0 1rem 0;
 }
 #proof .proof-container {
   max-width: 1000px;
@@ -926,6 +922,443 @@ section .row-reverse-mid span {
   #proof .section-icon {
     margin-bottom: 1rem;
   }
+}
+
+/* Unified Section Background */
+#simulation, #proof, #implementation, #results, #lessons, #future-work {
+  background: #f8f9fa !important;
+}
+
+/* Page-specific body background override for Game of Life page */
+body {
+  background-color: #f8f9fa !important;
+}
+
+/* Simulation Section Styles */
+#simulation {
+  padding: 8rem 0;
+}
+#simulation .simulation-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+@media (max-width: 37.5em) {
+  #simulation .simulation-wrapper {
+    padding: 0 1rem;
+  }
+}
+#simulation .simulation-section {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+@media (max-width: 56.25em) {
+  #simulation .simulation-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+@media (max-width: 37.5em) {
+  #simulation .simulation-section {
+    padding: 2rem 1.5rem;
+  }
+}
+#simulation .simulation-description .simulation-text {
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: #495057;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+#simulation .simulation-description .github-link-container {
+  margin: 2rem 0 0 0;
+  text-align: left;
+}
+#simulation .simulation-interactive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#simulation .simulation-interactive #lifeCanvas {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  max-width: 100%;
+  height: auto;
+}
+#simulation .simulation-interactive #controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+#simulation .simulation-interactive #controls button {
+  background: #5b86e5;
+  color: #ffffff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#simulation .simulation-interactive #controls button:hover {
+  background: rgb(46.9789473684, 101.5210526316, 222.0210526316);
+  transform: translateY(-2px);
+}
+#simulation .simulation-interactive #controls input[type=range] {
+  width: 120px;
+}
+#simulation .simulation-interactive #controls input[type=number] {
+  width: 60px;
+  padding: 0.5rem;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  font-size: 1.4rem;
+}
+#simulation .simulation-interactive #controls label {
+  font-size: 1.4rem;
+  color: #272341;
+  font-weight: 500;
+}
+#simulation .simulation-interactive #controls #delayDisplay {
+  font-size: 1.3rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Implementation Section Styles */
+#implementation {
+  padding: 8rem 0;
+  /* Architecture Grid */
+  /* Encoding Strategy */
+  /* Features Grid */
+  /* CLI Commands */
+}
+#implementation .implementation-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+@media (max-width: 37.5em) {
+  #implementation .implementation-wrapper {
+    padding: 0 1rem;
+  }
+}
+#implementation .implementation-overview {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+#implementation .implementation-text {
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: #495057;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+#implementation .implementation-section {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 3rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+@media (max-width: 37.5em) {
+  #implementation .implementation-section {
+    padding: 2rem 1.5rem;
+  }
+}
+#implementation .implementation-subtitle {
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: #272341;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+@media (max-width: 37.5em) {
+  #implementation .implementation-subtitle {
+    font-size: 2rem;
+  }
+}
+#implementation .architecture-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+@media (max-width: 37.5em) {
+  #implementation .architecture-grid {
+    grid-template-columns: 1fr;
+  }
+}
+#implementation .architecture-component {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  border-left: 4px solid #5b86e5;
+}
+@media (max-width: 37.5em) {
+  #implementation .architecture-component {
+    padding: 1.5rem;
+  }
+}
+#implementation .architecture-component h4 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #272341;
+  margin-bottom: 1rem;
+}
+#implementation .architecture-component p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: #495057;
+  margin-bottom: 1rem;
+}
+#implementation .code-snippet {
+  background: #e9ecef;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 1.2rem;
+  color: #495057;
+  display: inline-block;
+}
+#implementation .encoding-strategy {
+  margin-top: 2rem;
+}
+#implementation .encoding-step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+@media (max-width: 37.5em) {
+  #implementation .encoding-step {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+#implementation .step-number {
+  width: 40px;
+  height: 40px;
+  background: #5b86e5;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.6rem;
+  margin-right: 2rem;
+  flex-shrink: 0;
+}
+@media (max-width: 37.5em) {
+  #implementation .step-number {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+}
+#implementation .step-content {
+  flex: 1;
+}
+#implementation .step-content h4 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #272341;
+  margin-bottom: 1rem;
+}
+#implementation .step-content p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: #495057;
+  margin-bottom: 1rem;
+}
+#implementation .features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+@media (max-width: 37.5em) {
+  #implementation .features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+#implementation .feature-item {
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+@media (max-width: 37.5em) {
+  #implementation .feature-item {
+    padding: 1.5rem;
+  }
+}
+#implementation .feature-item i {
+  font-size: 3rem;
+  color: #5b86e5;
+  margin-bottom: 1rem;
+}
+#implementation .feature-item h4 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #272341;
+  margin-bottom: 1rem;
+}
+#implementation .feature-item p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: #495057;
+}
+#implementation .cli-commands {
+  margin-top: 2rem;
+}
+#implementation .cli-command {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 37.5em) {
+  #implementation .cli-command {
+    padding: 1.5rem;
+  }
+}
+#implementation .command-syntax {
+  background: #272341;
+  color: #ffffff;
+  padding: 1rem;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+}
+@media (max-width: 37.5em) {
+  #implementation .command-syntax {
+    font-size: 1.1rem;
+  }
+}
+#implementation .cli-command p {
+  font-size: 1.4rem;
+  color: #495057;
+  margin: 0;
+}
+
+/* Results, Lessons, Future Work Sections */
+#results {
+  padding: 0 0;
+  margin-top: -4rem;
+}
+
+/* Results, Lessons, Future Work Sections */
+#lessons {
+  padding: 4rem 0;
+}
+
+#future-work {
+  padding: 4rem 0;
+  margin-top: -3rem;
+}
+
+/* Results, Lessons, Future Work Sections */
+#results .results-wrapper,
+#results .lessons-wrapper,
+#results .future-work-wrapper, #lessons .results-wrapper,
+#lessons .lessons-wrapper,
+#lessons .future-work-wrapper, #future-work .results-wrapper,
+#future-work .lessons-wrapper,
+#future-work .future-work-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+@media (max-width: 37.5em) {
+  #results .results-wrapper,
+  #results .lessons-wrapper,
+  #results .future-work-wrapper, #lessons .results-wrapper,
+  #lessons .lessons-wrapper,
+  #lessons .future-work-wrapper, #future-work .results-wrapper,
+  #future-work .lessons-wrapper,
+  #future-work .future-work-wrapper {
+    padding: 0 1rem;
+  }
+}
+#results .results-placeholder,
+#results .lessons-placeholder,
+#results .future-work-placeholder, #lessons .results-placeholder,
+#lessons .lessons-placeholder,
+#lessons .future-work-placeholder, #future-work .results-placeholder,
+#future-work .lessons-placeholder,
+#future-work .future-work-placeholder {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: #495057;
+  text-align: left;
+}
+@media (max-width: 37.5em) {
+  #results .results-placeholder,
+  #results .lessons-placeholder,
+  #results .future-work-placeholder, #lessons .results-placeholder,
+  #lessons .lessons-placeholder,
+  #lessons .future-work-placeholder, #future-work .results-placeholder,
+  #future-work .lessons-placeholder,
+  #future-work .future-work-placeholder {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Add extra spacing below Future Work section */
+#future-work {
+  padding-bottom: 16rem;
+}
+
+/* Formula styling for implementation section */
+#implementation .formula {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  position: relative;
+}
+
+#implementation .math-term {
+  background: #e9ecef;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: "Courier New", monospace;
+  font-weight: 500;
+}
+
+/* MathJax styling for implementation section */
+#implementation .MathJax {
+  font-size: 170% !important;
+}
+
+#implementation mjx-container {
+  font-size: 170% !important;
 }
 
 /*# sourceMappingURL=main.css.map */

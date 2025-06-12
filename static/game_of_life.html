@@ -83,52 +83,61 @@
         </section>
 
         <!-- Simulation Section -->
-        <section id="projects">
+        <section id="simulation">
             <div class="container">
-                <div class="project-wrapper">
-                    <h2 class="section-title dark-blue-text">Game of Life Simulation</h2>
-                    <p class="project-description">
-                        This interactive simulation allows you to visualize the Game of Life in action. You can step through 
-                        generations one at a time, or simulate multiple generations at once. The grid has a very simple glider 
-                        on it, but each cell can be toggled on or off simply by clicking it.
-                        <br/><br/>
-                        The simulation is built using WebAssembly leveraging Rust for the core logic. I probably won't add 
-                        the reversing feature into this demo because it'll be a computational nightmare. The worst case 
-                        time complexity for this problem is \( O(2^n) \) where n is the number of squares.
-                        <br/><br/> 
-                        You can find the full progress for the simulation on the github page.
-                    </p>
-                      <a
-                        href="https://github.com/rrumana/game_of_life"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="cta-btn cta-btn--intro cta-btn--projects"
-                        >Github Link</a
-                      >
-                    <p class="project-description">
-                        <br/>
-                    </p>
-                    <canvas id="lifeCanvas" width="400" height="400"></canvas>
-                    <div id="controls">
-                        <button id="stepBtn">Step Forward</button>
-                        <button id="backBtn">Step Back</button>
-                        <button id="resetBtn">Reset</button>
-                        <input type="range" id="speedRange" min="50" max="1000" value="200" />
-                        <label for="genInput">Generations:</label>
-                        <input type="number" id="genInput" min="1" max="100" value="1" />
-                        <button id="multiStepBtn">Multi-Step</button>
-                        <div id="delayDisplay">Frame Delay: 200ms</div>
-                    </div>
-                    <script type="module">
-                        // Import only the simulation initialization function.
-                        import { initGameOfLife } from "./javascript/game_of_life.js";
+                <h2 class="section-title">Game of Life Simulation</h2>
+                
+                <div class="simulation-wrapper">
+                    <div class="simulation-section">
+                        <div class="simulation-description">
+                            <p class="simulation-text">
+                                This interactive simulation allows you to visualize the Game of Life in action. You can step through
+                                generations one at a time, or simulate multiple generations at once. The grid has a very simple glider
+                                on it, but each cell can be toggled on or off simply by clicking it.
+                            </p>
+                            <p class="simulation-text">
+                                The simulation is built using WebAssembly leveraging Rust for the core logic. I probably won't add
+                                the reversing feature into this demo because it'll be a computational nightmare. The worst case
+                                time complexity for this problem is \( O(2^n) \) where n is the number of squares.
+                            </p>
+                            <p class="simulation-text">
+                                You can find the full progress for the simulation on the github page.
+                            </p>
+                            <div class="github-link-container">
+                                <a href="https://github.com/rrumana/game_of_life_reverse"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="cta-btn cta-btn--intro cta-btn--projects">
+                                    Github Link
+                                </a>
+                            </div>
+                        </div>
                         
-                        // Call initGameOfLife once the page loads.
-                        initGameOfLife().catch((error) => {
-                            console.error("Failed to initialize simulation:", error);
-                        });
-                    </script>
+                        <div class="simulation-interactive">
+                            <canvas id="lifeCanvas" width="400" height="400"></canvas>
+                            <div id="controls">
+                                <button id="stepBtn">Step Forward</button>
+                                <button id="backBtn">Step Back</button>
+                                <button id="resetBtn">Reset</button>
+                                <input type="range" id="speedRange" min="50" max="1000" value="200" />
+                                <label for="genInput">Generations:</label>
+                                <input type="number" id="genInput" min="1" max="100" value="1" />
+                                <button id="multiStepBtn">Multi-Step</button>
+                                <div id="delayDisplay">Frame Delay: 200ms</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <script type="module">
+                    // Import only the simulation initialization function.
+                    import { initGameOfLife } from "./javascript/game_of_life.js";
+                    
+                    // Call initGameOfLife once the page loads.
+                    initGameOfLife().catch((error) => {
+                        console.error("Failed to initialize simulation:", error);
+                    });
+                </script>
             </div>
         </section>
 
@@ -341,7 +350,7 @@
                 <div id="conclusion" class="proof-section">
                     <div class="section-header" onclick="toggleSection('conclusion')">
                         <div class="section-icon">7</div>
-                        <h3 class="section-title-text">Conclusion & Future Work</h3>
+                        <h3 class="section-title-text">Conclusion</h3>
                         <span class="collapse-indicator">▼</span>
                     </div>
                     <div class="section-content">
@@ -349,21 +358,220 @@
                             Thus, <span class="math-term">c_φ</span> has a predecessor if and only if <span class="math-term">φ</span> is satisfiable.
                             Since 3-SAT is NP-complete and REV-GOL ∈ NP, it follows that <strong>REV-GOL is NP-complete</strong>.
                         </p>
-                        
-                        <h4 style="color: white; margin-top: 2rem; margin-bottom: 1rem;">What's Next?</h4>
-                        <p class="proof-text">
-                            My goal is to create a program that can convert an arbitrary grid into a SAT problem in polynomial time and then use a SAT solver to find a suitable solution. This would allow me to, at the very least, approximate the number of predecessor states.
-                        </p>
-                        <p class="proof-text">
-                            I hope to be able to reverse an arbitrary Game of Life state back into a predecessor state that closely resembles random noise, providing insights into the computational complexity of cellular automata.
-                        </p>
                         <p class="proof-text">
                             All progress will be posted on my GitHub first before making its way here.
                         </p>
-                        <a href="https://github.com/rrumana/game_of_life" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn--intro cta-btn--projects">
+                        <a href="https://github.com/rrumana/game_of_life_reverse" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn--intro cta-btn--projects">
                             View GitHub Repo
                         </a>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation Section -->
+        <section id="implementation">
+            <div class="container">
+                <h2 class="section-title">Implementation: SAT-Based Reverse Solver</h2>
+                
+                <div class="implementation-wrapper">
+                    <div class="implementation-overview">
+                        <p class="implementation-text">
+                            Building on the theoretical foundation that reversing Game of Life is NP-Complete, I developed a practical
+                            implementation using Boolean Satisfiability (SAT) solving. The solver converts Game of Life reversal
+                            problems into SAT instances and leverages the CaDiCaL SAT solver to find predecessor states.
+                        </p>
+                        
+                    </div>
+
+                    <!-- Architecture Section -->
+                    <div class="implementation-section">
+                        <h3 class="implementation-subtitle">System Architecture</h3>
+                        <p class="implementation-text">
+                            The implementation is structured as a modular Rust application with the following core components:
+                        </p>
+                        
+                        <div class="architecture-grid">
+                            <div class="architecture-component">
+                                <h4>Configuration Management</h4>
+                                <p>YAML-based configuration system supporting flexible parameter tuning for grid size,
+                                generations, solver options, and output formats.</p>
+                                <code class="code-snippet">config/settings.rs</code>
+                            </div>
+                            
+                            <div class="architecture-component">
+                                <h4>Game of Life Engine</h4>
+                                <p>Core cellular automaton implementation with grid representation, rule application,
+                                and I/O operations for various boundary conditions.</p>
+                                <code class="code-snippet">game_of_life/mod.rs</code>
+                            </div>
+                            
+                            <div class="architecture-component">
+                                <h4>SAT Encoding</h4>
+                                <p>Converts Game of Life constraints into boolean satisfiability problems using hybrid
+                                encoding with primary and auxiliary variables.</p>
+                                <code class="code-snippet">sat/encoder.rs</code>
+                            </div>
+                            
+                            <div class="architecture-component">
+                                <h4>Solution Processing</h4>
+                                <p>Handles solution extraction, validation, and formatting with support for multiple
+                                output formats and evolution visualization.</p>
+                                <code class="code-snippet">reverse/solution.rs</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SAT Encoding Strategy -->
+                    <div class="implementation-section">
+                        <h3 class="implementation-subtitle">SAT Encoding Strategy</h3>
+                        <p class="implementation-text">
+                            The solver employs a hybrid encoding approach that balances constraint complexity with solving efficiency:
+                        </p>
+                        
+                        <div class="encoding-strategy">
+                            <div class="encoding-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Primary Variables</h4>
+                                    <p>Boolean variable <span class="math-term">cell(x, y, t)</span> for each cell at each time step</p>
+                                    <div class="formula">
+                                        \[ \text{Variables: } \{cell(i,j,t) \mid 0 \leq i < W, 0 \leq j < H, 0 \leq t \leq G\} \]
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="encoding-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Auxiliary Variables</h4>
+                                    <p>Helper variables for neighbor counts and state transitions to reduce constraint complexity</p>
+                                    <div class="formula">
+                                        \[ \text{Neighbor count: } n(i,j,t) = \sum_{(dx,dy) \in N} cell(i+dx, j+dy, t) \]
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="encoding-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Game of Life Constraints</h4>
+                                    <p>Conway's rules encoded as SAT clauses linking consecutive time steps</p>
+                                    <div class="formula">
+                                        \[ cell(i,j,t+1) \iff (cell(i,j,t) \land n(i,j,t) \in \{2,3\}) \lor (\neg cell(i,j,t) \land n(i,j,t) = 3) \]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Features -->
+                    <div class="implementation-section">
+                        <h3 class="implementation-subtitle">Key Features</h3>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <i class="fa fa-cogs"></i>
+                                <h4>Multiple Solution Finding</h4>
+                                <p>Discovers all valid predecessor states up to a configurable limit using iterative SAT solving</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fa fa-check-circle"></i>
+                                <h4>Solution Validation</h4>
+                                <p>Verifies found solutions by forward simulation to ensure correctness</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fa fa-chart-line"></i>
+                                <h4>Performance Analysis</h4>
+                                <p>Provides solvability estimates and encoding statistics for problem complexity assessment</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fa fa-file-export"></i>
+                                <h4>Flexible Output</h4>
+                                <p>Supports text, JSON, and visual representations with evolution path visualization</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CLI Interface -->
+                    <div class="implementation-section">
+                        <h3 class="implementation-subtitle">Command Line Interface</h3>
+                        <p class="implementation-text">
+                            The solver provides a comprehensive CLI with multiple commands for different use cases:
+                        </p>
+                        
+                        <div class="cli-commands">
+                            <div class="cli-command">
+                                <code class="command-syntax">cargo run -- solve --target input/glider.txt --generations 3</code>
+                                <p>Find predecessor states for a given target configuration</p>
+                            </div>
+                            
+                            <div class="cli-command">
+                                <code class="command-syntax">cargo run -- analyze --target input/pattern.txt</code>
+                                <p>Analyze target state solvability and complexity estimates</p>
+                            </div>
+                            
+                            <div class="cli-command">
+                                <code class="command-syntax">cargo run -- validate --predecessor p.txt --target t.txt</code>
+                                <p>Validate that a predecessor correctly evolves to the target</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results">
+            <div class="container">
+                <h2 class="section-title">Results</h2>
+                <div class="results-wrapper">
+                    <p class="results-placeholder">
+                        The project successfully demonstrates the feasibility of using SAT solving to 
+                        reverse-engineer Conway's Game of Life states. By encoding cellular automaton rules and constraints into 
+                        boolean logic clauses, the system can efficiently discover predecessor states that would evolve into a 
+                        given target configuration. Performance benchmarks reveal impressive scalability for practical use cases: 
+                        a 300-cell grid can be traced back 4 generations in under a second, while more ambitious reverse-engineering 
+                        tasks like 6 generations require 8 minutes and 10 generations complete in approximately 2 hours. Even 
+                        computationally intensive 20-generation lookbacks finish within 24 hours, showcasing the SAT solver's 
+                        capability to navigate the exponentially growing solution space of cellular automaton prehistory.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lessons Learned Section -->
+        <section id="lessons">
+            <div class="container">
+                <h2 class="section-title">Key Lessons Learned</h2>
+                <div class="lessons-wrapper">
+                    <p class="lessons-placeholder">
+                        The most significant challenge encountered was SAT encoding optimization, where initial 
+                        implementations generated an excessive number of clauses that severely degraded solver performance. This 
+                        experience highlighted how the formulation of constraints can dramatically impact computational efficiency, 
+                        even when the underlying logical relationships remain equivalent. Through careful pruning I was able
+                        to reduce the number of clauses by a factor of 10 without compromising the encoding accuraccy. When it 
+                        comes to problems with exponential runtime complexity pre-compute optimization becomes increasingly important.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Future Work Section -->
+        <section id="future-work">
+            <div class="container">
+                <h2 class="section-title">Future Work</h2>
+                <div class="future-work-wrapper">
+                    <p class="future-work-placeholder">
+                        The next phase will focus on leveraging parallelization to further enhance performance, specifically 
+                        investigating multithreaded SAT solvers with robust Rust bindings for seamless integration into the existing 
+                        codebase. Additionally, optimizing auxiliary algorithms and data structures presents opportunities for 
+                        incremental improvements, though these optimizations will likely yield diminishing returns given that 
+                        core SAT solving dominates the computational workload for large-scale problems. While I do not enticipate much
+                        more active development, I will post any breakthroughs here.
+                    </p>
                 </div>
             </div>
         </section>
