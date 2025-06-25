@@ -5,3 +5,9 @@ members = [
     "backend",
     "wasm_game_of_life",
 ]
+
+[profile.release]
+opt-level = "s"
+lto = true
+debug = false
+panic = "abort"

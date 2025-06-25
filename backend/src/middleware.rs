@@ -3,15 +3,16 @@ use axum::{
     http::{Request, HeaderMap},
     middleware::Next,
     response::IntoResponse,
+    body::Body,
 };
 use std::net::SocketAddr;
 use std::time::Instant;
 
 /// HTTP request logging middleware that captures comprehensive request/response data
-pub async fn log_requests<B>(
+pub async fn log_requests(
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
-    request: Request<B>,
-    next: Next<B>,
+    request: Request<Body>,
+    next: Next,
 ) -> impl IntoResponse {
     let start = Instant::now();
     

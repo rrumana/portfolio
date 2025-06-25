@@ -28,10 +28,7 @@ async fn fallback_handler(uri: Uri) -> impl IntoResponse {
 /// - `static_dir`: the directory for static assets.
 /// - `game_api`: the router for your Game of Life API endpoints.
 pub fn app(static_dir: &str, game_api: Router) -> Router {
-    let static_service = get_service(ServeDir::new(static_dir))
-        .handle_error(|error: std::io::Error| async move {
-            (StatusCode::INTERNAL_SERVER_ERROR, format!("Unhandled internal error: {}", error))
-        });
+    let static_service = get_service(ServeDir::new(static_dir));
 
     Router::new()
         .route("/sitemap.xml", get(routes::sitemap))

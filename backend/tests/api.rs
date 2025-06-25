@@ -1,6 +1,6 @@
 // backend/tests/api.rs
 use axum::{
-    body::Body,
+    body::{Body, to_bytes},
     http::{Request, StatusCode},
 };
 use backend::game_of_life::{GameOfLife, HEIGHT, WIDTH};
@@ -9,7 +9,6 @@ use std::{
     sync::{Arc, Mutex},
 };
 use tower::util::ServiceExt; // Bring oneshot into scope
-use hyper::body;
 use serde_json::Value;
 
 #[tokio::test]
@@ -36,7 +35,7 @@ async fn test_get_state_endpoint() {
 
     assert_eq!(response.status(), StatusCode::OK);
 
-    let body_bytes = body::to_bytes(response.into_body()).await.unwrap();
+    let body_bytes = to_bytes(response.into_body(), usize::MAX).await.unwrap();
     let json: Value = serde_json::from_slice(&body_bytes).unwrap();
     assert_eq!(json["width"], WIDTH);
     assert_eq!(json["height"], HEIGHT);
