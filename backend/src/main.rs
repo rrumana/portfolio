@@ -43,7 +43,7 @@ async fn main() {
     let api = game_api().layer(axum::extract::Extension(game_state));
     let app = app("static", api);
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 8086));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 8085));
     println!("Serving portfolio at http://{}", addr);
     
     let listener = TcpListener::bind(&addr).await.unwrap();

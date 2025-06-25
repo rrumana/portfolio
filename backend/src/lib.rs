@@ -15,6 +15,7 @@ use axum::response::{Html, IntoResponse};
 use tokio::fs::read_to_string;
 
 /// Fallback handler for 404 errors.
+#[allow(dead_code)]
 async fn fallback_handler(uri: Uri) -> impl IntoResponse {
     let path = PathBuf::from("static/404.html");
     let html = match read_to_string(path).await {
@@ -33,8 +34,7 @@ pub fn app(static_dir: &str, game_api: Router) -> Router {
     Router::new()
         .route("/sitemap.xml", get(routes::sitemap))
         .nest("/api/game-of-life", game_api)
-        .nest_service("/", static_service)
-        .fallback(fallback_handler)
+        .fallback_service(static_service)
         .layer(from_fn(middleware::log_requests))
 }
 
