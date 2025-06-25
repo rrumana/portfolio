@@ -925,7 +925,7 @@ section .row-reverse-mid span {
 }
 
 /* Unified Section Background */
-#simulation, #proof, #implementation, #results, #lessons, #future-work {
+#simulation, #optimizations, #proof, #implementation, #crates, #chaos-emergence, #results-analysis {
   background: #f8f9fa !important;
 }
 
@@ -936,7 +936,8 @@ body {
 
 /* Simulation Section Styles */
 #simulation {
-  padding: 8rem 0;
+  padding: 8rem 0 4rem 0; /* Reduce bottom padding to match other sections */
+  /* Enhanced Controls Styling */
 }
 #simulation .simulation-wrapper {
   max-width: 1200px;
@@ -1033,6 +1034,761 @@ body {
   font-size: 1.3rem;
   color: #6c757d;
   font-weight: 500;
+}
+#simulation #enhanced-controls {
+  margin-top: 2rem;
+  /* Responsive layout for enhanced controls */
+}
+#simulation #enhanced-controls .control-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+#simulation #enhanced-controls .control-section:last-child {
+  margin-bottom: 0;
+}
+#simulation #enhanced-controls .control-section h4 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #272341;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #5b86e5;
+  padding-bottom: 0.5rem;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid #5b86e5;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection:last-child {
+  margin-bottom: 0;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection h5 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #272341;
+  margin-bottom: 1rem;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .text-input-row {
+  margin-bottom: 1rem;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .text-input-row input[type=text] {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  font-size: 1.4rem;
+  transition: border-color 0.3s ease;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .text-input-row input[type=text]:focus {
+  outline: none;
+  border-color: #5b86e5;
+  box-shadow: 0 0 0 2px rgba(91, 134, 229, 0.1);
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .buffer-control-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .buffer-control-row label {
+  font-size: 1.4rem;
+  color: #272341;
+  font-weight: 500;
+  white-space: nowrap;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .buffer-control-row input[type=range] {
+  flex: 1;
+  min-width: 120px;
+  max-width: 200px;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .buffer-control-row span {
+  font-size: 1.3rem;
+  color: #6c757d;
+  font-weight: 500;
+  background: #e9ecef;
+  padding: 0.3rem 0.8rem;
+  border-radius: 3px;
+  min-width: 20px;
+  text-align: center;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .buffer-control-row button {
+  background: #5b86e5;
+  color: #ffffff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .buffer-control-row button:hover {
+  background: rgb(46.9789473684, 101.5210526316, 222.0210526316);
+  transform: translateY(-2px);
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .file-control-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .file-control-row input[type=file] {
+  flex: 1;
+  padding: 0.8rem;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  font-size: 1.4rem;
+  background: #ffffff;
+  cursor: pointer;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .file-control-row input[type=file]:focus {
+  outline: none;
+  border-color: #5b86e5;
+  box-shadow: 0 0 0 2px rgba(91, 134, 229, 0.1);
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .file-control-row button {
+  background: #5b86e5;
+  color: #ffffff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection .file-control-row button:hover {
+  background: rgb(46.9789473684, 101.5210526316, 222.0210526316);
+  transform: translateY(-2px);
+}
+#simulation #enhanced-controls .control-section .pattern-subsection #fileName {
+  font-size: 1.2rem;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: #e9ecef;
+  border-radius: 3px;
+  text-align: center;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection > button {
+  background: #5b86e5;
+  color: #ffffff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+#simulation #enhanced-controls .control-section .pattern-subsection > button:hover {
+  background: rgb(46.9789473684, 101.5210526316, 222.0210526316);
+  transform: translateY(-2px);
+}
+#simulation #enhanced-controls .control-section #versionDisplay {
+  font-size: 1.4rem;
+  color: #272341;
+  font-weight: 500;
+  background: #e9ecef;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+}
+#simulation #enhanced-controls .control-section .input-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+#simulation #enhanced-controls .control-section .input-group label {
+  font-size: 1.4rem;
+  color: #272341;
+  font-weight: 500;
+  margin-right: 0;
+}
+#simulation #enhanced-controls .control-section .input-group input[type=range] {
+  flex: 1;
+  min-width: 120px;
+}
+#simulation #enhanced-controls .control-section .input-group input[type=number] {
+  width: 80px;
+  padding: 0.5rem;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  font-size: 1.4rem;
+}
+#simulation #enhanced-controls .control-section .input-group #delayDisplay {
+  font-size: 1.3rem;
+  color: #6c757d;
+  font-weight: 500;
+  background: #e9ecef;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+#simulation #enhanced-controls .control-section button {
+  background: #5b86e5;
+  color: #ffffff;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0.5rem 0.5rem 0.5rem 0;
+}
+#simulation #enhanced-controls .control-section button:hover {
+  background: rgb(46.9789473684, 101.5210526316, 222.0210526316);
+  transform: translateY(-2px);
+}
+@media (max-width: 37.5em) {
+  #simulation #enhanced-controls {
+    padding: 1.5rem;
+  }
+  #simulation #enhanced-controls .control-section {
+    padding: 1rem;
+  }
+  #simulation #enhanced-controls .control-section input[type=text],
+  #simulation #enhanced-controls .control-section input[type=file] {
+    font-size: 1.2rem;
+  }
+  #simulation #enhanced-controls .control-section button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1.2rem;
+    width: 100%;
+    margin: 0.3rem 0;
+  }
+  #simulation #enhanced-controls .control-section input[type=range] {
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+}
+
+/* Optimizations Section Styles */
+#optimizations {
+  padding: 4rem 0 1rem 0;
+  /* Navigation styling similar to proof section */
+  /* Proof section styling for subsections */
+}
+#optimizations .proof-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+#optimizations .implementation-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+@media (max-width: 37.5em) {
+  #optimizations .implementation-wrapper {
+    padding: 0 1rem;
+  }
+}
+#optimizations .implementation-section {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 3rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+@media (max-width: 37.5em) {
+  #optimizations .implementation-section {
+    padding: 2rem 1.5rem;
+  }
+}
+#optimizations .implementation-text {
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: #495057;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+#optimizations .implementation-subtitle {
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: #272341;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+@media (max-width: 37.5em) {
+  #optimizations .implementation-subtitle {
+    font-size: 2rem;
+  }
+}
+#optimizations .proof-nav {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem; /* Reduce to match proof section subsection spacing */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+#optimizations .proof-nav h3 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #272341;
+}
+#optimizations .proof-nav ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+#optimizations .proof-nav li {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 5px;
+  border-left: 4px solid #5b86e5;
+}
+#optimizations .proof-nav a {
+  color: #272341;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+#optimizations .proof-nav a:hover {
+  color: #5b86e5;
+}
+#optimizations .proof-section {
+  background: white;
+  border-radius: 10px;
+  padding: 3rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+#optimizations .section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+#optimizations .section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-weight: bold;
+  color: white;
+  background: #6c757d;
+  font-size: 1.4rem;
+}
+#optimizations .section-title-text {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #272341;
+  margin: 0;
+}
+#optimizations .collapse-indicator {
+  margin-left: auto;
+  font-size: 1.4rem;
+  color: #5b86e5;
+  font-weight: bold;
+}
+#optimizations .section-content {
+  display: block;
+}
+
+/* Crates Section Styles */
+#crates {
+  padding: 2rem 0;
+  /* Navigation styling similar to proof section */
+  /* Proof section styling for subsections */
+  /* CLI Commands styling */
+}
+#crates .proof-content {
+  padding-top: 3rem; /* Add space between header and content like in other sections */
+}
+#crates .implementation-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+@media (max-width: 37.5em) {
+  #crates .implementation-wrapper {
+    padding: 0 1rem;
+  }
+}
+#crates .implementation-text {
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: #495057;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+#crates .proof-nav {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+#crates .proof-nav h3 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #272341;
+}
+#crates .proof-nav ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+#crates .proof-nav li {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 5px;
+  border-left: 4px solid #5b86e5;
+}
+#crates .proof-nav a {
+  color: #272341;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+#crates .proof-nav a:hover {
+  color: #5b86e5;
+}
+#crates .proof-section {
+  background: white;
+  border-radius: 10px;
+  padding: 3rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+#crates .section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+#crates .section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-weight: bold;
+  color: white;
+  background: #6c757d;
+  font-size: 1.4rem;
+}
+#crates .section-title-text {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #272341;
+  margin: 0;
+}
+#crates .collapse-indicator {
+  margin-left: auto;
+  font-size: 1.4rem;
+  color: #5b86e5;
+  font-weight: bold;
+}
+#crates .section-content {
+  display: block;
+}
+#crates .cli-commands {
+  margin-top: 2rem;
+}
+#crates .cli-command {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #5b86e5;
+}
+@media (max-width: 37.5em) {
+  #crates .cli-command {
+    padding: 1rem;
+  }
+}
+#crates .command-syntax {
+  background: #272341;
+  color: #ffffff;
+  padding: 1rem;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+}
+@media (max-width: 37.5em) {
+  #crates .command-syntax {
+    font-size: 1.1rem;
+  }
+}
+#crates .cli-command p {
+  font-size: 1.4rem;
+  color: #495057;
+  margin: 0;
+}
+
+/* Chaos Emergence Section Styles */
+#chaos-emergence {
+  padding: 2rem 0;
+  /* Navigation styling similar to proof section */
+  /* Proof section styling for subsections */
+  /* CLI Commands styling */
+}
+#chaos-emergence .proof-content {
+  padding-top: 3rem; /* Add space between header and content like in other sections */
+}
+#chaos-emergence .implementation-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+@media (max-width: 37.5em) {
+  #chaos-emergence .implementation-wrapper {
+    padding: 0 1rem;
+  }
+}
+#chaos-emergence .implementation-text {
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: #495057;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+#chaos-emergence .proof-nav {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+#chaos-emergence .proof-nav h3 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #272341;
+}
+#chaos-emergence .proof-nav ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+#chaos-emergence .proof-nav li {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 5px;
+  border-left: 4px solid #5b86e5;
+}
+#chaos-emergence .proof-nav a {
+  color: #272341;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+#chaos-emergence .proof-nav a:hover {
+  color: #5b86e5;
+}
+#chaos-emergence .proof-section {
+  background: white;
+  border-radius: 10px;
+  padding: 3rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+#chaos-emergence .section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+#chaos-emergence .section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-weight: bold;
+  color: white;
+  background: #6c757d;
+  font-size: 1.4rem;
+}
+#chaos-emergence .section-title-text {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #272341;
+  margin: 0;
+}
+#chaos-emergence .collapse-indicator {
+  margin-left: auto;
+  font-size: 1.4rem;
+  color: #5b86e5;
+  font-weight: bold;
+}
+#chaos-emergence .section-content {
+  display: block;
+}
+#chaos-emergence .cli-commands {
+  margin-top: 2rem;
+}
+#chaos-emergence .cli-command {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #5b86e5;
+}
+@media (max-width: 37.5em) {
+  #chaos-emergence .cli-command {
+    padding: 1rem;
+  }
+}
+#chaos-emergence .command-syntax {
+  background: #272341;
+  color: #ffffff;
+  padding: 1rem;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+}
+@media (max-width: 37.5em) {
+  #chaos-emergence .command-syntax {
+    font-size: 1.1rem;
+  }
+}
+#chaos-emergence .cli-command p {
+  font-size: 1.4rem;
+  color: #495057;
+  margin: 0;
+}
+#chaos-emergence .code-snippet {
+  background: #e9ecef;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 1.2rem;
+  color: #495057;
+  display: inline-block;
+}
+
+/* Results and Analysis Section Styles */
+#results-analysis {
+  padding: 2rem 0;
+  /* Navigation styling similar to proof section */
+  /* Proof section styling for subsections */
+}
+#results-analysis .proof-content {
+  padding-top: 3rem; /* Add space between header and content like in other sections */
+}
+#results-analysis .implementation-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+@media (max-width: 37.5em) {
+  #results-analysis .implementation-wrapper {
+    padding: 0 1rem;
+  }
+}
+#results-analysis .implementation-text {
+  font-size: 1.6rem;
+  line-height: 1.8;
+  color: #495057;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+#results-analysis .proof-nav {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+#results-analysis .proof-nav h3 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #272341;
+}
+#results-analysis .proof-nav ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+#results-analysis .proof-nav li {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 5px;
+  border-left: 4px solid #5b86e5;
+}
+#results-analysis .proof-nav a {
+  color: #272341;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+#results-analysis .proof-nav a:hover {
+  color: #5b86e5;
+}
+#results-analysis .proof-section {
+  background: white;
+  border-radius: 10px;
+  padding: 3rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+}
+#results-analysis .section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+#results-analysis .section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-weight: bold;
+  color: white;
+  background: #6c757d;
+  font-size: 1.4rem;
+}
+#results-analysis .section-title-text {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #272341;
+  margin: 0;
+}
+#results-analysis .collapse-indicator {
+  margin-left: auto;
+  font-size: 1.4rem;
+  color: #5b86e5;
+  font-weight: bold;
+}
+#results-analysis .section-content {
+  display: block;
 }
 
 /* Implementation Section Styles */
@@ -1359,6 +2115,57 @@ body {
 
 #implementation mjx-container {
   font-size: 170% !important;
+}
+
+/* Simple proof toggle button styling */
+.proof-toggle-btn {
+  background: #5b86e5;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+.proof-toggle-btn:hover {
+  background: rgb(46.9789473684, 101.5210526316, 222.0210526316);
+  transform: translateY(-1px);
+}
+
+/* Spacing fixes for collapsible sections */
+#results-analysis {
+  padding: 2rem 0;
+  margin-bottom: 16rem; /* Add extra space before Contact section to prevent clipping */
+}
+#results-analysis .proof-content {
+  margin-bottom: 0; /* Ensure content doesn't add extra margin */
+}
+
+/* Ensure consistent spacing for all collapsible sections */
+#optimizations, #proof, #implementation, #crates, #chaos-emergence {
+  padding: 2rem 0;
+  margin-bottom: 0; /* Remove any extra margin that might cause inconsistent spacing */
+}
+
+/* Fix spacing between Optimizations and Proof sections */
+#optimizations {
+  padding-bottom: 1rem !important; /* Reduce bottom padding to match proof */
+}
+
+/* Fix spacing between Proof and Implementation sections */
+#proof {
+  padding-bottom: 1rem !important; /* Reduce bottom padding */
+}
+
+#implementation {
+  padding-top: 1rem !important; /* Reduce top padding */
+  margin-bottom: 0 !important; /* Remove any extra margin */
+}
+
+#chaos-emergence {
+  margin-top: 0 !important; /* Remove any extra margin */
 }
 
 /*# sourceMappingURL=main.css.map */
