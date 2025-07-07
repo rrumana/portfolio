@@ -6,6 +6,49 @@
     max-width: 1000px;
     margin: 0 auto;
     padding: 0 2rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    @include respond(phone) {
+      padding: 0 1rem;
+    }
+  }
+
+  .proof-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.8;
+  }
+
+  .formula {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    
+    @include respond(phone) {
+      padding: 1rem;
+      margin: 1.5rem 0;
+    }
+  }
+
+  .MathJax {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+  }
+
+  mjx-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    display: block;
   }
 
   .proof-nav {
@@ -15,10 +58,18 @@
     margin-bottom: 3rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
+    @include respond(phone) {
+      padding: 1.5rem;
+    }
+
     h3 {
       font-size: 2rem;
       margin-bottom: 1.5rem;
       color: #272341;
+
+      @include respond(phone) {
+        font-size: 1.8rem;
+      }
     }
 
     ul {
@@ -26,6 +77,10 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
+
+      @include respond(phone) {
+        grid-template-columns: 1fr;
+      }
     }
 
     li {
@@ -40,6 +95,12 @@
       text-decoration: none;
       font-weight: 500;
       font-size: 1.4rem;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+
+      @include respond(phone) {
+        font-size: 1.3rem;
+      }
 
       &:hover {
         color: #5b86e5;
@@ -54,6 +115,15 @@
     margin-bottom: 2rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     border: 1px solid #e9ecef;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    @include respond(phone) {
+      padding: 2rem 1.5rem;
+    }
 
     &.definition {
       box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
@@ -119,6 +189,14 @@
     font-size: 1.6rem;
     line-height: 1.8;
     color: #495057;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+
+    @include respond(phone) {
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
   }
 
   .formula {
@@ -129,6 +207,21 @@
     border-radius: 8px;
     border: 1px solid #dee2e6;
     position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+
+    @include respond(phone) {
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 0.9em;
+    }
+
+    /* Ensure MathJax content can scroll */
+    .MathJax, .MathJax_Display {
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+    }
 
     &::before {
       content: "";
@@ -162,6 +255,9 @@
   .math-term {
     background: #e9ecef;
     padding: 0.2rem 0.4rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
     border-radius: 3px;
     font-family: 'Courier New', monospace;
     font-weight: 500;

@@ -1,0 +1,1348 @@
+/* ===================================
+   Game of Life - Consolidated Styles
+   =================================== */
+
+/* Base Section Styles - Equal spacing for all sections */
+#simulation, #optimizations, #proof, #implementation, #crates, #chaos-emergence, #results-analysis {
+  background: #f8f9fa !important;
+  padding: 2rem 0;
+  
+  @include respond(phone) {
+    padding: 1.5rem 0;
+  }
+}
+
+/* Simulation Section Styles */
+#simulation {
+  padding: 8rem 0 4rem 0; /* Reduce bottom padding to match other sections */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+
+  .simulation-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    @include respond(phone) {
+      padding: 0 1rem;
+    }
+  }
+}
+
+#results {
+  padding: 0 0;
+  margin-top: -4rem;
+}
+
+#lessons {
+  padding: 4rem 0;
+}
+
+#future-work {
+  padding: 4rem 0;
+  margin-top: -3rem;
+  padding-bottom: 16rem;
+}
+
+#results-analysis {
+  margin-bottom: 16rem;
+  
+  .proof-content {
+    margin-bottom: 0;
+  }
+}
+
+/* Page-specific body background */
+body {
+  background-color: #f8f9fa !important;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Section Title Styles */
+.section-title {
+  font-size: 4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 1rem;
+  
+  @include respond(tab-land) {
+    font-size: 3.5rem;
+    margin-bottom: 0.875rem;
+  }
+  
+  @include respond(tab-port) {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  @include respond(phone) {
+    font-size: 2.5rem;
+    margin-bottom: 0.625rem;
+  }
+  
+  @include respond(phone-xs) {
+    font-size: 2rem;
+  }
+}
+
+/* Common Container Styles */
+.simulation-wrapper,
+.implementation-wrapper,
+.proof-container,
+.results-wrapper,
+.lessons-wrapper,
+.future-work-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  
+  @include respond(phone) {
+    padding: 0 1rem;
+  }
+}
+
+.proof-container {
+  max-width: 1000px;
+}
+
+.results-wrapper,
+.lessons-wrapper,
+.future-work-wrapper {
+  max-width: 1000px;
+}
+
+/* Common Section Box Styles */
+.simulation-section,
+.implementation-section,
+.proof-section,
+.results-placeholder,
+.lessons-placeholder,
+.future-work-placeholder {
+  background: $white-color;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  width: 100%;
+  box-sizing: border-box;
+  
+  @include respond(phone) {
+    padding: 1.5rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  h3 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+    
+    @include respond(phone) {
+      font-size: 2rem;
+    }
+  }
+}
+
+.proof-section {
+  margin-bottom: 2rem;
+  overflow: hidden;
+  
+  &.definition {
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+  }
+  
+  &.theorem {
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+  }
+  
+  &.example {
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+  }
+}
+
+/* Common Text Styles */
+.implementation-text,
+.proof-text {
+  font-size: $default-font-size;
+  line-height: 1.8;
+  color: #495057;
+  margin-bottom: 2rem;
+  text-align: left;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: none;
+  
+  @include respond(tab-port-sm) {
+    font-size: 1.5rem;
+    line-height: 1.7;
+  }
+  
+  @include respond(phone) {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  
+  @include respond(phone-xs) {
+    font-size: 1.3rem;
+    line-height: 1.5;
+  }
+}
+
+/* Simulation text maintains consistent size */
+.simulation-text {
+  font-size: $default-font-size;
+  line-height: 1.8;
+  color: #495057;
+  margin-bottom: 2rem;
+  text-align: left;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: none;
+}
+
+.proof-text {
+  font-size: 1.6rem;
+  margin: 1.5rem 0;
+}
+
+/* Common Navigation Styles */
+.proof-nav {
+  background: white;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  @include respond(phone) {
+    padding: 1.5rem;
+  }
+  
+  h3 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #272341;
+    
+    @include respond(phone) {
+      font-size: 1.8rem;
+    }
+  }
+  
+  ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    
+    @include respond(phone) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  li {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 5px;
+    border-left: 4px solid #5b86e5;
+  }
+  
+  a {
+    color: #272341;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.4rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    
+    @include respond(phone) {
+      font-size: 1.3rem;
+    }
+    
+    &:hover {
+      color: #5b86e5;
+    }
+  }
+}
+
+#proof .proof-nav {
+  margin-bottom: 3rem;
+}
+
+/* Common Section Header Styles */
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  padding: 0;
+  cursor: pointer;
+  flex-wrap: nowrap;
+}
+
+.section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-weight: bold;
+  color: white;
+  background: #6c757d;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  
+  @include respond(phone) {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+    margin-right: 0.8rem;
+  }
+  
+  @include respond(phone-xs) {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+    margin-right: 0.6rem;
+  }
+}
+
+.section-title-text {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #272341;
+  margin: 0;
+  flex: 1;
+  
+  @include respond(tab-port) {
+    font-size: 2rem;
+  }
+  
+  @include respond(phone) {
+    font-size: 1.8rem;
+  }
+  
+  @include respond(phone-xs) {
+    font-size: 1.6rem;
+  }
+}
+
+.collapse-indicator {
+  margin-left: auto;
+  font-size: 1.4rem;
+  color: #5b86e5;
+  font-weight: bold;
+  flex-shrink: 0;
+  
+  @include respond(phone) {
+    font-size: 1.2rem;
+    margin-left: 0.5rem;
+  }
+  
+  @include respond(phone-xs) {
+    font-size: 1rem;
+  }
+}
+
+#proof .collapse-indicator {
+  font-size: 1.5rem;
+  color: #6c757d;
+  transition: transform 0.3s ease;
+}
+
+.section-content {
+  display: block;
+  
+  &.collapsed {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+}
+
+#proof .section-content {
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+/* Common Subtitle Styles */
+.implementation-subtitle {
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: $dark-blue-text;
+  margin-bottom: 2rem;
+  text-align: center;
+  
+  @include respond(phone) {
+    font-size: 2rem;
+  }
+}
+
+/* Simulation Section Specific */
+.simulation-section {
+  background: $white-color;
+  border-radius: 10px;
+  padding: 3rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+  overflow: hidden; /* Prevent content from overflowing the container */
+  width: 100%;
+  box-sizing: border-box;
+
+  @include respond(tab-land) {
+    gap: 2rem;
+    padding: 2.5rem;
+  }
+
+  @include respond(tab-port) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @include respond(tab-port-sm) {
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+
+  @include respond(phone) {
+    padding: 1.5rem 1rem;
+    gap: 1.5rem;
+    min-width: 0; /* Allow grid items to shrink below their content size */
+  }
+}
+
+.simulation-description {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  min-width: 0; /* Allow flex/grid item to shrink */
+  width: 100%;
+  box-sizing: border-box;
+
+  .simulation-text {
+    font-size: $default-font-size;
+    line-height: 1.8;
+    color: #495057;
+    margin-bottom: 2rem;
+    text-align: left;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    width: 100%;
+    box-sizing: border-box;
+
+    @include respond(tab-port-sm) {
+      font-size: 1.5rem;
+      line-height: 1.7;
+    }
+
+    @include respond(phone) {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    @include respond(phone-xs) {
+      font-size: 1.3rem;
+      line-height: 1.5;
+    }
+  }
+
+  .github-link-container {
+    margin: 2rem 0 0 0;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+
+    @include respond(phone) {
+      margin: 1.5rem 0 0 0;
+      text-align: center;
+    }
+  }
+}
+
+.simulation-interactive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0 1rem;
+
+  @include respond(phone) {
+    padding: 0 0.5rem;
+  }
+  
+  #lifeCanvas {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    
+    @include respond(tab-land) {
+      max-width: 500px;
+    }
+    
+    @include respond(tab-port) {
+      max-width: 450px;
+    }
+    
+    @include respond(tab-port-sm) {
+      max-width: 400px;
+    }
+    
+    @include respond(phone) {
+      max-width: 320px;
+      margin-bottom: 1.5rem;
+    }
+    
+    @include respond(phone-xs) {
+      max-width: 280px;
+    }
+  }
+}
+
+/* Controls Styling */
+#controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    background: $secondary-color;
+    color: $white-color;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: darken($secondary-color, 10%);
+      transform: translateY(-2px);
+    }
+  }
+
+  input[type="range"] {
+    width: 120px;
+  }
+
+  input[type="number"] {
+    width: 60px;
+    padding: 0.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    font-size: 1.4rem;
+  }
+
+  label {
+    font-size: 1.4rem;
+    color: $dark-blue-text;
+    font-weight: 500;
+  }
+
+  #delayDisplay {
+    font-size: 1.3rem;
+    color: #6c757d;
+    font-weight: 500;
+  }
+}
+
+/* Enhanced Controls Section */
+#enhanced-controls {
+  margin-top: 2rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  padding: 0 2rem;
+  box-sizing: border-box;
+  
+  @include respond(phone) {
+    padding: 0 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .control-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: $white-color;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    
+    @include respond(phone) {
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    h4 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: $dark-blue-text;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid $secondary-color;
+      padding-bottom: 0.5rem;
+    }
+    
+    button {
+      background: $secondary-color;
+      color: $white-color;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 5px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 0.5rem 0.5rem 0.5rem 0;
+      
+      &:hover {
+        background: darken($secondary-color, 10%);
+        transform: translateY(-2px);
+      }
+      
+      @include respond(phone) {
+        padding: 0.6rem 1.2rem;
+        font-size: 1.2rem;
+        width: 100%;
+        margin: 0.3rem 0;
+      }
+    }
+    
+    input[type="range"] {
+      width: 100%;
+      margin: 0.5rem 0;
+    }
+  }
+  
+  #versionDisplay {
+    font-size: 1.4rem;
+    color: $dark-blue-text;
+    font-weight: 500;
+    background: #e9ecef;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    
+    label {
+      font-size: 1.4rem;
+      color: $dark-blue-text;
+      font-weight: 500;
+      margin-right: 0;
+    }
+    
+    input[type="range"] {
+      flex: 1;
+      min-width: 120px;
+    }
+    
+    input[type="number"] {
+      width: 80px;
+      padding: 0.5rem;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      font-size: 1.4rem;
+    }
+    
+    #delayDisplay {
+      font-size: 1.3rem;
+      color: #6c757d;
+      font-weight: 500;
+      background: #e9ecef;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+  }
+}
+
+/* Pattern Subsections */
+.pattern-subsection {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid $secondary-color;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  h5 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: $dark-blue-text;
+    margin-bottom: 1rem;
+  }
+  
+  .text-input-row {
+    margin-bottom: 1rem;
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      font-size: 1.4rem;
+      transition: border-color 0.3s ease;
+      
+      &:focus {
+        outline: none;
+        border-color: $secondary-color;
+        box-shadow: 0 0 0 2px rgba(91, 134, 229, 0.1);
+      }
+    }
+  }
+  
+  .buffer-control-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    
+    label {
+      font-size: 1.4rem;
+      color: $dark-blue-text;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    
+    input[type="range"] {
+      flex: 1;
+      min-width: 120px;
+      max-width: 200px;
+    }
+    
+    span {
+      font-size: 1.3rem;
+      color: #6c757d;
+      font-weight: 500;
+      background: #e9ecef;
+      padding: 0.3rem 0.8rem;
+      border-radius: 3px;
+      min-width: 20px;
+      text-align: center;
+    }
+    
+    button {
+      background: $secondary-color;
+      color: $white-color;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 5px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      
+      &:hover {
+        background: darken($secondary-color, 10%);
+        transform: translateY(-2px);
+      }
+    }
+  }
+  
+  .file-control-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    
+    input[type="file"] {
+      flex: 1;
+      padding: 0.8rem;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      font-size: 1.4rem;
+      background: $white-color;
+      cursor: pointer;
+      
+      &:focus {
+        outline: none;
+        border-color: $secondary-color;
+        box-shadow: 0 0 0 2px rgba(91, 134, 229, 0.1);
+      }
+    }
+    
+    button {
+      background: $secondary-color;
+      color: $white-color;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 5px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      
+      &:hover {
+        background: darken($secondary-color, 10%);
+        transform: translateY(-2px);
+      }
+    }
+  }
+  
+  #fileName {
+    font-size: 1.2rem;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #e9ecef;
+    border-radius: 3px;
+    text-align: center;
+  }
+  
+  > button {
+    background: $secondary-color;
+    color: $white-color;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    
+    &:hover {
+      background: darken($secondary-color, 10%);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* CLI Commands Styling */
+.cli-commands {
+  margin-top: 2rem;
+}
+
+.cli-command {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid #5b86e5;
+  
+  @include respond(phone) {
+    padding: 1rem;
+  }
+  
+  p {
+    font-size: 1.4rem;
+    color: #495057;
+    margin: 0;
+  }
+}
+
+.command-syntax {
+  background: $dark-blue-text;
+  color: $white-color;
+  padding: 1rem;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  
+  @include respond(phone) {
+    font-size: 1.1rem;
+  }
+}
+
+/* Encoding Step Styles - for numbered inline steps */
+.encoding-step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: nowrap;
+  
+  .step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #5b86e5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+    
+    @include respond(phone) {
+      width: 25px;
+      height: 25px;
+      margin-right: 1rem;
+      font-size: 0.9rem;
+    }
+    
+    @include respond(phone-xs) {
+      width: 22px;
+      height: 22px;
+      margin-right: 0.8rem;
+      font-size: 0.8rem;
+    }
+  }
+  
+  .step-content {
+    flex: 1;
+    min-width: 0;
+    
+    h4 {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      display: inline;
+      
+      @include respond(phone) {
+        font-size: 1.5rem;
+      }
+      
+      @include respond(phone-xs) {
+        font-size: 1.3rem;
+      }
+    }
+  }
+}
+
+/* Code Snippet Styling */
+.code-snippet {
+  background: #e9ecef;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 1.2rem;
+  color: #495057;
+  display: inline-block;
+}
+
+/* Math and Formula Styling */
+.formula {
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  contain: layout;
+  
+  @include respond(phone) {
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-size: 0.9em;
+  }
+  
+  .MathJax, .MathJax_Display {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+  
+  &::before {
+    content: "";
+  }
+}
+
+.math-term {
+  background: #e9ecef;
+  padding: 0.2rem 0.4rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: none;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+}
+
+/* MathJax Styling - Only apply 170% to specific sections */
+#proof .MathJax,
+#implementation .MathJax {
+  font-size: 170% !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  contain: layout;
+}
+
+#proof mjx-container,
+#implementation mjx-container {
+  font-size: 170% !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  display: block;
+  contain: layout;
+}
+
+/* Simulation section MathJax inherits default size */
+#simulation .MathJax,
+#simulation mjx-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  contain: layout;
+}
+
+/* Ensure step content MathJax scrolls properly */
+.step-content .MathJax,
+.step-content mjx-container,
+.implementation-section .MathJax,
+.implementation-section mjx-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  contain: layout;
+}
+
+/* Proof Section Specific Boxes */
+.definition-box {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.theorem-box {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.example-box {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+/* Step Number Styling */
+.step-number {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background: #5b86e5;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+/* Implementation Section Specific */
+.implementation-overview {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.encoding-strategy {
+  margin: 2rem 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.encoding-step {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  min-width: 0;
+  flex-wrap: nowrap;
+  
+  @include respond(phone) {
+    padding: 1rem;
+    align-items: flex-start;
+  }
+  
+  .step-number {
+    width: 40px;
+    height: 40px;
+    background: $secondary-color;
+    color: $white-color;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.6rem;
+    margin-right: 2rem;
+    flex-shrink: 0;
+    
+    @include respond(phone) {
+      width: 35px;
+      height: 35px;
+      font-size: 1.4rem;
+      margin-right: 1.5rem;
+    }
+    
+    @include respond(phone-xs) {
+      width: 30px;
+      height: 30px;
+      font-size: 1.2rem;
+      margin-right: 1rem;
+    }
+  }
+  
+  .step-content {
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+    width: 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: none;
+    overflow: hidden;
+    
+    h4 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: $dark-blue-text;
+      margin-bottom: 1rem;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      
+      @include respond(phone) {
+        font-size: 1.6rem;
+      }
+    }
+    
+    p {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      color: #495057;
+      margin-bottom: 1rem;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      hyphens: none;
+      
+      @include respond(phone) {
+        font-size: 1.3rem;
+        line-height: 1.5;
+      }
+    }
+    
+    .formula {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      contain: layout;
+      position: relative;
+      box-sizing: border-box;
+      flex-shrink: 1;
+    }
+  }
+}
+
+/* Architecture Grid */
+.architecture-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  
+  @include respond(phone) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.architecture-component {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  border-left: 4px solid $secondary-color;
+  
+  @include respond(phone) {
+    padding: 1.5rem;
+  }
+  
+  h4 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: $dark-blue-text;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: #495057;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Features Grid */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  
+  @include respond(phone) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-item {
+  text-align: center;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  
+  @include respond(phone) {
+    padding: 1.5rem;
+  }
+  
+  i {
+    font-size: 3rem;
+    color: $secondary-color;
+    margin-bottom: 1rem;
+  }
+  
+  h4 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: $dark-blue-text;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: #495057;
+  }
+}
+
+/* Proof Toggle Button */
+.proof-toggle-btn {
+  background: $secondary-color;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: darken($secondary-color, 10%);
+    transform: translateY(-1px);
+  }
+}
+
+/* Proof Content Spacing */
+.proof-content {
+  padding-top: 3rem;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .proof-container {
+    padding: 0 1rem;
+  }
+  
+  .proof-section {
+    padding: 2rem 1.5rem;
+  }
+  
+  .proof-nav ul {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-icon {
+    margin-bottom: 0;
+  }
+}
+
+/* Enhanced Controls Mobile Adjustments */
+@include respond(phone) {
+  #enhanced-controls {
+    padding: 1.5rem;
+    
+    .control-section {
+      padding: 1rem;
+      
+      input[type="text"],
+      input[type="file"] {
+        font-size: 1.2rem;
+      }
+      
+      button {
+        padding: 0.6rem 1.2rem;
+        font-size: 1.2rem;
+        width: 100%;
+        margin: 0.3rem 0;
+      }
+      
+      input[type="range"] {
+        width: 100%;
+        margin: 0.5rem 0;
+      }
+    }
+  }
+}

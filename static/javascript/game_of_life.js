@@ -44,6 +44,19 @@ speedRange.addEventListener("input", () => {
     delayDisplay.textContent = "Frame Delay: " + speedRange.value + "ms";
 });
 
+// Add window resize listener for responsive canvas
+let resizeTimeout;
+window.addEventListener("resize", () => {
+    // Debounce resize events to avoid excessive calls
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        if (gameInstance) {
+            resizeCanvas();
+            drawGrid();
+        }
+    }, 250);
+});
+
 // Helper function: delay for a given number of milliseconds
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -176,9 +189,26 @@ async function loadGridFromData(gridData, width, height) {
     updateInfo();
 }
 
-// Resize canvas based on grid dimensions
+// Resize canvas based on grid dimensions and container size
 function resizeCanvas() {
-    const maxCanvasSize = 600;
+    // Get the container element to determine available space
+    const container = canvas.parentElement;
+    const containerRect = container.getBoundingClientRect();
+    
+    // Calculate available space, accounting for padding and margins
+    const availableWidth = Math.min(containerRect.width * 0.9, window.innerWidth * 0.9);
+    const availableHeight = Math.min(window.innerHeight * 0.6, availableWidth); // Keep reasonable aspect ratio
+    
+    // Set responsive max canvas size based on screen size
+    let maxCanvasSize;
+    if (window.innerWidth <= 600) { // Mobile
+        maxCanvasSize = Math.min(availableWidth, 350);
+    } else if (window.innerWidth <= 900) { // Tablet
+        maxCanvasSize = Math.min(availableWidth, 500);
+    } else { // Desktop
+        maxCanvasSize = Math.min(availableWidth, 600);
+    }
+    
     const minCellSize = 2;
     const maxCellSize = 30;
 
@@ -192,6 +222,20 @@ function resizeCanvas() {
     CELL_SIZE = cellSize;
     canvas.width = GRID_WIDTH * CELL_SIZE;
     canvas.height = GRID_HEIGHT * CELL_SIZE;
+    
+    // Ensure canvas doesn't exceed container bounds
+    const finalWidth = Math.min(canvas.width, maxCanvasSize);
+    const finalHeight = Math.min(canvas.height, maxCanvasSize);
+    
+    if (canvas.width !== finalWidth || canvas.height !== finalHeight) {
+        canvas.width = finalWidth;
+        canvas.height = finalHeight;
+        // Recalculate cell size if canvas was constrained
+        CELL_SIZE = Math.min(
+            Math.floor(finalWidth / GRID_WIDTH),
+            Math.floor(finalHeight / GRID_HEIGHT)
+        );
+    }
 }
 
 // Draw the grid onto the canvas
