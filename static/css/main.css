@@ -228,8 +228,18 @@ a:hover {
   font-size: 1.3rem;
   color: rgb(178.5, 178.5, 178.5);
 }
+@media (max-width: 37.5em) {
+  .footer__text {
+    font-size: 1.1rem;
+  }
+}
+@media (max-width: 20em) {
+  .footer__text {
+    font-size: 1rem;
+  }
+}
 .footer__text a {
-  font-size: 1.3rem;
+  font-size: inherit;
   color: rgb(191.25, 191.25, 191.25);
   transition: all 0.2s ease-in-out;
   display: inline-block;
