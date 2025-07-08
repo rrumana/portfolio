@@ -6,8 +6,18 @@
   &__text {
     font-size: 1.3rem;
     color: color.scale($white-color, $lightness: -30%);
+    
+    // Responsive font sizing for better mobile experience
+    @include respond(phone) {
+      font-size: 1.1rem;
+    }
+    
+    @include respond(phone-xs) {
+      font-size: 1rem;
+    }
+    
     a {
-      font-size: 1.3rem;
+      font-size: inherit; // Inherit font size from parent instead of fixed size
       color: color.scale($white-color, $lightness: -25%);
       transition: all 0.2s ease-in-out;
       display: inline-block;
