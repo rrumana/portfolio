@@ -1,11 +1,15 @@
 /*
-0 - 600px:          Phone
-600px - 900px       Table Portrait
-900px - 1200px      Table Landscape
-[1200px - 1800px]   Desktop Normal Styles
-1800px +            Big Desktop
+Breakpoint Map:
+- phone-s:      0 - 288px   (18em)
+- phone-m:      0 - 432px   (27em)
+- phone-l:      0 - 576px   (36em)
+- tab-port-sm:  0 - 768px   (48em)
+- tab-port:     0 - 900px   (56.25em)
+- tab-land:     0 - 1200px  (75em)
+- big-desktop:  1800px +    (112.5em)
+
 1em = 16px
-ORDER: Base + Typography > Generar Layout + Grid > Page Layout > Components
+ORDER: Base + Typography > General Layout + Grid > Page Layout > Components
 */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
 * {
