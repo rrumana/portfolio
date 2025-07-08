@@ -9,15 +9,20 @@
 ORDER: Base + Typography > Generar Layout + Grid > Page Layout > Components
 */
 @mixin respond($breakpoint) {
-  @if $breakpoint == phone-xs {
-    @media (max-width: 20em) {
+  @if $breakpoint == phone-s {
+    @media (max-width: 18em) {
       @content;
-    } //0 - 320px
+    } //0 - 288
   }
-  @if $breakpoint == phone {
-    @media (max-width: 37.5em) {
+  @if $breakpoint == phone-m {
+    @media (max-width: 27em) {
       @content;
-    } //0 - 600px
+    } //0 - 432px
+  }
+  @if $breakpoint == phone-l {
+    @media (max-width: 36em) {
+      @content;
+    } //0 - 576px
   }
   @if $breakpoint == tab-port-sm {
     @media (max-width: 48em) {
