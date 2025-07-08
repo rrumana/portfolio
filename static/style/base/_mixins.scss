@@ -1,43 +1,47 @@
 // MEDIA QUERY MANAGER
 /*
-0 - 600px:          Phone
-600px - 900px       Table Portrait
-900px - 1200px      Table Landscape
-[1200px - 1800px]   Desktop Normal Styles
-1800px +            Big Desktop
+Breakpoint Map:
+- phone-s:      0 - 288px   (18em)
+- phone-m:      0 - 432px   (27em)
+- phone-l:      0 - 576px   (36em)
+- tab-port-sm:  0 - 768px   (48em)
+- tab-port:     0 - 900px   (56.25em)
+- tab-land:     0 - 1200px  (75em)
+- big-desktop:  1800px +    (112.5em)
+
 1em = 16px
-ORDER: Base + Typography > Generar Layout + Grid > Page Layout > Components
+ORDER: Base + Typography > General Layout + Grid > Page Layout > Components
 */
+
+// Centralized breakpoint map for easy maintenance
+$breakpoints: (
+  phone-s: 18em,        // 0 - 288px
+  phone-m: 27em,        // 0 - 432px
+  phone-l: 36em,        // 0 - 576px
+  tab-port-sm: 48em,    // 0 - 768px
+  tab-port: 56.25em,    // 0 - 900px
+  tab-land: 75em,       // 0 - 1200px
+  big-desktop: 112.5em  // 1800px +
+);
+
+// Responsive mixin using the breakpoint map
 @mixin respond($breakpoint) {
-  @if $breakpoint == phone-xs {
-    @media (max-width: 20em) {
-      @content;
-    } //0 - 320px
-  }
-  @if $breakpoint == phone {
-    @media (max-width: 37.5em) {
-      @content;
-    } //0 - 600px
-  }
-  @if $breakpoint == tab-port-sm {
-    @media (max-width: 48em) {
-      @content;
-    } //768px
-  }
-  @if $breakpoint == tab-port {
-    @media (max-width: 56.25em) {
-      @content;
-    } //900px
-  }
-  @if $breakpoint == tab-land {
-    @media (max-width: 75em) {
-      @content;
-    } //1200px
-  }
-  @if $breakpoint == big-desktop {
-    @media (min-width: 112.5em) {
-      @content;
-    } //1800px +
+  // Check if the breakpoint exists in our map
+  @if map-has-key($breakpoints, $breakpoint) {
+    $breakpoint-value: map-get($breakpoints, $breakpoint);
+    
+    // Special case for big-desktop (min-width instead of max-width)
+    @if $breakpoint == big-desktop {
+      @media (min-width: $breakpoint-value) {
+        @content;
+      }
+    } @else {
+      @media (max-width: $breakpoint-value) {
+        @content;
+      }
+    }
+  } @else {
+    @warn "Breakpoint '#{$breakpoint}' not found in $breakpoints map. Available breakpoints: #{map-keys($breakpoints)}";
   }
 }
 

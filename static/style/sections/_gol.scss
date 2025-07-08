@@ -7,7 +7,7 @@
   background: #f8f9fa !important;
   padding: 2rem 0;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 1.5rem 0;
   }
 }
@@ -24,7 +24,7 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
 
-    @include respond(phone) {
+    @include respond(phone-l) {
       padding: 0 1rem;
     }
   }
@@ -79,12 +79,17 @@ body {
     margin-bottom: 0.75rem;
   }
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     font-size: 2.5rem;
     margin-bottom: 0.625rem;
   }
   
-  @include respond(phone-xs) {
+  @include respond(phone-m) {
+    font-size: 2.2rem;
+    margin-bottom: 0.6rem;
+  }
+  
+  @include respond(phone-s) {
     font-size: 2rem;
   }
 }
@@ -102,7 +107,7 @@ body {
   overflow-wrap: break-word;
   word-wrap: break-word;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 0 1rem;
   }
 }
@@ -135,7 +140,7 @@ body {
   width: 100%;
   box-sizing: border-box;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 1.5rem 1rem;
     margin-bottom: 0.75rem;
   }
@@ -145,7 +150,7 @@ body {
     margin-bottom: 1rem;
     color: #333;
     
-    @include respond(phone) {
+    @include respond(phone-l) {
       font-size: 2rem;
     }
   }
@@ -185,13 +190,13 @@ body {
     line-height: 1.7;
   }
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     font-size: 1.4rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
   }
   
-  @include respond(phone-xs) {
+  @include respond(phone-s) {
     font-size: 1.3rem;
     line-height: 1.5;
   }
@@ -222,7 +227,7 @@ body {
   margin-bottom: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 1.5rem;
   }
   
@@ -231,7 +236,7 @@ body {
     margin-bottom: 1.5rem;
     color: #272341;
     
-    @include respond(phone) {
+    @include respond(phone-l) {
       font-size: 1.8rem;
     }
   }
@@ -242,7 +247,7 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
     
-    @include respond(phone) {
+    @include respond(phone-l) {
       grid-template-columns: 1fr;
     }
   }
@@ -262,7 +267,7 @@ body {
     overflow-wrap: break-word;
     word-wrap: break-word;
     
-    @include respond(phone) {
+    @include respond(phone-l) {
       font-size: 1.3rem;
     }
     
@@ -300,14 +305,14 @@ body {
   font-size: 1.4rem;
   flex-shrink: 0;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     width: 35px;
     height: 35px;
     font-size: 1.2rem;
     margin-right: 0.8rem;
   }
   
-  @include respond(phone-xs) {
+  @include respond(phone-s) {
     width: 30px;
     height: 30px;
     font-size: 1rem;
@@ -326,11 +331,11 @@ body {
     font-size: 2rem;
   }
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     font-size: 1.8rem;
   }
   
-  @include respond(phone-xs) {
+  @include respond(phone-s) {
     font-size: 1.6rem;
   }
 }
@@ -342,12 +347,12 @@ body {
   font-weight: bold;
   flex-shrink: 0;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     font-size: 1.2rem;
     margin-left: 0.5rem;
   }
   
-  @include respond(phone-xs) {
+  @include respond(phone-s) {
     font-size: 1rem;
   }
 }
@@ -382,7 +387,7 @@ body {
   margin-bottom: 2rem;
   text-align: center;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     font-size: 2rem;
   }
 }
@@ -417,7 +422,7 @@ body {
     gap: 1.5rem;
   }
 
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 1.5rem 1rem;
     gap: 1.5rem;
     min-width: 0; /* Allow grid items to shrink below their content size */
@@ -449,13 +454,13 @@ body {
       line-height: 1.7;
     }
 
-    @include respond(phone) {
+    @include respond(phone-l) {
       font-size: 1.4rem;
       line-height: 1.6;
       margin-bottom: 1.5rem;
     }
 
-    @include respond(phone-xs) {
+    @include respond(phone-s) {
       font-size: 1.3rem;
       line-height: 1.5;
     }
@@ -467,7 +472,7 @@ body {
     width: 100%;
     box-sizing: border-box;
 
-    @include respond(phone) {
+    @include respond(phone-l) {
       margin: 1.5rem 0 0 0;
       text-align: center;
     }
@@ -484,7 +489,7 @@ body {
   overflow: hidden;
   padding: 0 1rem;
 
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 0 0.5rem;
   }
   
@@ -508,12 +513,12 @@ body {
       max-width: 400px;
     }
     
-    @include respond(phone) {
+    @include respond(phone-l) {
       max-width: 320px;
       margin-bottom: 1.5rem;
     }
     
-    @include respond(phone-xs) {
+    @include respond(phone-s) {
       max-width: 280px;
     }
   }
@@ -576,7 +581,7 @@ body {
   padding: 0 2rem;
   box-sizing: border-box;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 0 1rem;
     margin-top: 1.5rem;
   }
@@ -590,7 +595,7 @@ body {
     overflow-wrap: break-word;
     word-wrap: break-word;
     
-    @include respond(phone) {
+    @include respond(phone-l) {
       padding: 1rem;
       margin-bottom: 1.5rem;
     }
@@ -624,7 +629,7 @@ body {
         transform: translateY(-2px);
       }
       
-      @include respond(phone) {
+      @include respond(phone-l) {
         padding: 0.6rem 1.2rem;
         font-size: 1.2rem;
         width: 100%;
@@ -856,7 +861,7 @@ body {
   margin-bottom: 1rem;
   border-left: 4px solid #5b86e5;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 1rem;
   }
   
@@ -878,7 +883,7 @@ body {
   margin-bottom: 1rem;
   overflow-x: auto;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     font-size: 1.1rem;
   }
 }
@@ -903,14 +908,14 @@ body {
     margin-right: 1.5rem;
     flex-shrink: 0;
     
-    @include respond(phone) {
+    @include respond(phone-l) {
       width: 25px;
       height: 25px;
       margin-right: 1rem;
       font-size: 0.9rem;
     }
     
-    @include respond(phone-xs) {
+    @include respond(phone-s) {
       width: 22px;
       height: 22px;
       margin-right: 0.8rem;
@@ -929,11 +934,11 @@ body {
       font-weight: 600;
       display: inline;
       
-      @include respond(phone) {
+      @include respond(phone-l) {
         font-size: 1.5rem;
       }
       
-      @include respond(phone-xs) {
+      @include respond(phone-s) {
         font-size: 1.3rem;
       }
     }
@@ -969,7 +974,7 @@ body {
   min-width: 0;
   contain: layout;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 1rem;
     margin: 1.5rem 0;
     font-size: 0.9em;
@@ -1111,7 +1116,7 @@ body {
   min-width: 0;
   flex-wrap: nowrap;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 1rem;
     align-items: flex-start;
   }
@@ -1130,14 +1135,14 @@ body {
     margin-right: 2rem;
     flex-shrink: 0;
     
-    @include respond(phone) {
+    @include respond(phone-l) {
       width: 35px;
       height: 35px;
       font-size: 1.4rem;
       margin-right: 1.5rem;
     }
     
-    @include respond(phone-xs) {
+    @include respond(phone-s) {
       width: 30px;
       height: 30px;
       font-size: 1.2rem;
@@ -1163,7 +1168,7 @@ body {
       overflow-wrap: break-word;
       word-wrap: break-word;
       
-      @include respond(phone) {
+      @include respond(phone-l) {
         font-size: 1.6rem;
       }
     }
@@ -1177,7 +1182,7 @@ body {
       word-wrap: break-word;
       hyphens: none;
       
-      @include respond(phone) {
+      @include respond(phone-l) {
         font-size: 1.3rem;
         line-height: 1.5;
       }
@@ -1204,7 +1209,7 @@ body {
   gap: 2rem;
   margin-top: 2rem;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     grid-template-columns: 1fr;
   }
 }
@@ -1215,7 +1220,7 @@ body {
   border-radius: 8px;
   border-left: 4px solid $secondary-color;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 1.5rem;
   }
   
@@ -1241,7 +1246,7 @@ body {
   gap: 2rem;
   margin-top: 2rem;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     grid-template-columns: 1fr;
   }
 }
@@ -1253,7 +1258,7 @@ body {
   border-radius: 8px;
   border: 1px solid #e9ecef;
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     padding: 1.5rem;
   }
   
@@ -1320,7 +1325,7 @@ body {
 }
 
 /* Enhanced Controls Mobile Adjustments */
-@include respond(phone) {
+@include respond(phone-l) {
   #enhanced-controls {
     padding: 1.5rem;
     

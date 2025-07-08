@@ -8,12 +8,16 @@
     color: color.scale($white-color, $lightness: -30%);
     
     // Responsive font sizing for better mobile experience
-    @include respond(phone) {
+    @include respond(phone-l) {
       font-size: 1.1rem;
     }
     
-    @include respond(phone-xs) {
+    @include respond(phone-m) {
       font-size: 1rem;
+    }
+    
+    @include respond(phone-s) {
+      font-size: 0.9rem;
     }
     
     a {

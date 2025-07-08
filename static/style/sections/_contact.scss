@@ -23,7 +23,7 @@
     clip-path: polygon(0 5vh, 100% 0, 100% 100%, 0 100%);
   }
   
-  @include respond(phone) {
+  @include respond(phone-l) {
     -webkit-clip-path: polygon(0 3vh, 100% 0, 100% 100%, 0 100%);
     clip-path: polygon(0 3vh, 100% 0, 100% 100%, 0 100%);
   }
@@ -42,7 +42,7 @@
       font-size: 2.4rem;
 
       // Responsive for contact text
-      @include respond(phone) {
+      @include respond(phone-l) {
         font-size: 2rem;
       }
     }
