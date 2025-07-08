@@ -7,10 +7,6 @@ use game_of_life::grid::{StandardGrid, Grid};
 use text_to_input::text_to_pixel_art;
 use log::info;
 
-// Use wee_alloc as the global allocator for smaller binary size
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
 // Default grid dimensions for backward compatibility
 const DEFAULT_WIDTH: usize = 20;
 const DEFAULT_HEIGHT: usize = 20;
