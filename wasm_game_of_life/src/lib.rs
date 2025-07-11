@@ -6,6 +6,7 @@ use game_of_life::engines::{UltimateEngine, GameOfLifeEngine};
 use game_of_life::grid::{StandardGrid, Grid};
 use text_to_input::text_to_pixel_art;
 use log::info;
+use gif::{Encoder, Frame, Repeat};
 
 // Default grid dimensions for backward compatibility
 const DEFAULT_WIDTH: usize = 20;
@@ -156,6 +157,128 @@ impl GameOfLifeWasm {
     #[wasm_bindgen]
     pub fn count_live_cells(&self) -> usize {
         self.engine.count_live_cells()
+    }
+}
+
+/// GIF Recorder for capturing Game of Life animations
+#[wasm_bindgen]
+pub struct GifRecorder {
+    buffer: Vec<u8>,
+    frame_delay_ms: u16,
+    width: u16,
+    height: u16,
+    is_recording: bool,
+    frames: Vec<Vec<u8>>,
+}
+
+#[wasm_bindgen]
+impl GifRecorder {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> GifRecorder {
+        GifRecorder {
+            buffer: Vec::new(),
+            frame_delay_ms: 100,
+            width: 0,
+            height: 0,
+            is_recording: false,
+            frames: Vec::new(),
+        }
+    }
+
+    /// Start recording with specified dimensions and frame delay
+    #[wasm_bindgen]
+    pub fn start_recording(&mut self, width: usize, height: usize, frame_delay_ms: u16) -> Result<(), JsValue> {
+        if self.is_recording {
+            return Err(JsValue::from_str("Already recording"));
+        }
+
+        self.width = width as u16;
+        self.height = height as u16;
+        self.frame_delay_ms = frame_delay_ms;
+        self.buffer = Vec::new();
+        self.frames = Vec::new();
+        self.is_recording = true;
+
+        info!("Started GIF recording: {}x{} at {}ms per frame", width, height, frame_delay_ms);
+        Ok(())
+    }
+
+    /// Add a frame to the GIF from RGB image data
+    #[wasm_bindgen]
+    pub fn capture_frame(&mut self, rgb_data: &[u8]) -> Result<(), JsValue> {
+        if !self.is_recording {
+            return Err(JsValue::from_str("Not currently recording"));
+        }
+
+        let expected_size = (self.width as usize) * (self.height as usize) * 3; // RGB = 3 bytes per pixel
+        if rgb_data.len() != expected_size {
+            return Err(JsValue::from_str(&format!(
+                "RGB data size mismatch: expected {}x{}x3 = {}, got {}",
+                self.width, self.height, expected_size, rgb_data.len()
+            )));
+        }
+
+        // Store the RGB frame data directly
+        self.frames.push(rgb_data.to_vec());
+
+        Ok(())
+    }
+
+    /// Stop recording and return the GIF data
+    #[wasm_bindgen]
+    pub fn stop_recording(&mut self) -> Result<Vec<u8>, JsValue> {
+        if !self.is_recording {
+            return Err(JsValue::from_str("Not currently recording"));
+        }
+
+        if self.frames.is_empty() {
+            return Err(JsValue::from_str("No frames captured"));
+        }
+
+        // Create the GIF from all collected frames
+        self.buffer.clear();
+        let mut encoder = Encoder::new(&mut self.buffer, self.width, self.height, &[])
+            .map_err(|e| JsValue::from_str(&format!("Failed to create GIF encoder: {}", e)))?;
+        
+        encoder.set_repeat(Repeat::Infinite)
+            .map_err(|e| JsValue::from_str(&format!("Failed to set repeat: {}", e)))?;
+
+        // Convert frame delay from milliseconds to centiseconds
+        let delay_centiseconds = (self.frame_delay_ms + 5) / 10; // Round up
+
+        // Write all frames
+        for frame_pixels in &self.frames {
+            let mut frame = Frame::from_rgb(self.width, self.height, frame_pixels);
+            frame.delay = delay_centiseconds;
+            
+            encoder.write_frame(&frame)
+                .map_err(|e| JsValue::from_str(&format!("Failed to write frame: {}", e)))?;
+        }
+
+        // Finalize the encoder
+        drop(encoder);
+
+        self.is_recording = false;
+        let gif_data = self.buffer.clone();
+        
+        info!("Stopped GIF recording, generated {} bytes from {} frames", gif_data.len(), self.frames.len());
+        
+        // Clear frames to free memory
+        self.frames.clear();
+        
+        Ok(gif_data)
+    }
+
+    /// Check if currently recording
+    #[wasm_bindgen]
+    pub fn is_recording(&self) -> bool {
+        self.is_recording
+    }
+
+    /// Get current frame delay in milliseconds
+    #[wasm_bindgen]
+    pub fn get_frame_delay(&self) -> u16 {
+        self.frame_delay_ms
     }
 }
 

@@ -1,11 +1,12 @@
 // static/javascript/game_of_life.js
 
 // Import the WASM module functions - now with enhanced UltimateEngine support
-import init, { 
-    init_logging, 
-    tick, 
+import init, {
+    init_logging,
+    tick,
     sample_grid,
     GameOfLifeWasm,
+    GifRecorder,
     create_game,
     create_game_with_size,
     text_to_grid_with_buffer,
@@ -21,6 +22,7 @@ const stepBtn = document.getElementById("stepBtn");
 const backBtn = document.getElementById("backBtn");
 const resetBtn = document.getElementById("resetBtn");
 const multiStepBtn = document.getElementById("multiStepBtn");
+const recordBtn = document.getElementById("recordBtn");
 const speedRange = document.getElementById("speedRange");
 const genInput = document.getElementById("genInput");
 const delayDisplay = document.getElementById("delayDisplay");
@@ -33,6 +35,10 @@ let fileInput, fileUploadBtn, downloadBtn;
 let gameInstance = null;
 let gridHistory = [];
 let multiStepActive = false;
+
+// GIF recording state
+let gifRecorder = null;
+let isRecording = false;
 
 // Grid display settings
 let CELL_SIZE = 20;
@@ -345,6 +351,109 @@ function downloadCurrentState() {
     URL.revokeObjectURL(url);
 }
 
+// GIF Recording Functions
+async function toggleRecording() {
+    if (!gameInstance) {
+        showError("No game instance available");
+        return;
+    }
+
+    if (!isRecording) {
+        await startRecording();
+    } else {
+        await stopRecording();
+    }
+}
+
+async function startRecording() {
+    try {
+        // Create new GIF recorder
+        gifRecorder = new GifRecorder();
+        
+        // Get current frame delay from the speed slider
+        const frameDelay = parseInt(speedRange.value, 10);
+        
+        // Start recording with canvas dimensions and frame delay
+        await gifRecorder.start_recording(canvas.width, canvas.height, frameDelay);
+        
+        // Capture the initial frame from canvas
+        await captureCanvasFrame();
+        
+        isRecording = true;
+        recordBtn.textContent = "Stop Recording";
+        recordBtn.style.backgroundColor = "#dc3545"; // Red color
+        
+        showSuccess(`Started GIF recording at ${frameDelay}ms per frame (${canvas.width}x${canvas.height})`);
+    } catch (error) {
+        showError(`Failed to start recording: ${error}`);
+        isRecording = false;
+        recordBtn.textContent = "Record GIF";
+        recordBtn.style.backgroundColor = "";
+    }
+}
+// Capture current canvas frame for GIF recording
+async function captureCanvasFrame() {
+    if (!gifRecorder || !isRecording) return;
+    
+    try {
+        // Get image data from canvas
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        
+        // Convert RGBA to RGB (GIF doesn't support alpha)
+        const rgbData = new Uint8Array(canvas.width * canvas.height * 3);
+        for (let i = 0; i < imageData.data.length; i += 4) {
+            const rgbIndex = (i / 4) * 3;
+            rgbData[rgbIndex] = imageData.data[i];     // R
+            rgbData[rgbIndex + 1] = imageData.data[i + 1]; // G
+            rgbData[rgbIndex + 2] = imageData.data[i + 2]; // B
+            // Skip alpha channel (imageData.data[i + 3])
+        }
+        
+        // Send RGB data to WASM recorder
+        await gifRecorder.capture_frame(rgbData);
+    } catch (error) {
+        console.error("Failed to capture canvas frame:", error);
+    }
+}
+
+
+async function stopRecording() {
+    if (!gifRecorder || !isRecording) {
+        showError("No active recording to stop");
+        return;
+    }
+
+    try {
+        // Stop recording and get GIF data
+        const gifData = await gifRecorder.stop_recording();
+        
+        // Create blob and download
+        const blob = new Blob([gifData], { type: "image/gif" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `game_of_life_${GRID_WIDTH}x${GRID_HEIGHT}_${Date.now()}.gif`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        // Reset recording state
+        isRecording = false;
+        gifRecorder = null;
+        recordBtn.textContent = "Record GIF";
+        recordBtn.style.backgroundColor = "";
+        
+        showSuccess(`GIF saved! Size: ${(gifData.length / 1024).toFixed(1)} KB`);
+    } catch (error) {
+        showError(`Failed to stop recording: ${error}`);
+        isRecording = false;
+        gifRecorder = null;
+        recordBtn.textContent = "Record GIF";
+        recordBtn.style.backgroundColor = "";
+    }
+}
+
 // Show success message
 function showSuccess(message) {
     console.log("SUCCESS:", message);
@@ -404,7 +513,13 @@ async function localStepForward() {
         
         // Step forward
         gameInstance.step();
+        
         drawGrid();
+        
+        // Capture frame if recording (after drawing)
+        if (isRecording && gifRecorder) {
+            await captureCanvasFrame();
+        }
         updateInfo();
     } catch (error) {
         console.error("Error during local step forward:", error);
@@ -483,6 +598,7 @@ stepBtn.addEventListener("click", localStepForward);
 backBtn.addEventListener("click", localStepBack);
 resetBtn.addEventListener("click", resetSimulation);
 multiStepBtn.addEventListener("click", localMultiStep);
+recordBtn.addEventListener("click", toggleRecording);
 
 // Optional: Auto-simulation (if desired)
 let autoInterval;
