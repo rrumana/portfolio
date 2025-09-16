@@ -3,3 +3,6 @@
 /logs
 
 OPTIMIZATION_WISHLIST.md
+frontend/node_modules
+frontend/.astro
+frontend/dist

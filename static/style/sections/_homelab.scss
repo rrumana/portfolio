@@ -2,8 +2,27 @@
    Kubernetes Homelab Page Styles
    =============================== */
 
+#about.homelab-hero {
+  background: linear-gradient(135deg, rgba(54, 209, 220, 0.18), rgba(91, 134, 229, 0.18));
+  color: $dark-blue-text;
+  padding: 8rem 0 6rem 0;
+  -webkit-clip-path: none;
+  clip-path: none;
+
+  .section-title {
+    color: $dark-blue-text;
+  }
+
+  .about-wrapper__info-text {
+    color: $dark-grey;
+  }
+
+  .cta-btn--resume {
+    color: $dark-blue-text;
+  }
+}
+
 .homelab-hero {
-  background: linear-gradient(135deg, rgba(54, 209, 220, 0.15), rgba(91, 134, 229, 0.15));
   padding-bottom: 6rem;
 
   .about-wrapper__info {
@@ -25,6 +44,10 @@
   .section-title {
     margin-bottom: 3rem;
   }
+}
+
+#getting-started.homelab-section {
+  padding-bottom: 18rem;
 }
 
 .homelab-grid {
