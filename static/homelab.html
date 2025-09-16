@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <title>Kubernetes Homelab | Platform Engineering at Home</title>
+    <meta
+      name="keywords"
+      content="kubernetes homelab, gitops, argocd, longhorn, metalLB, home lab, rcrumana, k3s, self-hosting"
+    />
+    <meta
+      name="description"
+      content="Tour Ryan Rumana's GitOps-driven Kubernetes homelab powering media, AI, and productivity workloads with k3s, ArgoCD, Longhorn, and HAProxy."
+    />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Kubernetes Homelab | Platform Engineering at Home" />
+    <meta
+      property="og:description"
+      content="Explore the GitOps automation, resilient storage, and application stack that power Ryan Rumana's production-ready home Kubernetes platform."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ryanrumana.com/homelab.html" />
+    <meta property="og:image" content="https://ryanrumana.com/images/homelab.png" />
+    <meta property="og:image:alt" content="Kubernetes Homelab rack" />
+    <meta property="og:site_name" content="Ryan Rumana Portfolio" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kubernetes Homelab | Platform Engineering at Home" />
+    <meta
+      name="twitter:description"
+      content="A GitOps-first k3s homelab running media, AI, and productivity services with Longhorn storage and HAProxy ingress."
+    />
+    <meta name="twitter:image" content="https://ryanrumana.com/images/homelab.png" />
+    <meta name="twitter:image:alt" content="Kubernetes Homelab rack" />
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="author" content="Ryan Rumana" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://ryanrumana.com/homelab.html" />
+
+    <link rel="icon" type="image/png" href="./assets/favicon.ico" />
+    <meta name="theme-color" content="#36d1dc" />
+    <link rel="preload" as="style" href="./css/main.css" />
+    <link rel="stylesheet" href="./css/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script defer src="./javascript/scrollreveal.min.js"></script>
+    <script defer type="text/javascript" src="./javascript/scrollveal.js"></script>
+  </head>
+
+  <body>
+    <section id="about" class="homelab-hero">
+      <div class="container">
+        <h2 class="section-title">Project Spotlight: <br />Kubernetes Homelab</h2>
+        <div class="row about-wrapper">
+          <div class="about-wrapper__image">
+            <img
+              class="img-fluid"
+              src="./images/homelab.png"
+              alt="Homelab rack"
+              width="450"
+              height="350"
+            />
+          </div>
+          <div class="about-wrapper__info">
+            <p class="about-wrapper__info-text">
+              This homelab is my playground for blending platform engineering with daily life.
+              It runs on k3s, embraces GitOps, and powers everything from streaming media to
+              personal AI experiments. Every service is declarative, version-controlled, and
+              deployed automatically through ArgoCD.
+            </p>
+            <p class="about-wrapper__info-text">
+              The goal is simple: pursue 100% data freedom while staying curious. That means
+              aggressive automation, production-ready guardrails, and room to test tomorrow's
+              ideas without breaking today's workflows.
+            </p>
+            <span class="about-wrapper__cta">
+              <a
+                href="https://github.com/rrumana/k8s-homelab"
+                class="cta-btn cta-btn--resume"
+                target="_blank"
+                rel="noopener noreferrer"
+              >View Repository</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="architecture" class="homelab-section">
+      <div class="container">
+        <h2 class="section-title dark-blue-text">Architecture Snapshot</h2>
+        <div class="homelab-grid">
+          <article class="homelab-card">
+            <h3>Lightweight Core</h3>
+            <p>
+              k3s keeps the cluster lean (\<100MB footprint) without cutting corners. MetalLB
+              unlocks LoadBalancer services on bare metal, HAProxy terminates TLS, and
+              containerd drives workloads efficiently across two nodes.
+            </p>
+          </article>
+          <article class="homelab-card">
+            <h3>GitOps All the Way</h3>
+            <p>
+              ArgoCD owns the desired state using the app-of-apps pattern. Kustomize bases and
+              overlays split shared configuration from environment tweaks, while automation
+              enforces drift detection and self-healing syncs.
+            </p>
+          </article>
+          <article class="homelab-card">
+            <h3>Resilient Storage</h3>
+            <p>
+              Longhorn replicates persistent volumes across both nodes. Hourly snapshots and
+              nightly NAS backups protect everything from Plex metadata to password vaults.
+            </p>
+          </article>
+          <article class="homelab-card">
+            <h3>Simple Network Flow</h3>
+            <p>
+              Traffic flows Cloudflare → HAProxy → services, split by ingress classes for public
+              vs. restricted apps. cert-manager keeps certificates fresh without manual effort.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="homelab-section alt">
+      <div class="container">
+        <h2 class="section-title">Operational Rhythm</h2>
+        <div class="homelab-layout">
+          <div class="homelab-card">
+            <h3>Day-to-Day Flow</h3>
+            <ul>
+              <li>Edit YAML in Git ➜ push ➜ ArgoCD syncs within minutes.</li>
+              <li>Observability stack capture planned via LGTM pattern (Grafana, Loki, Tempo, Mimir).</li>
+              <li>Platform scripts bootstrap k3s and GitOps tooling from a clean node.</li>
+            </ul>
+          </div>
+          <div class="homelab-card">
+            <h3>Why It Works</h3>
+            <ul>
+              <li>app-of-apps structure keeps platform services, apps, and infrastructure isolated.</li>
+              <li>Topology spread rules ensure critical replicas survive a node failure.</li>
+              <li>Ingress templates and ADRs document decisions so future tweaks stay intentional.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="homelab-section">
+      <div class="container">
+        <h2 class="section-title dark-blue-text">What Runs Here</h2>
+        <div class="homelab-services">
+          <div class="homelab-service-card">
+            <h3>Media & Entertainment</h3>
+            <p>Plex, qBittorrent behind Gluetun, and a full *arr stack keep the library fresh.</p>
+          </div>
+          <div class="homelab-service-card">
+            <h3>Productivity & Security</h3>
+            <p>Vaultwarden, Nextcloud + Collabora, and Immich replace third-party SaaS.</p>
+          </div>
+          <div class="homelab-service-card">
+            <h3>AI & Development</h3>
+            <p>Ollama and Qdrant host local LLM experiments, with the portfolio site deployed alongside.</p>
+          </div>
+          <div class="homelab-service-card">
+            <h3>Platform Essentials</h3>
+            <p>ArgoCD, cert-manager, HAProxy, MetalLB, and Longhorn form the backbone services.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="resilience" class="homelab-section alt">
+      <div class="container">
+        <h2 class="section-title">High Availability & Safeguards</h2>
+        <div class="homelab-metrics">
+          <div class="metric">
+            <span class="metric-label">Cluster Layout</span>
+            <p>Two-node k3s cluster, single writer control plane.</p>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Critical Replicas</span>
+            <p>HAProxy, CoreDNS, cert-manager, Vaultwarden, and the portfolio run multi-replica.</p>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Data Protection</span>
+            <p>Longhorn snapshots hourly, backups nightly to NAS.</p>
+          </div>
+        </div>
+        <p class="resilience-note">
+          Everything is built to fail smart: pods respect anti-affinity, storage self-heals, and
+          automation keeps drift from sneaking in.
+        </p>
+      </div>
+    </section>
+
+    <section id="learning" class="homelab-section">
+      <div class="container">
+        <h2 class="section-title dark-blue-text">What I'm Learning</h2>
+        <div class="homelab-grid">
+          <article class="homelab-card">
+            <h3>Platform Thinking</h3>
+            <p>
+              Modeling infrastructure as reusable building blocks—GitOps apps, ingress templates,
+              and runbooks—makes experimentation quick without losing control.
+            </p>
+          </article>
+          <article class="homelab-card">
+            <h3>Observability Discipline</h3>
+            <p>
+              Planning the LGTM stack with Prometheus 3.0 and Grafana Alloy brings modern signal
+              collection to a tiny footprint and informs scaling decisions.
+            </p>
+          </article>
+          <article class="homelab-card">
+            <h3>Security in Motion</h3>
+            <p>
+              Network policies, cert rotation, and secrets management via dedicated namespaces
+              reinforce good habits before they become emergencies.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="getting-started" class="homelab-section alt">
+      <div class="container">
+        <h2 class="section-title">Try It Yourself</h2>
+        <div class="homelab-card">
+          <ol>
+            <li>Clone the repo and run the <code>install-k3s.sh</code> bootstrap script.</li>
+            <li>Apply the ArgoCD manifests and watch GitOps take over.</li>
+            <li>Enable Longhorn, run the root app, and customize overlays for your network.</li>
+          </ol>
+          <p class="getting-started-note">
+            The docs folder captures ADRs, architecture notes, and templates to remix the setup for
+            your own environment.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <h2 class="section-title">Get in Touch</h2>
+        <div class="contact-wrapper">
+          <p class="contact-wrapper__text">
+            Curious about the stack or want to compare homelab war stories? I'd love to chat.
+          </p>
+          <a href="mailto:ryan.rumana@gmail.com" class="cta-btn cta-btn--resume">Contact Me</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <a href="#about" class="back-to-top" aria-label="go back to top">
+          <i class="fa fa-angle-up fa-2x" aria-hidden="true"></i>
+        </a>
+        <div class="social-links">
+          <a
+            href="mailto:ryan.rumana@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Gmail"
+          >
+            <i class="fa fa-envelope"></i>
+          </a>
+          <a
+            href="https://linkedin.com/in/ryanrumana"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+          <a
+            href="https://github.com/rrumana"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <i class="fa-brands fa-github"></i>
+          </a>
+        </div>
+        <hr />
+        <p class="footer__text">
+          &copy; <span id="year"></span> - Developed by
+          <a href="https://rcrumana.xyz" target="_blank" rel="noopener noreferrer">Ryan Rumana</a>.
+        </p>
+      </div>
+    </footer>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script src="./javascript/vanilla-tilt.min.js"></script>
+    <script type="text/javascript" src="./javascript/valtilt.js"></script>
+  </body>
+</html>
