@@ -1,4 +1,5 @@
 ---
+import type { AstroComponentFactory } from 'astro/runtime/server';
 import BaseLayout from './BaseLayout.astro';
 import Container from '../components/shell/Container.astro';
 import Badge from '../components/callouts/Badge.astro';
@@ -21,7 +22,7 @@ interface Props {
   techStack?: string[];
   actions?: Action[];
   navLinks?: { href: string; label: string }[];
-  sections?: any[];
+  sections?: AstroComponentFactory[];
 }
 
 const {
@@ -78,10 +79,9 @@ const {
         <slot />
         {sections.length > 0 && (
           <div class="project__sections">
-            {sections.map((Section, index) => {
-              const SectionComponent: any = Section;
-              return <SectionComponent data-section-index={index} />;
-            })}
+            {sections.map((Section, index) => (
+              <Section data-section-index={index} />
+            ))}
           </div>
         )}
       </Container>
