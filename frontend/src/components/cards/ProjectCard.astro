@@ -6,6 +6,7 @@ import Text from '../ui/Text.astro';
 interface Link {
   label: string;
   href: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
 }
 
 interface Props {
@@ -44,10 +45,16 @@ const {
         ))}
       </ul>
     )}
-    <div class="project-card__actions">
-      {cta && <Button href={cta.href}>{cta.label}</Button>}
-      {secondaryCta && <Button href={secondaryCta.href} variant="secondary">{secondaryCta.label}</Button>}
-    </div>
+    {(cta || secondaryCta) && (
+      <div class="project-card__actions">
+        {cta && <Button href={cta.href} variant={cta.variant ?? 'primary'}>{cta.label}</Button>}
+        {secondaryCta && (
+          <Button href={secondaryCta.href} variant={secondaryCta.variant ?? 'secondary'}>
+            {secondaryCta.label}
+          </Button>
+        )}
+      </div>
+    )}
   </div>
 </article>
 

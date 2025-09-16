@@ -1,0 +1,155 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Container from '../components/shell/Container.astro';
+import Badge from '../components/callouts/Badge.astro';
+import Button from '../components/ui/Button.astro';
+import Heading from '../components/ui/Heading.astro';
+import Text from '../components/ui/Text.astro';
+
+interface Action {
+  label: string;
+  href: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
+}
+
+interface Props {
+  title: string;
+  description?: string;
+  eyebrow?: string;
+  heroImage?: string;
+  heroAlt?: string;
+  techStack?: string[];
+  actions?: Action[];
+  navLinks?: { href: string; label: string }[];
+}
+
+const {
+  title,
+  description,
+  eyebrow,
+  heroImage,
+  heroAlt,
+  techStack = [],
+  actions = [],
+  navLinks = [],
+} = Astro.props as Props;
+---
+<BaseLayout title={`${title} | Ryan Rumana`} description={description} navLinks={navLinks}>
+  <main class="project">
+    <section class="project__hero">
+      <Container class="project__hero-inner">
+        <div class="project__heading">
+          {eyebrow && <Badge tone="accent">{eyebrow}</Badge>}
+          <Heading level={1} size="3xl">{title}</Heading>
+          {description && <Text size="lg" tone="muted">{description}</Text>}
+          {actions.length > 0 && (
+            <div class="project__actions">
+              {actions.map((action) => (
+                <Button href={action.href} variant={action.variant ?? 'primary'}>
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          )}
+        </div>
+        {heroImage && (
+          <div class="project__media">
+            <img src={heroImage} alt={heroAlt ?? ''} loading="lazy" />
+          </div>
+        )}
+      </Container>
+    </section>
+
+    {techStack.length > 0 && (
+      <Container class="project__meta">
+        <h2>Tech Stack</h2>
+        <ul>
+          {techStack.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </Container>
+    )}
+
+    <article class="project__content">
+      <Container class="project__content-inner">
+        <slot />
+      </Container>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+.project__hero {
+  padding-block: var(--space-3xl);
+  background: linear-gradient(135deg, rgba(54, 93, 240, 0.08), rgba(91, 134, 229, 0.1));
+}
+
+.project__hero-inner {
+  display: grid;
+  gap: var(--space-2xl);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: center;
+}
+
+.project__heading {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.project__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.project__media {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.project__meta {
+  margin-block: var(--space-2xl);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.project__meta ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  list-style: none;
+}
+
+.project__meta li {
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-xs);
+  background: rgba(91, 134, 229, 0.18);
+  color: var(--color-primary-500);
+  font-weight: 600;
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.02em;
+}
+
+.project__content {
+  padding-block: var(--space-3xl);
+}
+
+.project__content-inner {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+.project__content-inner :global(h2) {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+}
+
+.project__content-inner :global(p) {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  color: var(--color-neutral-500);
+  max-width: 70ch;
+}
+</style>

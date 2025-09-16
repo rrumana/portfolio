@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageSection from '../components/shell/PageSection.astro';
 import Heading from '../components/ui/Heading.astro';
@@ -6,61 +7,113 @@ import Text from '../components/ui/Text.astro';
 import Button from '../components/ui/Button.astro';
 import GridSection from '../components/layouts/GridSection.astro';
 import Badge from '../components/callouts/Badge.astro';
+import ProjectCard from '../components/cards/ProjectCard.astro';
+import CallToAction from '../components/callouts/CallToAction.astro';
 
 const navLinks = [
   { href: '#vision', label: 'Vision' },
   { href: '#components', label: 'Component Set' },
+  { href: '#projects', label: 'Featured Work' },
   { href: '#next', label: 'Next Steps' },
 ];
+
+const projects = (await getCollection('projects')).filter((project) => project.data.featured);
+projects.sort((a, b) => a.data.order - b.data.order);
 ---
 <BaseLayout
-  title="Portfolio v2"
-  description="Initial Astro scaffolding for the portfolio redesign."
+  title="Ryan Rumana | Portfolio v2"
+  description="Astro-powered redesign scaffold while the Rust runtime continues serving the site."
   navLinks={navLinks}
 >
   <main>
-    <PageSection id="vision" eyebrow="Redesign In Progress" title="Portfolio v2 scaffolding">
+    <PageSection
+      id="vision"
+      eyebrow="Redesign in Progress"
+      title="A cohesive design system for every project"
+      description="The v2 effort introduces shared tokens, components, and layouts so each page feels like part of the same polished experience."
+    >
       <Text size="lg">
-        Astro is now configured to generate static assets while the Rust runtime continues to serve
-        requests and WebAssembly-powered features. The shared design system will expand from these
-        primitives as content migrates.
+        Astro now generates static assets that the Rust runtime serves alongside WASM-powered demos.
+        The new component library keeps typography, spacing, and interactions consistent while we
+        migrate existing content.
       </Text>
       <Button href="/static/index.html" variant="secondary">View legacy site</Button>
     </PageSection>
 
-    <PageSection id="components" title="Foundational components" description="These primitives will power every page going forward.">
+    <PageSection
+      id="components"
+      title="Foundational components"
+      description="These primitives anchor the new design system and will scale with future pages."
+    >
       <GridSection columns={3}>
         <article class="feature-card">
           <Badge tone="accent">Layout</Badge>
           <Heading level={3} size="lg">Page containers</Heading>
           <Text tone="muted">
-            Container, PageSection, and flexible grid helpers keep spacing and hierarchy uniform across the experience.
+            Container wrappers, section scaffolding, and flexible grids ensure spacing and hierarchy
+            feel seamless from page to page.
           </Text>
         </article>
         <article class="feature-card">
           <Badge tone="neutral">UI</Badge>
-          <Heading level={3} size="lg">Buttons &amp; typography</Heading>
+          <Heading level={3} size="lg">Typography &amp; buttons</Heading>
           <Text tone="muted">
-            Token-driven Heading, Text, and Button components standardize type scale, weights, and interactive states.
+            Token-driven Heading, Text, and Button primitives standardize type scales, weights, and
+            interactive states across the portfolio.
           </Text>
         </article>
         <article class="feature-card">
           <Badge tone="accent">Patterns</Badge>
-          <Heading level={3} size="lg">Cards &amp; layouts</Heading>
+          <Heading level={3} size="lg">Cards &amp; callouts</Heading>
           <Text tone="muted">
-            Reusable cards, split sections, and callouts make it straightforward to compose project spotlights and case studies.
+            Reusable cards, split sections, and CTAs simplify composing detailed case studies and
+            project spotlights without re-styling from scratch.
           </Text>
         </article>
       </GridSection>
     </PageSection>
 
-    <PageSection id="next" title="Next steps" description="Design tokens and components are ready for page migrations.">
+    <PageSection
+      id="projects"
+      title="Featured work"
+      description="A sample of active projects pulled from the new content collection."
+    >
+      <div class="projects-grid">
+        {projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            summary={project.data.summary}
+            techStack={project.data.techStack}
+            media={project.data.heroImage}
+            mediaAlt={project.data.heroAlt}
+            cta={project.data.primaryAction}
+            secondaryCta={project.data.secondaryAction}
+          />
+        ))}
+      </div>
+    </PageSection>
+
+    <PageSection
+      id="next"
+      title="Next steps"
+      description="The scaffolding is ready. Upcoming work focuses on migrating each page and enhancing accessibility."
+    >
       <Text>
-        With the component library in place, the upcoming work will focus on porting the landing page into Astro, wiring
-        content collections, and iterating on accessibility. Legacy assets remain available for reference until the migration
-        is complete.
+        With the design tokens, core components, and content collections in place, the next tasks are
+        to port the landing page hero, About section, and project detail pages into Astro-powered
+        layouts. Legacy HTML remains available in <code>static/</code> until feature parity is reached.
       </Text>
     </PageSection>
+
+    <CallToAction
+      eyebrow="Let’s talk"
+      title="Interested in the rebuild or future collaborations?"
+      description="I’m always open to comparing homelab setups, chatting about Rust, or teaming up on platform engineering projects."
+      actions={[
+        { label: 'Email me', href: 'mailto:ryan.rumana@gmail.com' },
+        { label: 'View GitHub', href: 'https://github.com/rrumana', variant: 'secondary' },
+      ]}
+    />
   </main>
 </BaseLayout>
 
@@ -73,5 +126,10 @@ const navLinks = [
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   border: 1px solid rgba(17, 23, 42, 0.05);
+}
+
+.projects-grid {
+  display: grid;
+  gap: var(--space-xl);
 }
 </style>
