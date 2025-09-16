@@ -1,6 +1,5 @@
 ---
 title: "Reverse Game of Life"
-slug: "game-of-life"
 summary: "A Rust-powered exploration into inferring prior states of Conway's Game of Life using SAT solvers and WASM for interactive visualization."
 featured: true
 order: 1

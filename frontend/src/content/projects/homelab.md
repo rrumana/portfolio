@@ -1,6 +1,5 @@
 ---
 title: "Kubernetes Homelab"
-slug: "kubernetes-homelab"
 summary: "Two-node k3s platform with GitOps, Longhorn storage, and a LibreChat + llama.cpp AI stack that powers my day-to-day workflows."
 featured: true
 order: 2

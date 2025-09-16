@@ -1,6 +1,5 @@
 ---
 title: "Multi-Camera Person Re-identification"
-slug: "multi-camera-reid"
 summary: "A distributed computer vision pipeline that tracks subjects across cameras with quantized edge inference and a GitOps deployment."
 featured: true
 order: 3
