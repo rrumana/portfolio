@@ -15,11 +15,12 @@ interface Props {
   title: string;
   description?: string;
   actions?: Link[];
+  id?: string;
 }
 
-const { eyebrow, title, description, actions = [] } = Astro.props as Props;
+const { eyebrow, title, description, actions = [], id } = Astro.props as Props;
 ---
-<section class="cta">
+<section class="cta" id={id}>
   <Container class="cta__inner">
     <div class="cta__copy">
       {eyebrow && <p class="cta__eyebrow">{eyebrow}</p>}

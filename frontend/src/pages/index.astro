@@ -2,83 +2,78 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageSection from '../components/shell/PageSection.astro';
-import Heading from '../components/ui/Heading.astro';
 import Text from '../components/ui/Text.astro';
 import Button from '../components/ui/Button.astro';
 import GridSection from '../components/layouts/GridSection.astro';
-import Badge from '../components/callouts/Badge.astro';
 import ProjectCard from '../components/cards/ProjectCard.astro';
 import CallToAction from '../components/callouts/CallToAction.astro';
+import SplitSection from '../components/layouts/SplitSection.astro';
+import Hero from '../components/sections/Hero.astro';
 
 const navLinks = [
-  { href: '#vision', label: 'Vision' },
-  { href: '#components', label: 'Component Set' },
-  { href: '#projects', label: 'Featured Work' },
-  { href: '#next', label: 'Next Steps' },
+  { href: '#about', label: 'About' },
+  { href: '#projects', label: 'Projects' },
+  { href: '/projects', label: 'All Work' },
+  { href: '#contact', label: 'Contact' },
 ];
 
 const projects = (await getCollection('projects')).filter((project) => project.data.featured);
 projects.sort((a, b) => a.data.order - b.data.order);
 ---
 <BaseLayout
-  title="Ryan Rumana | Portfolio v2"
-  description="Astro-powered redesign scaffold while the Rust runtime continues serving the site."
+  title="Ryan Rumana | Portfolio"
+  description="Software engineer and platform builder focused on Rust, Kubernetes, and resilient homelab infrastructure."
   navLinks={navLinks}
 >
   <main>
-    <PageSection
-      id="vision"
-      eyebrow="Redesign in Progress"
-      title="A cohesive design system for every project"
-      description="The v2 effort introduces shared tokens, components, and layouts so each page feels like part of the same polished experience."
-    >
-      <Text size="lg">
-        Astro now generates static assets that the Rust runtime serves alongside WASM-powered demos.
-        The new component library keeps typography, spacing, and interactions consistent while we
-        migrate existing content.
-      </Text>
-      <Button href="/static/index.html" variant="secondary">View legacy site</Button>
-    </PageSection>
+    <Hero
+      eyebrow="Platform Engineer"
+      title="Hi, I'm Ryan Rumana"
+      description="I build resilient systems that blend Rust, Kubernetes, and automation—powering production-ready homelabs, WASM experiences, and AI workloads at the edge."
+      primaryCta={{ label: 'Get in touch', href: '#contact' }}
+      secondaryCta={{ label: 'Download résumé', href: '/assets/resume.pdf' }}
+    />
 
     <PageSection
-      id="components"
-      title="Foundational components"
-      description="These primitives anchor the new design system and will scale with future pages."
+      id="about"
+      title="About"
+      description="Engineer, adventurer, and perpetual learner—rooted in Rust and inspired by the outdoors."
+      variant="alt"
     >
-      <GridSection columns={3}>
-        <article class="feature-card">
-          <Badge tone="accent">Layout</Badge>
-          <Heading level={3} size="lg">Page containers</Heading>
-          <Text tone="muted">
-            Container wrappers, section scaffolding, and flexible grids ensure spacing and hierarchy
-            feel seamless from page to page.
+      <SplitSection>
+        <img
+          slot="media"
+          src="/images/profile.png"
+          alt="Ryan Rumana portrait"
+          width="450"
+          height="350"
+          loading="lazy"
+        />
+        <div class="about__copy">
+          <Text>
+            I'm a software engineer with roots in Tallahassee and degrees in Computer Science and Machine Learning from
+            the Colorado School of Mines. I thrive on building—from Rust tooling and Kubernetes platforms to custom PCs
+            and interactive experiments.
           </Text>
-        </article>
-        <article class="feature-card">
-          <Badge tone="neutral">UI</Badge>
-          <Heading level={3} size="lg">Typography &amp; buttons</Heading>
-          <Text tone="muted">
-            Token-driven Heading, Text, and Button primitives standardize type scales, weights, and
-            interactive states across the portfolio.
+          <Text>
+            When I'm not experimenting with infrastructure, you'll likely find me outside: hiking, snowboarding, or training
+            for triathlons. That curiosity drives this site, where I share projects that combine performance, automation,
+            and thoughtful design.
           </Text>
-        </article>
-        <article class="feature-card">
-          <Badge tone="accent">Patterns</Badge>
-          <Heading level={3} size="lg">Cards &amp; callouts</Heading>
-          <Text tone="muted">
-            Reusable cards, split sections, and CTAs simplify composing detailed case studies and
-            project spotlights without re-styling from scratch.
-          </Text>
-        </article>
-      </GridSection>
+          <div class="about__actions">
+            <Button href="/assets/resume.pdf">View résumé</Button>
+            <Button href="mailto:ryan.rumana@gmail.com" variant="secondary">Contact</Button>
+          </div>
+        </div>
+      </SplitSection>
     </PageSection>
 
     <PageSection
       id="projects"
-      title="Featured work"
-      description="A sample of active projects pulled from the new content collection."
+      title="Featured projects"
+      description="Select work that blends platform engineering rigor with hands-on experimentation."
     >
-      <div class="projects-grid">
+      <GridSection columns={3}>
         {projects.map((project) => (
           <ProjectCard
             title={project.data.title}
@@ -90,46 +85,34 @@ projects.sort((a, b) => a.data.order - b.data.order);
             secondaryCta={project.data.secondaryAction}
           />
         ))}
-      </div>
-    </PageSection>
-
-    <PageSection
-      id="next"
-      title="Next steps"
-      description="The scaffolding is ready. Upcoming work focuses on migrating each page and enhancing accessibility."
-    >
-      <Text>
-        With the design tokens, core components, and content collections in place, the next tasks are
-        to port the landing page hero, About section, and project detail pages into Astro-powered
-        layouts. Legacy HTML remains available in <code>static/</code> until feature parity is reached.
-      </Text>
+      </GridSection>
     </PageSection>
 
     <CallToAction
+      id="contact"
       eyebrow="Let’s talk"
-      title="Interested in the rebuild or future collaborations?"
-      description="I’m always open to comparing homelab setups, chatting about Rust, or teaming up on platform engineering projects."
+      title="Interested in collaborating or trading homelab war stories?"
+      description="I’m always open to comparing setups, chatting about Rust, or teaming up on platform engineering projects."
       actions={[
         { label: 'Email me', href: 'mailto:ryan.rumana@gmail.com' },
         { label: 'View GitHub', href: 'https://github.com/rrumana', variant: 'secondary' },
       ]}
     />
+
+    <div aria-hidden="true"></div>
   </main>
 </BaseLayout>
 
 <style>
-.feature-card {
+.about__copy {
   display: grid;
-  gap: var(--space-sm);
-  padding: var(--space-xl);
-  background: var(--color-surface-100);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(17, 23, 42, 0.05);
+  gap: var(--space-md);
 }
 
-.projects-grid {
-  display: grid;
-  gap: var(--space-xl);
+.about__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
 }
 </style>

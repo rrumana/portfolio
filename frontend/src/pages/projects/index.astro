@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageSection from '../../components/shell/PageSection.astro';
+import GridSection from '../../components/layouts/GridSection.astro';
+import ProjectCard from '../../components/cards/ProjectCard.astro';
+
+const projects = await getCollection('projects');
+projects.sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout
+  title="Projects | Ryan Rumana"
+  description="Deep dives into the projects and experiments I'm building across Rust, Kubernetes, and AI."
+  navLinks={[{ href: '/', label: 'Home' }, { href: '#projects', label: 'Projects' }]}
+>
+  <main>
+    <PageSection
+      id="projects"
+      title="Projects"
+      description="Browse the latest experiments, infrastructure build-outs, and research from my homelab."
+    >
+      <GridSection columns={3}>
+        {projects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            summary={project.data.summary}
+            techStack={project.data.techStack}
+            media={project.data.heroImage}
+            mediaAlt={project.data.heroAlt}
+            cta={project.data.primaryAction}
+            secondaryCta={project.data.secondaryAction}
+          />
+        ))}
+      </GridSection>
+    </PageSection>
+  </main>
+</BaseLayout>

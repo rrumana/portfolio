@@ -1,0 +1,130 @@
+---
+import Container from '../shell/Container.astro';
+import Button from '../ui/Button.astro';
+import Text from '../ui/Text.astro';
+import Badge from '../callouts/Badge.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+}
+
+const { eyebrow, title, description, primaryCta, secondaryCta } = Astro.props as Props;
+---
+<section class="hero">
+  <Container class="hero__inner">
+    <div class="hero__copy">
+      {eyebrow && <Badge tone="accent">{eyebrow}</Badge>}
+      <h1>{title}</h1>
+      <Text size="lg" tone="muted">{description}</Text>
+      <div class="hero__actions">
+        <Button href={primaryCta.href}>{primaryCta.label}</Button>
+        {secondaryCta && <Button href={secondaryCta.href} variant="secondary">{secondaryCta.label}</Button>}
+      </div>
+    </div>
+    <div class="hero__meta">
+      <div class="hero__card">
+        <p class="hero__card-title">Currently</p>
+        <p class="hero__card-body">Building reliable systems in Rust, Kubernetes, and homelab automation.</p>
+      </div>
+      <div class="hero__card">
+        <p class="hero__card-title">Focus Areas</p>
+        <ul>
+          <li>Platform Engineering</li>
+          <li>Edge + Homelab Infrastructure</li>
+          <li>Rust, WASM, and performance tooling</li>
+        </ul>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+.hero {
+  padding-block: var(--space-3xl);
+  background: linear-gradient(135deg, rgba(54, 209, 220, 0.12), rgba(91, 134, 229, 0.16));
+}
+
+.hero__inner {
+  display: grid;
+  gap: var(--space-2xl);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: center;
+}
+
+.hero__copy {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.hero__copy h1 {
+  font-size: clamp(2.8rem, 6vw, 3.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-neutral-900);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.hero__meta {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.hero__card {
+  background: var(--color-surface-100);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(17, 23, 42, 0.06);
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.hero__card-title {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-neutral-500);
+  font-weight: 600;
+}
+
+.hero__card-body,
+.hero__card ul {
+  font-size: var(--font-size-md);
+  color: var(--color-neutral-700);
+  line-height: var(--line-height-normal);
+}
+
+.hero__card ul {
+  list-style: disc;
+  padding-left: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .hero__card ul {
+    padding-left: var(--space-md);
+  }
+}
+
+html[data-theme='dark'] .hero {
+  background: linear-gradient(135deg, rgba(54, 209, 220, 0.2), rgba(91, 134, 229, 0.28));
+}
+
+html[data-theme='dark'] .hero__card {
+  background: rgba(21, 31, 53, 0.95);
+  border: 1px solid rgba(100, 112, 140, 0.35);
+  color: var(--color-neutral-500);
+}
+
+html[data-theme='dark'] .hero__card-title {
+  color: var(--color-neutral-500);
+}
+</style>
