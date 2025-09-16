@@ -85,4 +85,8 @@ const { eyebrow, title, description, actions = [] } = Astro.props as Props;
     align-items: flex-start;
   }
 }
+
+html[data-theme='dark'] .cta {
+  background: linear-gradient(135deg, rgba(54, 209, 220, 0.35), rgba(91, 134, 229, 0.4));
+}
 </style>

@@ -12,11 +12,11 @@ techStack:
 heroImage: "/images/test2.png"
 heroAlt: "Re-identification visualization"
 primaryAction:
+  label: "View project"
+  href: "/projects/multi-camera-reid"
+secondaryAction:
   label: "Read paper"
   href: "/assets/EE292D Final Project Report.pdf"
-secondaryAction:
-  label: "Legacy page"
-  href: "/ReID.html"
 ---
 This project will leverage the ProjectLayout in Astro for a richer write-up, consolidating assets and
 callouts into reusable components.

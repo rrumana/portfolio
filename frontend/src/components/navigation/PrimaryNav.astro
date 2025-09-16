@@ -33,4 +33,13 @@ const { links = [] } = Astro.props as { links?: LinkItem[] };
 .primary-nav a:focus-visible {
   color: var(--color-neutral-900);
 }
+
+html[data-theme='dark'] .primary-nav a {
+  color: var(--color-neutral-500);
+}
+
+html[data-theme='dark'] .primary-nav a:hover,
+html[data-theme='dark'] .primary-nav a:focus-visible {
+  color: var(--color-neutral-900);
+}
 </style>

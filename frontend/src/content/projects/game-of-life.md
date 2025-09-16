@@ -13,7 +13,7 @@ heroImage: "/images/Gospers_glider_gun_crop.gif"
 heroAlt: "Conway's Game of Life simulation"
 primaryAction:
   label: "View project"
-  href: "/game_of_life.html"
+  href: "/projects/game-of-life"
 secondaryAction:
   label: "Source code"
   href: "https://github.com/rrumana/game_of_life_reverse"

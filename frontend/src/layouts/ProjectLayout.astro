@@ -61,7 +61,7 @@ const {
     </section>
 
     {techStack.length > 0 && (
-      <Container class="project__meta">
+      <Container id="tech" class="project__meta">
         <h2>Tech Stack</h2>
         <ul>
           {techStack.map((item) => (
@@ -144,6 +144,7 @@ const {
 .project__content-inner :global(h2) {
   font-size: var(--font-size-2xl);
   font-weight: 700;
+  color: var(--color-neutral-900);
 }
 
 .project__content-inner :global(p) {

@@ -1,0 +1,115 @@
+---
+const id = 'theme-toggle';
+---
+<button
+  class="theme-toggle"
+  type="button"
+  data-theme-toggle
+  aria-label="Toggle theme"
+  aria-pressed="false"
+>
+  <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">🌞</span>
+  <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
+  <span class="theme-toggle__label">Toggle theme</span>
+</button>
+
+<script is:inline>
+  const storageKey = 'rr-theme';
+  const root = document.documentElement;
+  const toggleBtn = document.querySelector('[data-theme-toggle]');
+
+  const applyTheme = (theme) => {
+    if (theme) {
+      root.setAttribute('data-theme', theme);
+    } else {
+      root.removeAttribute('data-theme');
+    }
+    if (toggleBtn) {
+      const isDark = (theme ?? root.getAttribute('data-theme')) === 'dark';
+      toggleBtn.setAttribute('aria-pressed', String(isDark));
+      toggleBtn.classList.toggle('is-dark', isDark);
+    }
+  };
+
+  const storedTheme = localStorage.getItem(storageKey);
+  if (storedTheme) {
+    applyTheme(storedTheme);
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    applyTheme('dark');
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme');
+      const nextTheme = current === 'dark' ? 'light' : 'dark';
+      applyTheme(nextTheme === 'light' ? '' : 'dark');
+      if (nextTheme === 'light') {
+        localStorage.removeItem(storageKey);
+      } else {
+        localStorage.setItem(storageKey, 'dark');
+      }
+    });
+  }
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+    if (!localStorage.getItem(storageKey)) {
+      applyTheme(event.matches ? 'dark' : 'light');
+    }
+  });
+</script>
+
+<style>
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: rgba(17, 23, 42, 0.06);
+  color: var(--color-neutral-700);
+  font-size: var(--font-size-sm);
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  background: rgba(54, 93, 240, 0.15);
+  color: var(--color-primary-500);
+}
+
+.theme-toggle.is-dark {
+  background: rgba(91, 134, 229, 0.18);
+  color: var(--color-accent-500);
+}
+
+.theme-toggle__icon {
+  font-size: 1.2rem;
+}
+
+.theme-toggle__icon--sun {
+  display: inline;
+}
+
+.theme-toggle__icon--moon {
+  display: none;
+}
+
+.theme-toggle.is-dark .theme-toggle__icon--sun {
+  display: none;
+}
+
+.theme-toggle.is-dark .theme-toggle__icon--moon {
+  display: inline;
+}
+
+.theme-toggle__label {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 720px) {
+  .theme-toggle__label {
+    display: none;
+  }
+}
+</style>

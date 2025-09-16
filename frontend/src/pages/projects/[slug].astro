@@ -1,0 +1,60 @@
+---
+import { getCollection, getEntryBySlug } from 'astro:content';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.data.slug },
+    props: { entrySlug: project.slug ?? project.data.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const { entrySlug } = Astro.props as { entrySlug: string };
+
+if (!slug) {
+  throw new Error('Project slug missing');
+}
+
+const project = await getEntryBySlug('projects', entrySlug);
+
+if (!project) {
+  throw new Error(`Project with slug ${slug} not found`);
+}
+
+const { Content } = await project.render();
+
+const actions = [project.data.primaryAction, project.data.secondaryAction].filter(Boolean) as {
+  label: string;
+  href: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
+}[];
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '#tech', label: 'Tech' },
+  { href: '#details', label: 'Details' },
+];
+---
+<ProjectLayout
+  title={project.data.title}
+  description={project.data.summary}
+  eyebrow="Project"
+  heroImage={project.data.heroImage}
+  heroAlt={project.data.heroAlt}
+  techStack={project.data.techStack}
+  actions={actions}
+  navLinks={navLinks}
+>
+  <section id="details" class="project-section">
+    <Content />
+  </section>
+</ProjectLayout>
+
+<style>
+.project-section {
+  display: grid;
+  gap: var(--space-xl);
+}
+</style>
