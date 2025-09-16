@@ -56,8 +56,8 @@ const currentYear = new Date().getFullYear();
 }
 
 html[data-theme='dark'] .site-footer {
-  background: rgba(21, 31, 53, 0.95);
-  border-top: 1px solid rgba(100, 112, 140, 0.35);
+  background: var(--color-surface-200);
+  border-top: 1px solid rgba(120, 132, 182, 0.35);
 }
 
 html[data-theme='dark'] .site-footer__meta,
@@ -67,6 +67,6 @@ html[data-theme='dark'] .site-footer__links a {
 
 html[data-theme='dark'] .site-footer__links a:hover,
 html[data-theme='dark'] .site-footer__links a:focus-visible {
-  color: var(--color-neutral-900);
+  color: var(--color-primary-500);
 }
 </style>

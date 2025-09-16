@@ -5,15 +5,20 @@ import Button from '../ui/Button.astro';
 ---
 <section class="gol-demo">
   <div class="gol-demo__media">
-    <img src="/images/Gospers_glider_gun_crop.gif" alt="Game of Life glider gun" loading="lazy" />
+    <iframe
+      src="/legacy/game_of_life.html"
+      title="Game of Life demo"
+      loading="lazy"
+      class="gol-demo__frame"
+    ></iframe>
   </div>
   <div class="gol-demo__content">
     <Heading level={2} size="2xl">Interactive playground</Heading>
     <Text>
-      Draw patterns, simulate forwards or backwards, and export GIFs directly from the browser. The UI runs on
-      wasm-bindgen while the heavy lifting stays in Rust.
+      Draw patterns, simulate forwards or backwards, and export GIFs directly from the browser. The Rust engine and
+      wasm-bindgen UI remain exactly as before—now surfaced in the new layout.
     </Text>
-    <Button href="/game_of_life.html">Launch legacy demo</Button>
+    <Button href="/legacy/game_of_life.html" variant="secondary">Open in new tab</Button>
   </div>
 </section>
 
@@ -22,7 +27,7 @@ import Button from '../ui/Button.astro';
   display: grid;
   gap: var(--space-xl);
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  align-items: center;
+  align-items: stretch;
 }
 
 .gol-demo__media {
@@ -30,12 +35,14 @@ import Button from '../ui/Button.astro';
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   border: 1px solid rgba(17, 23, 42, 0.08);
+  min-height: 420px;
 }
 
-.gol-demo__media img {
+.gol-demo__frame {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  border: none;
+  background: var(--color-surface-100);
 }
 
 .gol-demo__content {
@@ -44,6 +51,6 @@ import Button from '../ui/Button.astro';
 }
 
 html[data-theme='dark'] .gol-demo__media {
-  border: 1px solid rgba(100, 112, 140, 0.35);
+  border: 1px solid rgba(120, 132, 182, 0.35);
 }
 </style>

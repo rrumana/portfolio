@@ -89,6 +89,10 @@ main {
   background: var(--color-surface-100);
 }
 
+html[data-theme='dark'] .section--alt {
+  background: var(--color-surface-200);
+}
+
 pre, code {
   font-family: var(--font-family-mono);
 }

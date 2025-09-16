@@ -45,7 +45,7 @@ const { eyebrow, title, description, primaryCta, secondaryCta } = Astro.props as
 <style>
 .hero {
   padding-block: var(--space-3xl);
-  background: linear-gradient(135deg, rgba(54, 209, 220, 0.12), rgba(91, 134, 229, 0.16));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-500) 20%, transparent), color-mix(in srgb, var(--color-primary-500) 18%, transparent));
 }
 
 .hero__inner {
@@ -115,12 +115,12 @@ const { eyebrow, title, description, primaryCta, secondaryCta } = Astro.props as
 }
 
 html[data-theme='dark'] .hero {
-  background: linear-gradient(135deg, rgba(54, 209, 220, 0.2), rgba(91, 134, 229, 0.28));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-500) 26%, transparent), color-mix(in srgb, var(--color-primary-500) 24%, transparent));
 }
 
 html[data-theme='dark'] .hero__card {
-  background: rgba(21, 31, 53, 0.95);
-  border: 1px solid rgba(100, 112, 140, 0.35);
+  background: var(--color-surface-200);
+  border: 1px solid rgba(120, 132, 182, 0.35);
   color: var(--color-neutral-500);
 }
 

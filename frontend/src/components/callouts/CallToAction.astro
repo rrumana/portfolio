@@ -42,7 +42,7 @@ const { eyebrow, title, description, actions = [], id } = Astro.props as Props;
 <style>
 .cta {
   padding-block: var(--space-3xl);
-  background: linear-gradient(135deg, var(--color-accent-500), var(--color-primary-500));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-500) 65%, transparent), color-mix(in srgb, var(--color-primary-500) 60%, transparent));
   color: var(--color-surface-100);
 }
 
@@ -88,6 +88,12 @@ const { eyebrow, title, description, actions = [], id } = Astro.props as Props;
 }
 
 html[data-theme='dark'] .cta {
-  background: linear-gradient(135deg, rgba(54, 209, 220, 0.35), rgba(91, 134, 229, 0.4));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-500) 50%, transparent), color-mix(in srgb, var(--color-primary-500) 48%, transparent));
+}
+
+html[data-theme='dark'] .cta__actions .button--secondary {
+  background: rgba(255, 255, 255, 0.22);
+  color: var(--color-surface-100);
+  border: 1px solid rgba(255, 255, 255, 0.32);
 }
 </style>

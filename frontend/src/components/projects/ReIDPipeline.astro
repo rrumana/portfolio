@@ -1,0 +1,43 @@
+---
+import Heading from '../ui/Heading.astro';
+import Text from '../ui/Text.astro';
+import SplitSection from '../layouts/SplitSection.astro';
+---
+<section class="reid-pipeline">
+  <SplitSection>
+    <img
+      slot="media"
+      src="/images/test2.png"
+      alt="Multi-camera re-identification pipeline"
+      loading="lazy"
+    />
+    <div class="reid-pipeline__content">
+      <Heading level={3} size="lg">Edge-first architecture</Heading>
+      <Text>
+        EfficientNet-based embeddings run on NVIDIA Jetsons with TensorRT, pushing inference to the
+        edge so cameras coordinate without saturating the network.
+      </Text>
+      <Heading level={4} size="md">GitOps delivery</Heading>
+      <Text tone="muted">
+        Kustomize overlays and Argo CD keep every camera node in sync. Updating an on-device model is
+        as simple as merging a PR.
+      </Text>
+    </div>
+  </SplitSection>
+</section>
+
+<style>
+.reid-pipeline {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+.reid-pipeline img {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+html[data-theme='dark'] .reid-pipeline img {
+  border: 1px solid rgba(120, 132, 182, 0.35);
+}
+</style>

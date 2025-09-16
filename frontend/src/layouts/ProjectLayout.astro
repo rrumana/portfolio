@@ -5,7 +5,6 @@ import Badge from '../components/callouts/Badge.astro';
 import Button from '../components/ui/Button.astro';
 import Heading from '../components/ui/Heading.astro';
 import Text from '../components/ui/Text.astro';
-import type { AstroComponentFactory } from 'astro/runtime/server';
 
 interface Action {
   label: string;
@@ -22,7 +21,7 @@ interface Props {
   techStack?: string[];
   actions?: Action[];
   navLinks?: { href: string; label: string }[];
-  sections?: AstroComponentFactory[];
+  sections?: any[];
 }
 
 const {
@@ -79,9 +78,10 @@ const {
         <slot />
         {sections.length > 0 && (
           <div class="project__sections">
-            {sections.map((Section) => (
-              <Section />
-            ))}
+            {sections.map((Section, index) => {
+              const SectionComponent: any = Section;
+              return <SectionComponent data-section-index={index} />;
+            })}
           </div>
         )}
       </Container>
@@ -92,7 +92,7 @@ const {
 <style>
 .project__hero {
   padding-block: var(--space-3xl);
-  background: linear-gradient(135deg, rgba(54, 93, 240, 0.08), rgba(91, 134, 229, 0.1));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary-500) 18%, transparent), color-mix(in srgb, var(--color-accent-500) 16%, transparent));
 }
 
 .project__hero-inner {
@@ -117,6 +117,7 @@ const {
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-md);
+  border: 1px solid transparent;
 }
 
 .project__meta {
@@ -135,8 +136,8 @@ const {
 .project__meta li {
   padding: var(--space-2xs) var(--space-sm);
   border-radius: var(--radius-xs);
-  background: rgba(91, 134, 229, 0.18);
-  color: var(--color-primary-500);
+  background: color-mix(in srgb, var(--color-primary-500) 22%, transparent);
+  color: var(--color-primary-600);
   font-weight: 600;
   font-size: var(--font-size-xs);
   letter-spacing: 0.02em;
@@ -156,14 +157,6 @@ const {
   gap: var(--space-2xl);
 }
 
-html[data-theme='dark'] .project__hero {
-  background: linear-gradient(135deg, rgba(115, 147, 255, 0.16), rgba(75, 211, 234, 0.14));
-}
-
-html[data-theme='dark'] .project__meta li {
-  background: rgba(115, 147, 255, 0.22);
-}
-
 .project__content-inner :global(h2) {
   font-size: var(--font-size-2xl);
   font-weight: 700;
@@ -175,5 +168,18 @@ html[data-theme='dark'] .project__meta li {
   line-height: var(--line-height-normal);
   color: var(--color-neutral-500);
   max-width: 70ch;
+}
+
+html[data-theme='dark'] .project__hero {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--color-primary-500) 26%, transparent), color-mix(in srgb, var(--color-accent-500) 24%, transparent));
+}
+
+html[data-theme='dark'] .project__media {
+  border: 1px solid rgba(120, 132, 182, 0.35);
+}
+
+html[data-theme='dark'] .project__meta li {
+  background: color-mix(in srgb, var(--color-primary-500) 32%, transparent);
+  color: var(--color-neutral-900);
 }
 </style>

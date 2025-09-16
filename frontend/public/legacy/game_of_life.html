@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+        <title>Conway's Game of Life | Interactive Simulation by Ryan Rumana</title>
+        <meta name="keywords" content="Game of Life, Conway, cellular automata, simulation, Rust, WASM, WebAssembly, interactive, Ryan Rumana, programming" />
+        <meta name="description" content="Experience Conway's Game of Life in an interactive simulation built with Rust and WebAssembly. Watch cellular automata evolve in real-time with this educational project by Ryan Rumana." />
+        
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:title" content="Conway's Game of Life | Interactive Simulation" />
+        <meta property="og:description" content="Experience Conway's Game of Life in an interactive simulation built with Rust and WebAssembly. Watch cellular automata evolve in real-time." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ryanrumana.com/game_of_life.html" />
+        <meta property="og:image" content="https://ryanrumana.com/images/Gospers_glider_gun_crop.gif" />
+        <meta property="og:image:alt" content="Conway's Game of Life Simulation" />
+        <meta property="og:site_name" content="Ryan Rumana Portfolio" />
+        <meta property="og:locale" content="en_US" />
+        
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Conway's Game of Life | Interactive Simulation" />
+        <meta name="twitter:description" content="Experience Conway's Game of Life in an interactive simulation built with Rust and WebAssembly. Watch cellular automata evolve in real-time." />
+        <meta name="twitter:image" content="https://ryanrumana.com/images/Gospers_glider_gun_crop.gif" />
+        <meta name="twitter:image:alt" content="Conway's Game of Life Simulation" />
+        
+        <!-- Additional SEO Meta Tags -->
+        <meta name="author" content="Ryan Rumana" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://ryanrumana.com/game_of_life.html" />
+        
+        <link rel="icon" type="image/png" href="./assets/favicon.ico" />
+        <meta name="theme-color" content="#36d1dc" />
+        <link rel="preload" as="style" href="./css/main.css" />
+        <link rel="stylesheet" href="./css/main.css" />
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+              integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+              crossorigin="anonymous"
+              referrerpolicy="no-referrer" />
+        <script defer src="./javascript/scrollreveal.min.js"></script>
+        <script defer type="text/javascript" src="./javascript/scrollveal.js"></script>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js">
+        </script>
+        
+    </head>
+    <body>
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title">Project Spotlight: <br>Reversing Game Of Life</h2>
+                <div class="row about-wrapper">
+                    <div class="about-wrapper__image">
+                        <img class="img-fluid"
+                             src="./images/Gospers_glider_gun_crop.gif"
+                             alt="Profile Image"
+                             width="450"
+                             height="350" />
+                    </div>
+                    <div class="about-wrapper__info">
+                        <p class="about-wrapper__info-text">
+                            Conway's Game of Life is a cellular automaton played on an infinite two-dimensional 
+                            grid of cells, each either alive or dead. Gameplay evolves through discrete time steps 
+                            governed by simple neighbor-based rules determining cell survival, death, or 
+                            reproduction. Widely explored in computer science, it demonstrates emergent complexity, 
+                            algorithmic efficiency, and self-organizing behaviors from minimalistic rule sets.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            The goal of this project was to walk through the steps of proving and implementing 
+                            game of life reversal using SAT solvers, but has become more of an playground where
+                            one can build, simulate, and record small scale examples in the forwards and backwards 
+                            direction.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            I hope you enjoy using this as much as I enjoyed making it!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulation Section -->
+        <section id="simulation">
+            <div class="container">
+                <h2 class="section-title">Game of Life Simulation</h2>
+                
+                <div class="simulation-wrapper">
+                    <div class="simulation-section">
+                        <div class="simulation-description">
+                            <p class="simulation-text">
+                                This interactive simulation allows you to visualize the Game of Life in action. You can step through
+                                generations one at a time, or simulate multiple generations at once. The grid has a very simple glider
+                                on it, but each cell can be toggled on or off simply by clicking it.
+                            </p>
+                            <p class="simulation-text">
+                                The simulation is built using WebAssembly leveraging Rust for the core logic with an optimized SIMD-based
+                                engine. The enhanced interface includes several powerful features: <strong>Text to ASCII Art</strong> lets you
+                                convert any text into cellular patterns that emerge on the grid, <strong>Pattern Management</strong> allows you
+                                to upload custom patterns from files or download your current grid state, and <strong>Game Controls</strong>
+                                provide precise simulation control with adjustable speed and multi-step advancement.
+                            </p>
+                            <p class="simulation-text">
+                                This simulation integrates with my reverse Game of Life project, demonstrating both forward evolution
+                                and the theoretical foundations for reconstructing predecessor states. While the reversing feature isn't
+                                included in this demo due to its computational complexity (\( O(2^n) \) worst case), the optimized engine
+                                showcases the performance improvements that make such ambitious computations feasible.
+                            </p>
+                            <p class="simulation-text">
+                                You can find the full progress for both the simulation and reverse solver on the github page.
+                            </p>
+                            <div class="github-link-container">
+                                <a href="https://github.com/rrumana/game_of_life_reverse"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="cta-btn cta-btn--intro cta-btn--projects">
+                                    Github Link
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="simulation-interactive">
+                            <canvas id="lifeCanvas" width="400" height="400"></canvas>
+                            <!-- Enhanced UI Elements -->
+                            <div id="enhanced-controls">
+                                <!-- Basic Controls Section -->
+                                <div class="control-section">
+                                    <h4>Game Controls</h4>
+                                    <button id="stepBtn">Step Forward</button>
+                                    <button id="backBtn">Step Back</button>
+                                    <button id="resetBtn">Reset</button>
+                                    <button id="multiStepBtn">Multi-Step</button>
+                                    <button id="recordBtn">Record GIF</button>
+                                    <div class="input-group">
+                                        <label for="speedRange">Speed:</label>
+                                        <input type="range" id="speedRange" min="50" max="1000" value="200" />
+                                        <div id="delayDisplay">Frame Delay: 200ms</div>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="genInput">Generations:</label>
+                                        <input type="number" id="genInput" min="1" max="100" value="1" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Pattern Management Section -->
+                                <div class="control-section">
+                                    <h4>Text-To-ASCII</h4>
+                                    
+                                    <!-- Text to ASCII subsection -->
+                                    <div class="pattern-subsection">
+                                        <h5>Generate from Text</h5>
+                                        <div class="text-input-row">
+                                            <input type="text" id="textInput" placeholder="Enter text to convert" />
+                                        </div>
+                                        <div class="buffer-control-row">
+                                            <label for="bufferSizeSlider">Buffer Size:</label>
+                                            <input type="range" id="bufferSizeSlider" min="1" max="10" value="2" />
+                                            <span id="bufferDisplay">2</span>
+                                            <button id="generateTextBtn">Generate</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- File upload subsection -->
+                                    <div class="pattern-subsection">
+                                        <h5>Load from File</h5>
+                                        <div class="file-control-row">
+                                            <input type="file" id="fileInput" accept=".txt" />
+                                            <button id="fileUploadBtn">Upload Pattern</button>
+                                        </div>
+                                        <div id="fileName">No file selected</div>
+                                    </div>
+                                    
+                                    <!-- Download subsection -->
+                                    <div class="pattern-subsection">
+                                        <h5>Export Pattern</h5>
+                                        <button id="downloadBtn">Download Pattern</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <script type="module">
+                    // Import only the simulation initialization function.
+                    import { initGameOfLife } from "./javascript/game_of_life.js";
+                    
+                    // Call initGameOfLife once the page loads.
+                    initGameOfLife().catch((error) => {
+                        console.error("Failed to initialize simulation:", error);
+                    });
+                </script>
+            </div>
+        </section>
+
+        <!-- Game of Life Optimizations Section -->
+        <section id="optimizations">
+            <div class="container">
+                <div class="section-header" onclick="toggleOptimizations()" style="cursor: pointer; display: flex; align-items: center; gap: 1rem; padding: 1.5rem 0; border-bottom: 3px solid #5b86e5;">
+                    <h2 class="section-title" style="margin: 0; flex: 1;">Optimizing The Simulation</h2>
+                    <span id="optimizations-indicator" class="collapse-indicator" style="font-size: 1.4rem; color: #5b86e5; font-weight: bold;">▼</span>
+                </div>
+                <div id="optimizations-content" class="proof-content" style="display: none;">
+                    <div class="implementation-wrapper">
+                        
+                        <!-- Navigation -->
+                        <div class="proof-nav">
+                            <h3>Engine Architecture</h3>
+                            <ul>
+                                <li><a href="#overview">1. Engine Overview</a></li>
+                                <li><a href="#bit-packing">2. Bit-Packed Representation</a></li>
+                                <li><a href="#simd-operations">3. SIMD Vectorization</a></li>
+                                <li><a href="#neighbor-counting">4. Neighbor Counting</a></li>
+                                <li><a href="#parallel-processing">5. Parallel Processing</a></li>
+                                <li><a href="#webassembly">6. WebAssembly Integration</a></li>
+                                <li><a href="#futureWork">7. Future Work</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Engine Overview Section -->
+                        <div id="overview" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('overview')">
+                                <div class="section-icon">1</div>
+                                <h3 class="section-title-text">Engine Overview</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    The represents the bext version yet of my Game of Life optimization, delivering <strong>~10,000x performance improvement</strong> 
+                                    over my first naive implementation through bit manipulation and hardware-accelerated computation. While benchmarking this engine achieved 
+                                    <strong>158 billion cell updates per second</strong> on my laptop, although there is still plenty of room for improvement.
+                                </p>
+                                <p class="implementation-text">
+                                    The engine automatically detects your hardware capabilities and selects optimal SIMD configurations,
+                                    supporting widths of 4, 8, or 16 parallel operations. It uses configurable generic parameters
+                                    <code class="code-snippet">UltimateEngine&lt;const N: usize&gt;</code> where N represents the SIMD lane count,
+                                    allowing compile-time optimization for specific hardware targets.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Bit-Packed Representation Section -->
+                        <div id="bit-packing" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('bit-packing')">
+                                <div class="section-icon">2</div>
+                                <h3 class="section-title-text">Bit-Packed Representation</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    The engine stores 64 cells per u64 integer, achieving <strong>8x memory efficiency</strong> compared to
+                                    byte-per-cell representations. This bit-packing strategy dramatically improves cache performance and
+                                    enables vectorized operations on large cell groups simultaneously.
+                                </p>
+                                <p class="implementation-text">
+                                    Grid layout uses MSB-first bit ordering with strategic padding which eliminates boundary checks during computation, 
+                                    while SIMD alignment ensures optimal memory access patterns. Pre-computed boundary masks handle edge cases efficiently without
+                                    conditional branching in the hot path.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- SIMD Operations Section -->
+                        <div id="simd-operations" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('simd-operations')">
+                                <div class="section-icon">3</div>
+                                <h3 class="section-title-text">SIMD Vectorization</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    The engine leverages Rust's portable SIMD to process multiple 64-bit words simultaneously.
+                                    Custom shift operations <code class="code-snippet">shl()</code> and <code class="code-snippet">shr()</code>
+                                    handle cross-lane bit propagation using <code class="code-snippet">rotate_elements_left/right</code>
+                                    with pre-selected masks to maintain bit continuity across SIMD lanes. Using 8 SIMD lanes represents a <strong>512x</strong>
+                                    speedup compared to byte-per-cell representations. 
+                                </p>
+                                <p class="implementation-text">
+                                    Memory prefetching on x86_64 architectures uses <code class="code-snippet">_mm_prefetch</code>
+                                    with <code class="code-snippet">_MM_HINT_T0</code> to load next rows into L1 cache before processing,
+                                    reducing memory latency. The engine processes columns in SIMD-aligned chunks, maximizing
+                                    instruction-level parallelism and minimizing cache misses.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Neighbor Counting Algorithm Section -->
+                        <div id="neighbor-counting" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('neighbor-counting')">
+                                <div class="section-icon">4</div>
+                                <h3 class="section-title-text">Neighbor Counting Algorithm</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    The core <code class="code-snippet">sub_step()</code> function implements an optimized full/half adder
+                                    algorithm for counting neighbors. Rather than iterating through 8 neighbors individually, it uses
+                                    a two-stage binary tree reduction to compute neighbor counts for all 64 cells in parallel.
+                                </p>
+                                <p class="implementation-text">
+                                    Neighbors are grouped into pairs using XOR for sum bits and AND for carry bitsand then combined. 
+                                    The Game of Life rules are applied using bitwise operations:
+                                    <code class="code-snippet">center |= ab; center &= b3 ^ b4; center &= !c0;</code>
+                                    eliminating conditional branching in the hotpath, allowing the vectorization to remain efficient.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Parallel Processing Section -->
+                        <div id="parallel-processing" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('parallel-processing')">
+                                <div class="section-icon">5</div>
+                                <h3 class="section-title-text">Parallel Processing</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    The engine uses Rayon thread pools to distribute row processing across CPU cores. Work is divided
+                                    into chunks based on <code class="code-snippet">available_parallelism()</code> with automatic load
+                                    balancing. Each thread processes a contiguous block of rows, minimizing false sharing and
+                                    maximizing cache locality.
+                                </p>
+                                <p class="implementation-text">
+                                    Thread synchronization uses scoped threads with zero-overhead spawning. The double-buffering strategy
+                                    with <code class="code-snippet">swap(&mut self.field, &mut self.new_field)</code> eliminates
+                                    memory allocation overhead between generations, while maintaining memory access patterns
+                                    for optimal cache performance.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- WebAssembly Integration Section -->
+                        <div id="webassembly" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('webassembly')">
+                                <div class="section-icon">6</div>
+                                <h3 class="section-title-text">WebAssembly Integration</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    WebAssembly compilation maintains near-native performance while providing seamless browser integration.
+                                    The engine detects the WebAssembly target using <code class="code-snippet">cfg!(target_arch = "wasm32")</code>
+                                    and automatically disables thread pools, falling back to sequential processing with identical
+                                    SIMD optimizations.
+                                </p>
+                                <p class="implementation-text">
+                                    SIMD operations compile to WebAssembly SIMD instructions when supported, providing significant
+                                    performance benefits in modern browsers. The engine gracefully handles hardware limitations
+                                    with automatic fallback to scalar implementations, ensuring compatibility across all platforms
+                                    while maximizing performance on capable hardware.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Future Work Section -->
+                        <div id="futureWork" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('futureWork')">
+                                <div class="section-icon">7</div>
+                                <h3 class="section-title-text">Future Work</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    Several optimization vectors remain unexplored for further performance enhancement. Current benchmarks indicate
+                                    memory bandwidth saturation as the primary bottleneck, with CPU utilization plateauing at approximately 50% due to
+                                    DRAM throughput limitations. Future work could investigate other memory access pattern optimizations, including
+                                    software prefetching heuristics, and cache-friendly algorithms to mitigate memory bottlenecks.
+                                </p>
+                                <p class="implementation-text">
+                                    I hope the attention to detail and the performance optimizations are appreciated even though they weren't needed
+                                    to begin with, the initial implementation could do 12 million cell updates per second, which is plenty for this 
+                                    webpage and most tasks in general. If I really wanted to go faster there are always GPU implementations to explore as well.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Collapsible Proof Section -->
+        <section id="proof">
+            <div class="container">
+                <div class="section-header" onclick="toggleProof()" style="cursor: pointer; display: flex; align-items: center; gap: 1rem; padding: 1.5rem 0; border-bottom: 3px solid #5b86e5;">
+                    <h2 class="section-title" style="margin: 0; flex: 1;">Proving Reverse GOL Is NP-Complete</h2>
+                    <span id="proof-indicator" class="collapse-indicator" style="font-size: 1.4rem; color: #5b86e5; font-weight: bold;">▼</span>
+                </div>
+                <div id="proof-content" class="proof-content" style="display: none;">
+                    <div class="implementation-wrapper">
+                        <div class="implementation-section">
+                
+                <!-- Navigation -->
+                <div class="proof-nav">
+                    <h3>Proof Structure</h3>
+                    <ul>
+                        <li><a href="#definitions">1. Definitions & Setup</a></li>
+                        <li><a href="#theorem">2. Main Theorem</a></li>
+                        <li><a href="#np-membership">3. NP Membership</a></li>
+                        <li><a href="#np-hardness">4. NP-Hardness</a></li>
+                        <li><a href="#gadgets">5. Gadget Construction</a></li>
+                        <li><a href="#example">6. Example</a></li>
+                        <li><a href="#conclusion">7. Conclusion</a></li>
+                    </ul>
+                </div>
+
+                <!-- Definitions Section -->
+                <div id="definitions" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('definitions')">
+                        <div class="section-icon">1</div>
+                        <h3 class="section-title-text">Definitions & Setup</h3>
+                        <span class="collapse-indicator">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <p class="proof-text">
+                            Let <span class="math-term">Σ = {0,1}</span>. For a finite grid of size <span class="math-term">N × N</span>, a configuration is a function:
+                        </p>
+                        <div class="formula">
+                            \[ c: \{0,1,\dots,N-1\}^2 \to \{0,1\}. \]
+                        </div>
+                        
+                        <p class="proof-text">
+                            Define the local update rule of Conway's Game of Life:
+                        </p>
+                        <div class="formula">
+                            \[ f: \{0,1\}^{N \times N} \to \{0,1\}^{N \times N} \]
+                        </div>
+                        <p class="proof-text">by</p>
+                        <div class="formula">
+                            \[
+                            f(c)(i,j) = \begin{cases}
+                                1, & \text{if } c(i,j)=1 \text{ and } n(i,j) \in \{2,3\}, \\
+                                1, & \text{if } c(i,j)=0 \text{ and } n(i,j)=3, \\
+                                0, & \text{otherwise},
+                            \end{cases}
+                            \]
+                        </div>
+                        <p class="proof-text">where the neighbor count is:</p>
+                        <div class="formula">
+                            \[
+                            n(i,j) = \sum_{(d_1,d_2) \in \{-1,0,1\}^2 \setminus \{(0,0)\}} c(i+d_1,j+d_2).
+                            \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Theorem Section -->
+                <div id="theorem" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('theorem')">
+                        <div class="section-icon">2</div>
+                        <h3 class="section-title-text">Main Theorem</h3>
+                        <span class="collapse-indicator">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <p class="proof-text">
+                            <strong>Theorem:</strong> The decision problem REV-GOL is NP-Complete.
+                        </p>
+                        <div class="formula">
+                            \[
+                            \text{REV-GOL} = \{\, c \in \{0,1\}^{N \times N} \mid \exists\, p \in \{0,1\}^{N \times N} \text{ such that } f(p)=c \,\}.
+                            \]
+                        </div>
+                        <p class="proof-text">
+                            In other words, REV-GOL asks: "Given a Game of Life configuration <span class="math-term">c</span>, does there exist a predecessor configuration <span class="math-term">p</span> such that applying one step of the Game of Life rules to <span class="math-term">p</span> produces <span class="math-term">c</span>?"
+                        </p>
+                    </div>
+                </div>
+
+                <!-- NP Membership Section -->
+                <div id="np-membership" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('np-membership')">
+                        <div class="section-icon">3</div>
+                        <h3 class="section-title-text">NP Membership</h3>
+                        <span class="collapse-indicator">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <p class="proof-text">
+                            <strong>REV-GOL ∈ NP:</strong> A nondeterministic algorithm can guess a candidate predecessor <span class="math-term">p</span> and verify in <span class="math-term">O(N²)</span> time that <span class="math-term">f(p) = c</span>.
+                        </p>
+                        <p class="proof-text">
+                            The verification process simply applies the Game of Life rules to each cell in the guessed configuration and checks if the result matches the given configuration.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- NP-Hardness Section -->
+                <div id="np-hardness" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('np-hardness')">
+                        <div class="section-icon">4</div>
+                        <h3 class="section-title-text">NP-Hardness Proof</h3>
+                        <span class="collapse-indicator">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <p class="proof-text">
+                            To prove NP-hardness, we reduce an arbitrary instance of <strong>3-SAT</strong> to REV-GOL.
+                        </p>
+                        <p class="proof-text">
+                            Let <span class="math-term">φ</span> be a 3-SAT formula:
+                        </p>
+                        <div class="formula">
+                            \[
+                            \phi = \bigwedge_{i=1}^m (\ell_{i1} \vee \ell_{i2} \vee \ell_{i3})
+                            \]
+                        </div>
+                        <p class="proof-text">
+                            with variables <span class="math-term">x₁, x₂, ..., xₙ</span>. The reduction constructs, in polynomial time, a Game of Life configuration <span class="math-term">c_φ</span> such that:
+                        </p>
+                        <div class="formula">
+                            \[
+                            c_\phi \in \text{REV-GOL} \iff \phi \text{ is satisfiable}.
+                            \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gadgets Section -->
+                <div id="gadgets" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('gadgets')">
+                        <div class="section-icon">5</div>
+                        <h3 class="section-title-text">Gadget Construction</h3>
+                        <span class="collapse-indicator">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <p class="proof-text">
+                            The reduction uses three types of gadgets:
+                        </p>
+                        
+                        <p class="proof-text">
+                            <strong>1. Variable Gadgets:</strong> For each variable <span class="math-term">xⱼ</span>, design a gadget <span class="math-term">G_{xⱼ}</span> in a block <span class="math-term">Rⱼ</span> with two predecessor states:
+                            <br>• <span class="math-term">P_{j,T}</span> corresponding to <span class="math-term">xⱼ = True</span>
+                            <br>• <span class="math-term">P_{j,F}</span> corresponding to <span class="math-term">xⱼ = False</span>
+                        </p>
+
+                        <p class="proof-text">
+                            <strong>2. Clause Gadgets:</strong> For each clause:
+                        </p>
+                        <div class="formula">
+                            \[ C_i = (\ell_{i1} \vee \ell_{i2} \vee \ell_{i3}) \]
+                        </div>
+                        <p class="proof-text">
+                            build a gadget <span class="math-term">G_{Cᵢ}</span> in a block <span class="math-term">Sᵢ</span> that is reversible if and only if at least one literal in the clause is satisfied.
+                        </p>
+
+                        <p class="proof-text">
+                            <strong>3. Interconnection:</strong> Arrange the gadgets so that:
+                        </p>
+                        <div class="formula">
+                            \[
+                            c_\phi = \left( \bigcup_{j=1}^n G_{x_j} \right) \cup \left( \bigcup_{i=1}^m G_{C_i} \right) \cup (\text{background})
+                            \]
+                        </div>
+                        <p class="proof-text">
+                            has a predecessor if and only if <span class="math-term">φ</span> is satisfiable.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Example Section -->
+                <div id="example" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('example')">
+                        <div class="section-icon">6</div>
+                        <h3 class="section-title-text">Concrete Example</h3>
+                        <span class="collapse-indicator">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <p class="proof-text">
+                            Consider the 3-SAT formula:
+                        </p>
+                        <div class="formula">
+                            \[ \phi = (x_1 \vee \neg x_2 \vee x_3) \wedge (\neg x_1 \vee x_2 \vee \neg x_3) \]
+                        </div>
+                        
+                        <p class="proof-text">
+                            <strong>Clause 1:</strong> <span class="math-term">(x₁ ∨ ¬x₂ ∨ x₃)</span> is satisfied when at least one of:
+                        </p>
+                        <div class="formula">
+                            \[
+                            x_1 \text{ is True } (P_{1,T}), \quad x_2 \text{ is False } (P_{2,F}), \quad x_3 \text{ is True } (P_{3,T})
+                            \]
+                        </div>
+                        
+                        <p class="proof-text">
+                            <strong>Clause 2:</strong> <span class="math-term">(¬x₁ ∨ x₂ ∨ ¬x₃)</span> is satisfied when at least one of:
+                        </p>
+                        <div class="formula">
+                            \[
+                            x_1 \text{ is False } (P_{1,F}), \quad x_2 \text{ is True } (P_{2,T}), \quad x_3 \text{ is False } (P_{3,F})
+                            \]
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conclusion Section -->
+                <div id="conclusion" class="proof-section">
+                    <div class="section-header" onclick="toggleSection('conclusion')">
+                        <div class="section-icon">7</div>
+                        <h3 class="section-title-text">Conclusion</h3>
+                        <span class="collapse-indicator">▼</span>
+                    </div>
+                    <div class="section-content">
+                        <p class="proof-text">
+                            Thus, <span class="math-term">c_φ</span> has a predecessor if and only if <span class="math-term">φ</span> is satisfiable.
+                            Since 3-SAT is NP-complete and REV-GOL ∈ NP, it follows that <strong>REV-GOL is NP-complete</strong>.
+                        </p>
+                        <p class="proof-text">
+                            All progress will be posted on my GitHub first before making its way here.
+                        </p>
+                        <a href="https://github.com/rrumana/game_of_life_reverse" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn--intro cta-btn--projects">
+                            View GitHub Repo
+                        </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implementation Section -->
+        <section id="implementation">
+            <div class="container">
+                <div class="section-header" onclick="toggleImplementation()" style="cursor: pointer; display: flex; align-items: center; gap: 1rem; padding: 1.5rem 0; border-bottom: 3px solid #5b86e5;">
+                    <h2 class="section-title" style="margin: 0; flex: 1;">Implementation: SAT-Based Reverse Solver</h2>
+                    <span id="implementation-indicator" class="collapse-indicator" style="font-size: 1.4rem; color: #5b86e5; font-weight: bold;">▼</span>
+                </div>
+                <div id="implementation-content" class="proof-content" style="display: none;">
+                    <div class="implementation-wrapper">
+                    <div class="implementation-overview">
+                        <p class="implementation-text">
+                        </p>
+                        
+                    </div>
+
+                    <!-- Architecture Section -->
+                    <div class="implementation-section">
+                        <h3 class="implementation-subtitle">System Architecture</h3>
+                        <p class="implementation-text">
+                            The implementation is structured as a modular Rust application with the following core components:
+                        </p>
+                        
+                        <div class="architecture-grid">
+                            <div class="architecture-component">
+                                <h4>Configuration Management</h4>
+                                <p>YAML-based configuration system supporting flexible parameter tuning for grid size,
+                                generations, solver backends, optimization levels, and output formats.</p>
+                            </div>
+                            
+                            <div class="architecture-component">
+                                <h4>Game of Life Engine</h4>
+                                <p>Core cellular automaton implementation with grid representation, rule application,
+                                I/O operations, and support for multiple boundary conditions (dead, wrap, mirror).</p>
+                            </div>
+                            
+                            <div class="architecture-component">
+                                <h4>SAT Encoding & Solving</h4>
+                                <p>Converts Game of Life constraints into SAT problems with support for multiple backends:
+                                CaDiCaL (single-threaded) and ParKissat-RS (multithreaded) solvers.</p>
+                            </div>
+                            
+                            <div class="architecture-component">
+                                <h4>Reverse Problem Solving</h4>
+                                <p>Handles problem definition, solution extraction, validation through forward simulation,
+                                and comprehensive output formatting with pattern analysis.</p>
+                            </div>
+                            
+                            <div class="architecture-component">
+                                <h4>Utility & Display</h4>
+                                <p>Provides display utilities, output formatting, benchmarking tools, and comprehensive
+                                logging for performance analysis and debugging.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SAT Encoding Strategy -->
+                    <div class="implementation-section">
+                        <h3 class="implementation-subtitle">SAT Encoding Strategy</h3>
+                        <p class="implementation-text">
+                            The solver employs a hybrid encoding approach that balances constraint complexity with solving efficiency:
+                        </p>
+                        
+                        <div class="encoding-strategy">
+                            <div class="encoding-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Primary Variables</h4>
+                                    <p>Boolean variable <span class="math-term">cell(x, y, t)</span> for each cell at each time step</p>
+                                    <div class="formula">
+                                        \[ \text{Variables: } \{cell(i,j,t) \mid 0 \leq i < W, 0 \leq j < H, 0 \leq t \leq G\} \]
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="encoding-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Auxiliary Variables</h4>
+                                    <p>Helper variables for neighbor counts and state transitions to reduce constraint complexity</p>
+                                    <div class="formula">
+                                        \[ \text{Neighbor count: } n(i,j,t) = \sum_{(dx,dy) \in N} cell(i+dx, j+dy, t) \]
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="encoding-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Game of Life Constraints</h4>
+                                    <p>Conway's rules encoded as SAT clauses linking consecutive time steps</p>
+                                    <div class="formula">
+                                        \[ cell(i,j,t+1) \iff (cell(i,j,t) \land n(i,j,t) \in \{2,3\}) \lor (\neg cell(i,j,t) \land n(i,j,t) = 3) \]
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Features -->
+                    <div class="implementation-section">
+                        <h3 class="implementation-subtitle">Key Features</h3>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <i class="fa fa-microchip"></i>
+                                <h4>Multiple SAT Backends</h4>
+                                <p>Supports both CaDiCaL (single-threaded) and ParKissat-RS (multithreaded) solvers for optimal performance across different problem sizes</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fa fa-tasks"></i>
+                                <h4>Multithreaded Solving</h4>
+                                <p>ParKissat-RS backend provides parallel SAT solving capabilities for complex problems with large grids and multiple generations</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fa fa-cogs"></i>
+                                <h4>Multiple Solution Finding</h4>
+                                <p>Discovers all valid predecessor states up to a configurable limit using iterative SAT solving with hybrid encoding strategies</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fa fa-check-circle"></i>
+                                <h4>Solution Validation</h4>
+                                <p>Verifies found solutions by forward simulation to ensure correctness and detects known Game of Life patterns</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fa fa-chart-line"></i>
+                                <h4>Comprehensive Benchmarking</h4>
+                                <p>Built-in performance analysis tools to compare solver backends and optimization strategies across different problem complexities</p>
+                            </div>
+                            
+                            <div class="feature-item">
+                                <i class="fa fa-file-export"></i>
+                                <h4>Multiple Output Formats</h4>
+                                <p>Supports text, JSON, and visual representations with evolution path visualization and pattern analysis</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CLI Interface -->
+                    <div class="implementation-section">
+                        <h3 class="implementation-subtitle">Command Line Interface</h3>
+                        <p class="implementation-text">
+                            The solver provides a comprehensive CLI with multiple commands for different use cases:
+                        </p>
+                        
+                        <div class="cli-commands">
+                            <div class="cli-command">
+                                <code class="command-syntax">cargo run -- solve --config config/examples/simple.yaml</code>
+                                <p>Find predecessor states using configuration file with customizable solver backends and optimization levels</p>
+                            </div>
+                            
+                            <div class="cli-command">
+                                <code class="command-syntax">cargo run -- solve --target input/target_states/glider.txt --generations 3 --max-solutions 5</code>
+                                <p>Find multiple predecessor states for a given target configuration with custom parameters</p>
+                            </div>
+                            
+                            <div class="cli-command">
+                                <code class="command-syntax">cargo run -- setup --directory . --force</code>
+                                <p>Initialize project structure with example configurations and target states</p>
+                            </div>
+                            
+                            <div class="cli-command">
+                                <code class="command-syntax">cargo run -- analyze --target input/target_states/blinker.txt</code>
+                                <p>Analyze target state solvability and complexity estimates before attempting to solve</p>
+                            </div>
+                            
+                            <div class="cli-command">
+                                <code class="command-syntax">cargo run -- validate --predecessor p.txt --target t.txt --show-evolution</code>
+                                <p>Validate that a predecessor correctly evolves to the target with complete evolution visualization</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Crates and Command Line Interface Section -->
+        <section id="crates">
+            <div class="container">
+                <div class="section-header" onclick="toggleCrates()" style="cursor: pointer; display: flex; align-items: center; gap: 1rem; padding: 1.5rem 0; border-bottom: 3px solid #5b86e5;">
+                    <h2 class="section-title" style="margin: 0; flex: 1;">Crates and Command Line Interface</h2>
+                    <span id="crates-indicator" class="collapse-indicator" style="font-size: 1.4rem; color: #5b86e5; font-weight: bold;">▼</span>
+                </div>
+                <div id="crates-content" class="proof-content" style="display: none;">
+                    <div class="implementation-wrapper">
+                        
+                        <!-- Navigation -->
+                        <div class="proof-nav">
+                            <h3>Project Crates</h3>
+                            <ul>
+                                <li><a href="#game-of-life-crate">1. Game of Life Engine</a></li>
+                                <li><a href="#reverse-solver-crate">2. Reverse SAT Solver</a></li>
+                                <li><a href="#parkissat-crate">3. ParKissat-RS Bindings</a></li>
+                                <li><a href="#text-to-input-crate">4. Text-to-ASCII Converter</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Game of Life Crate Section -->
+                        <div id="game-of-life-crate" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('game-of-life-crate')">
+                                <div class="section-icon">1</div>
+                                <h3 class="section-title-text">Game of Life Engine</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    A highly optimized Conway's Game of Life simulator featuring advanced SIMD parallelism and automatic
+                                    hardware detection. The engine delivers 10,000x performance improvements through
+                                    bit-packed representation (64 cells per u64), vectorized operations, and multi-threading with Rayon.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Key Features:</strong> Automatic SIMD width selection, memory prefetching, boundary optimization
+                                    with ghost cells, and support for multiple input formats.
+                                </p>
+                                <div class="cli-commands">
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cargo run --release</code>
+                                        <p>Run visual simulation with default settings</p>
+                                    </div>
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cargo run --release -- --input my_pattern.txt --generations 20</code>
+                                        <p>Custom pattern simulation with specified generations</p>
+                                    </div>
+                                </div>
+                                <p class="implementation-text">
+                                    <strong>Repository Link:</strong> <a href="https://github.com/rrumana/game_of_life" target="_blank" rel="noopener noreferrer">Link</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Reverse Solver Crate Section -->
+                        <div id="reverse-solver-crate" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('reverse-solver-crate')">
+                                <div class="section-icon">2</div>
+                                <h3 class="section-title-text">Reverse SAT Solver</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    A Rust implementation that solves the NP-Complete problem of reversing Conway's Game of Life by
+                                    converting it into boolean satisfiability (SAT) problems. Supports both CaDiCaL (single-threaded)
+                                    and ParKissat-RS (multithreaded) solver backends for optimal performance across different problem sizes.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Key Features:</strong> Multiple SAT backends, hybrid encoding strategies, configurable parameters
+                                    via YAML, comprehensive benchmarking tools, pattern analysis, and multiple output formats (text, JSON, visual).
+                                </p>
+                                <div class="cli-commands">
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cargo run -- solve --config config/examples/simple.yaml</code>
+                                        <p>Solve using configuration file with custom solver settings</p>
+                                    </div>
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cargo run -- analyze --target input/target_states/blinker.txt</code>
+                                        <p>Analyze target state solvability before attempting to solve</p>
+                                    </div>
+                                </div>
+                                <p class="implementation-text">
+                                    <strong>Repository Link:</strong> <a href="https://github.com/rrumana/game_of_life_reverse" target="_blank" rel="noopener noreferrer">Link</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- ParKissat Crate Section -->
+                        <div id="parkissat-crate" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('parkissat-crate')">
+                                <div class="section-icon">3</div>
+                                <h3 class="section-title-text">ParKissat-RS Bindings</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    Safe Rust bindings for the ParKissat-RS parallel SAT solver, winner of SAT Competition 2022.
+                                    Provides a memory-safe, idiomatic Rust API while maintaining high performance through minimal
+                                    overhead FFI calls. Combines Kissat solver efficiency with parallel processing capabilities.
+                                    Multithreaded may be a bit of a stretch since parallelizing SAT solving is very difficult, 
+                                    but some problems will be able to utilize multiple cores.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Key Features:</strong> Multi-threaded SAT solving, DIMACS format support, configurable
+                                    solver parameters, comprehensive error handling, interruption support.
+                                </p>
+                                <div class="cli-commands">
+                                    <div class="cli-command">
+                                        <code class="command-syntax">let mut solver = ParkissatSolver::new()?;</code>
+                                        <p>Create solver instance with safe Rust API</p>
+                                    </div>
+                                    <div class="cli-command">
+                                        <code class="command-syntax">solver.load_dimacs("problem.cnf")?;</code>
+                                        <p>Load SAT problems from standard DIMACS format files</p>
+                                    </div>
+                                </div>
+                                <p class="implementation-text">
+                                    <strong>Repository Link:</strong> <a href="https://github.com/rrumana/parkissat-rs" target="_blank" rel="noopener noreferrer">Link</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Text to Input Crate Section -->
+                        <div id="text-to-input-crate" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('text-to-input-crate')">
+                                <div class="section-icon">4</div>
+                                <h3 class="section-title-text">Text-to-ASCII Converter</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    A Rust crate that converts text input into pixel art using 1s and 0s with a sophisticated
+                                    variable-width font system. Supports A-Z uppercase, a-z lowercase, and space characters with
+                                    optimal spacing through 1-5 pixel wide characters for compact, readable output.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Key Features:</strong> Variable-width font optimization, automatic buffer generation,
+                                    case-sensitive rendering, graceful error handling without unwrap() calls, and performance
+                                    optimization with pre-allocated collections.
+                                </p>
+                                <div class="cli-commands">
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cargo run</code>
+                                        <p>Interactive text-to-pixel art conversion with error messages</p>
+                                    </div>
+                                    <div class="cli-command">
+                                        <code class="command-syntax">use text_to_input::text_to_pixel_art;</code>
+                                        <p>Library usage with comprehensive error handling</p>
+                                    </div>
+                                </div>
+                                <p class="implementation-text">
+                                    <strong>Repository Link:</strong> <a href="https://github.com/rrumana/text_to_input" target="_blank" rel="noopener noreferrer">Link</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Make Your Name Emerge From Chaos Section -->
+        <section id="chaos-emergence">
+            <div class="container">
+                <div class="section-header" onclick="toggleChaos()" style="cursor: pointer; display: flex; align-items: center; gap: 1rem; padding: 1.5rem 0; border-bottom: 3px solid #5b86e5;">
+                    <h2 class="section-title" style="margin: 0; flex: 1;">Make Your Name Emerge From Chaos</h2>
+                    <span id="chaos-indicator" class="collapse-indicator" style="font-size: 1.4rem; color: #5b86e5; font-weight: bold;">▼</span>
+                </div>
+                <div id="chaos-content" class="proof-content" style="display: none;">
+                    <div class="implementation-wrapper">
+                        
+                        <!-- Navigation -->
+                        <div class="proof-nav">
+                            <h3>Step-by-Step Guide</h3>
+                            <ul>
+                                <li><a href="#step-generate">1. Generate ASCII Pattern</a></li>
+                                <li><a href="#step-setup">2. Setup Reverse Solver</a></li>
+                                <li><a href="#step-solve">3. Find Predecessor State</a></li>
+                                <li><a href="#step-visualize">4. Visualize the Magic</a></li>
+                                <li><a href="#step-success">5. Watch Name Emerge</a></li>
+                                <li><a href="#step-gif">6. Create GIF (Coming Soon)</a></li>
+                                <li><a href="#step-tips">7. Tips & Tricks</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Step 1: Generate ASCII Pattern -->
+                        <div id="step-generate" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('step-generate')">
+                                <div class="section-icon">1</div>
+                                <h3 class="section-title-text">Generate ASCII Pattern</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    Create your text pattern using either the website functionality above or the text_to_input crate.
+                                    You can also manually draw on the grid with your mouse if you prefer custom patterns.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Website Method:</strong> Enter your name in the text input above, adjust the buffer size,
+                                    and click "Generate from Text". Then use the download button to save your pattern.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>CLI Method:</strong> Use the text_to_input crate for more control:
+                                </p>
+                                <div class="cli-commands">
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cd text_to_input && cargo run</code>
+                                        <p>Interactive text-to-ASCII conversion with custom settings</p>
+                                    </div>
+                                </div>
+                                <p class="implementation-text">
+                                    <strong>Important:</strong> No matter which method you use, you must download/save the pattern
+                                    file for the next steps.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Setup Reverse Solver -->
+                        <div id="step-setup" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('step-setup')">
+                                <div class="section-icon">2</div>
+                                <h3 class="section-title-text">Setup Reverse Solver</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    Clone and set up the reverse Game of Life crate. This is the only crate not implemented on the
+                                    website because running a SAT solver in the browser is not advisable.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Prerequisites:</strong> You must have Rust installed on your system. Check the crate
+                                    documentation for additional requirements.
+                                </p>
+                                <div class="cli-commands">
+                                    <div class="cli-command">
+                                        <code class="command-syntax">git clone https://github.com/rrumana/game_of_life_reverse</code>
+                                        <p>Clone the reverse Game of Life repository</p>
+                                    </div>
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cd game_of_life_reverse && cargo run -- setup</code>
+                                        <p>Initialize the project structure and dependencies</p>
+                                    </div>
+                                </div>
+                                <p class="implementation-text">
+                                    <strong>Repository Link:</strong> <a href="https://github.com/rrumana/text_to_input" target="_blank" rel="noopener noreferrer">Link</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Find Predecessor State -->
+                        <div id="step-solve" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('step-solve')">
+                                <div class="section-icon">3</div>
+                                <h3 class="section-title-text">Find Predecessor State</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    Move your generated pattern file into the input area of the reverse Game of Life crate,
+                                    then run the solver to find a predecessor state.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Performance Guide:</strong> For a first name, 3-4 generations will take on the order
+                                    of minutes, whereas 10 generations took about 12 hours on my laptop.
+                                </p>
+                                <div class="cli-commands">
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cp your_pattern.txt game_of_life_reverse/input/target_states/</code>
+                                        <p>Move your pattern file to the input directory</p>
+                                    </div>
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cargo run -- solve --target input/target_states/your_pattern.txt --generations 4</code>
+                                        <p>Run the reverse solver with your pattern and desired generations</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Visualize the Magic -->
+                        <div id="step-visualize" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('step-visualize')">
+                                <div class="section-icon">4</div>
+                                <h3 class="section-title-text">Visualize the Magic</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    Take the new file from the reverse solver and upload it to the website above, or load it
+                                    into the game_of_life crate. The initial state will look like random static - this is expected!
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>File Location:</strong> The solver will output a predecessor state file in the output directory. This file will
+                                    contain multiple generations - this is completely normal! The one labelled generation 0 
+                                    is the one you want, <strong>copy this into a new text file for upload.</strong>
+                                </p>
+                                <div class="cli-commands">
+                                    <div class="cli-command">
+                                        <code class="command-syntax">Upload the solution file using the file upload button above</code>
+                                        <p>Load the predecessor state into the web simulation</p>
+                                    </div>
+                                    <div class="cli-command">
+                                        <code class="command-syntax">Set Multi-Step generations ≥ the number used in CLI</code>
+                                        <p>Configure the simulation to run enough generations</p>
+                                    </div>
+                                    <div class="cli-command">
+                                        <code class="command-syntax">cargo run --release -- --input solution_file.txt --generations 4</code>
+                                        <p>Alternative: Use the game_of_life crate CLI for visualization</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Watch Name Emerge -->
+                        <div id="step-success" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('step-success')">
+                                <div class="section-icon">5</div>
+                                <h3 class="section-title-text">Watch Name Emerge</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    Click the Multi-Step button and watch as your name emerges from the apparent chaos!
+                                    The seemingly random initial state will evolve through the deterministic rules of Conway's
+                                    Game of Life to reveal your text pattern.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Step 6: Create GIF -->
+                        <div id="step-gif" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('step-gif')">
+                                <div class="section-icon">6</div>
+                                <h3 class="section-title-text">Create GIF (Coming Soon)</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    <strong>TODO:</strong> I am planning on adding a function to turn this evolution into a
+                                    downloadable GIF. The implementation approach is still being determined, but this feature
+                                    will allow you to easily share your name emergence animation.
+                                </p>
+                                <p class="implementation-text">
+                                    This section will be updated once the GIF generation functionality is implemented.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Step 7: Tips & Tricks -->
+                        <div id="step-tips" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('step-tips')">
+                                <div class="section-icon">7</div>
+                                <h3 class="section-title-text">Tips & Tricks</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    <strong>No Solutions Found?</strong> If your name has no solutions, try adding a bigger
+                                    buffer to the pattern. This increases the search space and makes it more likely to find
+                                    a solution, though it will also increase computation time.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Performance Optimization:</strong> Start with fewer generations (3-4) for initial
+                                    testing. You can always increase the generation count for more dramatic emergence effects
+                                    once you've confirmed the pattern works.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Pattern Design:</strong> Simpler patterns with more spacing tend to have more
+                                    solutions. Complex, tightly-packed text may require longer solve times or larger buffers.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Results and Analysis Section -->
+        <section id="results-analysis">
+            <div class="container">
+                <div class="section-header" onclick="toggleResultsAnalysis()" style="cursor: pointer; display: flex; align-items: center; gap: 1rem; padding: 1.5rem 0; border-bottom: 3px solid #5b86e5;">
+                    <h2 class="section-title" style="margin: 0; flex: 1;">Results and Analysis</h2>
+                    <span id="results-analysis-indicator" class="collapse-indicator" style="font-size: 1.4rem; color: #5b86e5; font-weight: bold;">▼</span>
+                </div>
+                <div id="results-analysis-content" class="proof-content" style="display: none;">
+                    <div class="implementation-wrapper">
+                        
+                        <!-- Navigation -->
+                        <div class="proof-nav">
+                            <h3>Project Analysis</h3>
+                            <ul>
+                                <li><a href="#results-section">1. Performance Results</a></li>
+                                <li><a href="#lessons-section">2. Key Lessons Learned</a></li>
+                                <li><a href="#future-work-section">3. Future Work</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Results Subsection -->
+                        <div id="results-section" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('results-section')">
+                                <div class="section-icon">1</div>
+                                <h3 class="section-title-text">Performance Results</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    The project successfully demonstrates the feasibility of using SAT solving to
+                                    reverse-engineer Conway's Game of Life states. By encoding cellular automaton rules and constraints into
+                                    boolean logic clauses, the system can efficiently discover predecessor states that would evolve into a
+                                    given target configuration.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Performance Benchmarks:</strong> The system reveals impressive scalability for practical use cases:
+                                    a 300-cell grid can be traced back 4 generations in under a second, while more ambitious reverse-engineering
+                                    tasks like 6 generations require 8 minutes and 10 generations complete in approximately 2 hours. Even
+                                    computationally intensive 20-generation lookbacks finish within 48 hours, anthough your results may vary, 
+                                    bigger grids will result in much longer search times.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Key Lessons Learned Subsection -->
+                        <div id="lessons-section" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('lessons-section')">
+                                <div class="section-icon">2</div>
+                                <h3 class="section-title-text">Key Lessons Learned</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    The most significant challenge encountered was SAT encoding optimization, where initial
+                                    implementations generated an excessive number of clauses that severely degraded solver performance. This
+                                    experience highlighted how the formulation of constraints can dramatically impact computational efficiency,
+                                    even when the underlying logical relationships remain equivalent.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Optimization Success:</strong> Through careful pruning I was able to reduce the number of clauses
+                                    by a factor of 10 without compromising the encoding accuracy. When it comes to problems with exponential
+                                    runtime complexity, pre-compute optimization becomes increasingly important for practical applications.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Future Work Subsection -->
+                        <div id="future-work-section" class="proof-section">
+                            <div class="section-header" onclick="toggleSection('future-work-section')">
+                                <div class="section-icon">3</div>
+                                <h3 class="section-title-text">Future Work</h3>
+                                <span class="collapse-indicator">▼</span>
+                            </div>
+                            <div class="section-content">
+                                <p class="implementation-text">
+                                    The next phase will focus on leveraging parallelization to further enhance performance, specifically
+                                    investigating multithreaded SAT solvers with robust Rust bindings for seamless integration into the existing
+                                    codebase. The ParKissat-RS integration represents a significant step in this direction.
+                                </p>
+                                <p class="implementation-text">
+                                    <strong>Additional Opportunities:</strong> Optimizing auxiliary algorithms and data structures presents
+                                    opportunities for incremental improvements, though these optimizations will likely yield diminishing returns
+                                    given that core SAT solving dominates the computational workload for large-scale problems. While I do not
+                                    anticipate much more active development, I will post any breakthroughs here.
+                                </p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <h2 class="section-title">Get in Touch</h2>
+                <div class="contact-wrapper">
+                    <p class="contact-wrapper__text">
+                        Interested in collaborating or learning more about this project? Feel free to reach out!
+                    </p>
+                    <a href="mailto:ryan.rumana@gmail.com" class="cta-btn cta-btn--resume">Contact Me</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="container">
+                <a href="#intro" class="back-to-top" aria-label="go back to top">
+                    <i class="fa fa-angle-up fa-2x" aria-hidden="true"></i>
+                </a>
+                <div class="social-links">
+                    <a href="mailto:ryan.rumana@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Gmail">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/ryanrumana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/rrumana" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+                <hr />
+                <p class="footer__text">
+                    &copy; <span id="year"></span> - Developed by
+                    <a href="https://rcrumana.xyz" target="_blank" rel="noopener noreferrer">Ryan Rumana</a>.
+                </p>
+            </div>
+        </footer>
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+            
+            // Toggle function for collapsible proof sections
+            function toggleSection(sectionId) {
+                const section = document.getElementById(sectionId);
+                const content = section.querySelector('.section-content');
+                const indicator = section.querySelector('.collapse-indicator');
+                
+                if (content.classList.contains('collapsed')) {
+                    content.classList.remove('collapsed');
+                    indicator.textContent = '▼';
+                    indicator.style.transform = 'rotate(0deg)';
+                } else {
+                    content.classList.add('collapsed');
+                    indicator.textContent = '▶';
+                    indicator.style.transform = 'rotate(-90deg)';
+                }
+            }
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('.proof-nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        // Expand the target section if it's collapsed
+                        const content = targetElement.querySelector('.section-content');
+                        if (content && content.classList.contains('collapsed')) {
+                            toggleSection(targetId);
+                        }
+                        
+                        // Smooth scroll to the target
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Initialize MathJax after content loads
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+                },
+                svg: {
+                    fontCache: 'global'
+                }
+            };
+        </script>
+        <script src="./javascript/vanilla-tilt.min.js"></script>
+        <script type="text/javascript" src="./javascript/valtilt.js"></script>
+    </body>
+</html>

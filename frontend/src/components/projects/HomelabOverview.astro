@@ -1,0 +1,80 @@
+---
+import Heading from '../ui/Heading.astro';
+import Text from '../ui/Text.astro';
+import Badge from '../callouts/Badge.astro';
+---
+<section class="homelab-overview">
+  <div class="homelab-overview__grid">
+    <article class="panel">
+      <Badge tone="accent">Cluster</Badge>
+      <Heading level={3} size="lg">Two-node k3s + Longhorn</Heading>
+      <Text>
+        k3s keeps the control plane lightweight while Longhorn replicates every PVC, giving me
+        instant failover for HAProxy, LibreChat, Vaultwarden, and more.
+      </Text>
+    </article>
+    <article class="panel">
+      <Badge tone="neutral">GitOps</Badge>
+      <Heading level={3} size="lg">Argo CD app-of-apps</Heading>
+      <Text>
+        Every platform service and application is reconciled from Git. The <code>platform/test</code>
+        workloads smoke-test new nodes before promotion.
+      </Text>
+    </article>
+    <article class="panel">
+      <Badge tone="accent">AI Stack</Badge>
+      <Heading level={3} size="lg">LibreChat + llama.cpp</Heading>
+      <Text>
+        Swapped out Ollama for a multi-node friendly llama.cpp deployment backed by MongoDB and
+        Qdrant so conversational memory survives node loss.
+      </Text>
+    </article>
+  </div>
+  <div class="homelab-overview__note">
+    <Heading level={3} size="lg">Ops snapshot</Heading>
+    <Text tone="muted">
+      MetalLB advertises services directly to my home network, HAProxy terminates TLS sourced from
+      cert-manager, and nightly Longhorn backups land on the NAS. The result is a homelab that feels
+      like a production platform without losing tinkering power.
+    </Text>
+  </div>
+</section>
+
+<style>
+.homelab-overview {
+  display: grid;
+  gap: var(--space-2xl);
+}
+
+.homelab-overview__grid {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.panel {
+  background: var(--color-surface-100);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(17, 23, 42, 0.08);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.homelab-overview__note {
+  background: var(--color-surface-100);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(17, 23, 42, 0.08);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+html[data-theme='dark'] .panel,
+html[data-theme='dark'] .homelab-overview__note {
+  background: var(--color-surface-200);
+  border: 1px solid rgba(120, 132, 182, 0.35);
+}
+</style>
