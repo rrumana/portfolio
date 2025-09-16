@@ -1,0 +1,49 @@
+---
+import Heading from '../ui/Heading.astro';
+import Text from '../ui/Text.astro';
+import Button from '../ui/Button.astro';
+---
+<section class="gol-demo">
+  <div class="gol-demo__media">
+    <img src="/images/Gospers_glider_gun_crop.gif" alt="Game of Life glider gun" loading="lazy" />
+  </div>
+  <div class="gol-demo__content">
+    <Heading level={2} size="2xl">Interactive playground</Heading>
+    <Text>
+      Draw patterns, simulate forwards or backwards, and export GIFs directly from the browser. The UI runs on
+      wasm-bindgen while the heavy lifting stays in Rust.
+    </Text>
+    <Button href="/game_of_life.html">Launch legacy demo</Button>
+  </div>
+</section>
+
+<style>
+.gol-demo {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: center;
+}
+
+.gol-demo__media {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(17, 23, 42, 0.08);
+}
+
+.gol-demo__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gol-demo__content {
+  display: grid;
+  gap: var(--space-md);
+}
+
+html[data-theme='dark'] .gol-demo__media {
+  border: 1px solid rgba(100, 112, 140, 0.35);
+}
+</style>

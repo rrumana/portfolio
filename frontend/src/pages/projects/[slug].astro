@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntryBySlug } from 'astro:content';
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import { projectContentMap } from '../../components/projects/index';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -37,6 +38,8 @@ const navLinks = [
   { href: '#tech', label: 'Tech' },
   { href: '#details', label: 'Details' },
 ];
+
+const sections = projectContentMap[project.slug] ?? [];
 ---
 <ProjectLayout
   title={project.data.title}
@@ -47,6 +50,7 @@ const navLinks = [
   techStack={project.data.techStack}
   actions={actions}
   navLinks={navLinks}
+  sections={sections}
 >
   <section id="details" class="project-section">
     <Content />

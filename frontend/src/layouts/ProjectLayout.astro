@@ -5,6 +5,7 @@ import Badge from '../components/callouts/Badge.astro';
 import Button from '../components/ui/Button.astro';
 import Heading from '../components/ui/Heading.astro';
 import Text from '../components/ui/Text.astro';
+import type { AstroComponentFactory } from 'astro/runtime/server';
 
 interface Action {
   label: string;
@@ -21,6 +22,7 @@ interface Props {
   techStack?: string[];
   actions?: Action[];
   navLinks?: { href: string; label: string }[];
+  sections?: AstroComponentFactory[];
 }
 
 const {
@@ -32,6 +34,7 @@ const {
   techStack = [],
   actions = [],
   navLinks = [],
+  sections = [],
 } = Astro.props as Props;
 ---
 <BaseLayout title={`${title} | Ryan Rumana`} description={description} navLinks={navLinks}>
@@ -74,6 +77,13 @@ const {
     <article class="project__content">
       <Container class="project__content-inner">
         <slot />
+        {sections.length > 0 && (
+          <div class="project__sections">
+            {sections.map((Section) => (
+              <Section />
+            ))}
+          </div>
+        )}
       </Container>
     </article>
   </main>
@@ -139,6 +149,19 @@ const {
 .project__content-inner {
   display: grid;
   gap: var(--space-xl);
+}
+
+.project__sections {
+  display: grid;
+  gap: var(--space-2xl);
+}
+
+html[data-theme='dark'] .project__hero {
+  background: linear-gradient(135deg, rgba(115, 147, 255, 0.16), rgba(75, 211, 234, 0.14));
+}
+
+html[data-theme='dark'] .project__meta li {
+  background: rgba(115, 147, 255, 0.22);
 }
 
 .project__content-inner :global(h2) {
