@@ -1,11 +1,21 @@
 ---
 import '../styles/globals.css';
+import SiteHeader from '../components/shell/SiteHeader.astro';
+import SiteFooter from '../components/shell/SiteFooter.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: string;
+  navLinks?: { href: string; label: string }[];
+}
 
 const {
   title = 'Ryan Rumana | Portfolio v2',
   description = 'Scaffolding layout for the portfolio redesign.',
   lang = 'en',
-} = Astro.props;
+  navLinks = [],
+} = Astro.props as Props;
 ---
 <!DOCTYPE html>
 <html lang={lang}>
@@ -16,6 +26,8 @@ const {
     <meta name="description" content={description} />
   </head>
   <body>
+    <SiteHeader navLinks={navLinks} />
     <slot />
+    <SiteFooter />
   </body>
 </html>

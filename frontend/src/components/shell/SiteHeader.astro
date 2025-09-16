@@ -1,0 +1,48 @@
+---
+import Container from './Container.astro';
+import PrimaryNav from '../navigation/PrimaryNav.astro';
+
+interface Props {
+  navLinks?: { href: string; label: string }[];
+}
+
+const { navLinks = [] } = Astro.props as Props;
+---
+<header class="site-header">
+  <Container class="site-header__inner">
+    <a class="site-header__brand" href="/">Ryan Rumana</a>
+    <PrimaryNav links={navLinks} />
+  </Container>
+</header>
+
+<style>
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-surface-300);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--space-md);
+}
+
+.site-header__brand {
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  letter-spacing: -0.01em;
+  color: var(--color-neutral-900);
+}
+
+@media (max-width: 720px) {
+  .site-header__inner {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+}
+</style>

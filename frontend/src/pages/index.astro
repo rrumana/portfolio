@@ -1,14 +1,77 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageSection from '../components/shell/PageSection.astro';
+import Heading from '../components/ui/Heading.astro';
+import Text from '../components/ui/Text.astro';
+import Button from '../components/ui/Button.astro';
+import GridSection from '../components/layouts/GridSection.astro';
+import Badge from '../components/callouts/Badge.astro';
+
+const navLinks = [
+  { href: '#vision', label: 'Vision' },
+  { href: '#components', label: 'Component Set' },
+  { href: '#next', label: 'Next Steps' },
+];
 ---
-<BaseLayout title="Portfolio v2" description="Initial Astro scaffolding for the portfolio redesign.">
+<BaseLayout
+  title="Portfolio v2"
+  description="Initial Astro scaffolding for the portfolio redesign."
+  navLinks={navLinks}
+>
   <main>
-    <section>
-      <h1>Portfolio v2 scaffolding</h1>
-      <p>
-        Astro is now configured to generate static assets while the existing Rust runtime continues
-        to serve the site. Component and styling work will follow once the shared design system is in place.
-      </p>
-    </section>
+    <PageSection id="vision" eyebrow="Redesign In Progress" title="Portfolio v2 scaffolding">
+      <Text size="lg">
+        Astro is now configured to generate static assets while the Rust runtime continues to serve
+        requests and WebAssembly-powered features. The shared design system will expand from these
+        primitives as content migrates.
+      </Text>
+      <Button href="/static/index.html" variant="secondary">View legacy site</Button>
+    </PageSection>
+
+    <PageSection id="components" title="Foundational components" description="These primitives will power every page going forward.">
+      <GridSection columns={3}>
+        <article class="feature-card">
+          <Badge tone="accent">Layout</Badge>
+          <Heading level={3} size="lg">Page containers</Heading>
+          <Text tone="muted">
+            Container, PageSection, and flexible grid helpers keep spacing and hierarchy uniform across the experience.
+          </Text>
+        </article>
+        <article class="feature-card">
+          <Badge tone="neutral">UI</Badge>
+          <Heading level={3} size="lg">Buttons &amp; typography</Heading>
+          <Text tone="muted">
+            Token-driven Heading, Text, and Button components standardize type scale, weights, and interactive states.
+          </Text>
+        </article>
+        <article class="feature-card">
+          <Badge tone="accent">Patterns</Badge>
+          <Heading level={3} size="lg">Cards &amp; layouts</Heading>
+          <Text tone="muted">
+            Reusable cards, split sections, and callouts make it straightforward to compose project spotlights and case studies.
+          </Text>
+        </article>
+      </GridSection>
+    </PageSection>
+
+    <PageSection id="next" title="Next steps" description="Design tokens and components are ready for page migrations.">
+      <Text>
+        With the component library in place, the upcoming work will focus on porting the landing page into Astro, wiring
+        content collections, and iterating on accessibility. Legacy assets remain available for reference until the migration
+        is complete.
+      </Text>
+    </PageSection>
   </main>
 </BaseLayout>
+
+<style>
+.feature-card {
+  display: grid;
+  gap: var(--space-sm);
+  padding: var(--space-xl);
+  background: var(--color-surface-100);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(17, 23, 42, 0.05);
+}
+</style>

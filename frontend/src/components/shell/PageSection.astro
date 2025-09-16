@@ -1,0 +1,61 @@
+---
+import Container from './Container.astro';
+import Heading from '../ui/Heading.astro';
+
+interface Props {
+  id?: string;
+  title?: string;
+  eyebrow?: string;
+  description?: string;
+  variant?: 'default' | 'alt';
+  as?: string;
+}
+
+const {
+  id,
+  title,
+  eyebrow,
+  description,
+  variant = 'default',
+  as: Tag = 'section',
+} = Astro.props as Props;
+---
+<Tag id={id} class={`section ${variant === 'alt' ? 'section--alt' : ''}`.trim()}>
+  <Container>
+    <div class="section__header" aria-hidden={!title && !eyebrow && !description}>
+      {eyebrow && <p class="section__eyebrow">{eyebrow}</p>}
+      {title && <Heading level={2}>{title}</Heading>}
+      {description && <p class="section__description">{description}</p>}
+    </div>
+    <div class="section__content">
+      <slot />
+    </div>
+  </Container>
+</Tag>
+
+<style>
+.section__header {
+  display: grid;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.section__eyebrow {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-neutral-500);
+}
+
+.section__description {
+  font-size: var(--font-size-lg);
+  color: var(--color-neutral-500);
+  max-width: 60ch;
+}
+
+.section__content {
+  display: grid;
+  gap: var(--space-xl);
+}
+</style>

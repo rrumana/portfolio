@@ -1,0 +1,63 @@
+---
+interface Props {
+  reverse?: boolean;
+  align?: 'start' | 'center';
+}
+
+const { reverse = false, align = 'center' } = Astro.props as Props;
+---
+<div class={`split-section ${reverse ? 'split-section--reverse' : ''} split-section--${align}`}>
+  <div class="split-section__media">
+    <slot name="media" />
+  </div>
+  <div class="split-section__content">
+    <slot />
+  </div>
+</div>
+
+<style>
+.split-section {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+.split-section--center {
+  align-items: center;
+}
+
+.split-section--start {
+  align-items: start;
+}
+
+.split-section--reverse {
+  direction: rtl;
+}
+
+.split-section--reverse > * {
+  direction: ltr;
+}
+
+.split-section__media,
+.split-section__content {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.split-section__media {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 900px) {
+  .split-section {
+    grid-template-columns: 1fr;
+  }
+
+  .split-section--reverse {
+    direction: ltr;
+  }
+}
+</style>

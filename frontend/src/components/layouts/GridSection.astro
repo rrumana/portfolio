@@ -1,0 +1,29 @@
+---
+interface Props {
+  columns?: 2 | 3 | 4;
+}
+
+const { columns = 3 } = Astro.props as Props;
+---
+<div class={`grid-section grid-section--${columns}`}> 
+  <slot />
+</div>
+
+<style>
+.grid-section {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+.grid-section--2 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.grid-section--3 {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.grid-section--4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+</style>

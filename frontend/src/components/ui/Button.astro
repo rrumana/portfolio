@@ -1,0 +1,98 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
+  size?: 'sm' | 'md';
+  icon?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon = false,
+  class: className = '',
+  ...rest
+} = Astro.props as Props;
+
+const baseClass = `button button--${variant} button--${size} ${icon ? 'button--icon' : ''} ${className}`.trim();
+---
+{href ? (
+  <a class={baseClass} href={href} {...rest}>
+    <slot />
+  </a>
+) : (
+  <button class={baseClass} type="button" {...rest}>
+    <slot />
+  </button>
+)}
+
+<style>
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding-inline: var(--space-lg);
+  padding-block: var(--space-sm);
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease, color 150ms ease;
+  text-decoration: none;
+}
+
+.button--sm {
+  padding-inline: var(--space-md);
+  padding-block: var(--space-xs);
+  font-size: var(--font-size-sm);
+}
+
+.button--primary {
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-500));
+  color: var(--color-surface-100);
+  box-shadow: var(--shadow-sm);
+}
+
+.button--primary:hover,
+.button--primary:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.button--secondary {
+  background: var(--color-surface-100);
+  color: var(--color-neutral-900);
+  border: 1px solid var(--color-surface-300);
+}
+
+.button--secondary:hover,
+.button--secondary:focus-visible {
+  background: var(--color-surface-200);
+}
+
+.button--ghost {
+  background: transparent;
+  color: var(--color-neutral-900);
+}
+
+.button--ghost:hover,
+.button--ghost:focus-visible {
+  background: rgba(54, 93, 240, 0.08);
+}
+
+.button--link {
+  padding: 0;
+  background: none;
+  color: var(--color-primary-500);
+}
+
+.button--link:hover,
+.button--link:focus-visible {
+  text-decoration: underline;
+}
+
+.button--icon {
+  padding-inline: var(--space-sm);
+}
+</style>

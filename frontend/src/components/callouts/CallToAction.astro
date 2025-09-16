@@ -1,0 +1,88 @@
+---
+import Container from '../shell/Container.astro';
+import Heading from '../ui/Heading.astro';
+import Text from '../ui/Text.astro';
+import Button from '../ui/Button.astro';
+
+interface Link {
+  href: string;
+  label: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
+}
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  actions?: Link[];
+}
+
+const { eyebrow, title, description, actions = [] } = Astro.props as Props;
+---
+<section class="cta">
+  <Container class="cta__inner">
+    <div class="cta__copy">
+      {eyebrow && <p class="cta__eyebrow">{eyebrow}</p>}
+      <Heading level={2} size="2xl">{title}</Heading>
+      {description && <Text tone="muted" size="lg">{description}</Text>}
+    </div>
+    {actions.length > 0 && (
+      <div class="cta__actions">
+        {actions.map((action) => (
+          <Button href={action.href} variant={action.variant ?? 'primary'}>
+            {action.label}
+          </Button>
+        ))}
+      </div>
+    )}
+  </Container>
+</section>
+
+<style>
+.cta {
+  padding-block: var(--space-3xl);
+  background: linear-gradient(135deg, var(--color-accent-500), var(--color-primary-500));
+  color: var(--color-surface-100);
+}
+
+.cta__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xl);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cta__copy {
+  max-width: 60ch;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.cta__eyebrow {
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.cta__actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.cta__actions .button--secondary {
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--color-surface-100);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  .cta__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>

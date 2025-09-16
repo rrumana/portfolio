@@ -1,0 +1,57 @@
+---
+import Container from './Container.astro';
+
+const currentYear = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <Container class="site-footer__inner">
+    <div class="site-footer__meta">
+      <span>&copy; {currentYear} Ryan Rumana</span>
+      <span>Built with Rust &amp; Astro</span>
+    </div>
+    <div class="site-footer__links">
+      <a href="mailto:ryan.rumana@gmail.com">Email</a>
+      <a href="https://linkedin.com/in/ryanrumana" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://github.com/rrumana" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </Container>
+</footer>
+
+<style>
+.site-footer {
+  padding-block: var(--space-2xl);
+  background: var(--color-surface-100);
+  border-top: 1px solid var(--color-surface-300);
+}
+
+.site-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.site-footer__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-neutral-500);
+}
+
+.site-footer__links {
+  display: flex;
+  gap: var(--space-md);
+  font-size: var(--font-size-sm);
+}
+
+.site-footer__links a {
+  color: var(--color-neutral-500);
+}
+
+.site-footer__links a:hover,
+.site-footer__links a:focus-visible {
+  color: var(--color-neutral-900);
+}
+</style>

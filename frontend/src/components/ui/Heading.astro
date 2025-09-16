@@ -1,0 +1,57 @@
+---
+interface Props {
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+  class?: string;
+}
+
+const {
+  level = 2,
+  size,
+  class: className = '',
+  ...rest
+} = Astro.props as Props;
+
+const Tag = (`h${level}`) as keyof HTMLElementTagNameMap;
+
+const sizeClass = size ? `heading--${size}` : '';
+---
+<Tag class={`heading ${sizeClass} ${className}`.trim()} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+.heading {
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  color: var(--color-neutral-900);
+}
+
+.heading--sm {
+  font-size: var(--font-size-lg);
+}
+
+.heading--md {
+  font-size: var(--font-size-xl);
+}
+
+.heading--lg {
+  font-size: var(--font-size-2xl);
+}
+
+.heading--xl {
+  font-size: var(--font-size-3xl);
+}
+
+.heading--2xl {
+  font-size: var(--font-size-4xl);
+}
+
+.heading--3xl {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.heading--4xl {
+  font-size: clamp(3rem, 6vw, 4rem);
+}
+</style>

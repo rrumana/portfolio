@@ -1,0 +1,36 @@
+---
+interface LinkItem {
+  href: string;
+  label: string;
+}
+
+const { links = [] } = Astro.props as { links?: LinkItem[] };
+---
+<nav class="primary-nav" aria-label="Main navigation">
+  <ul>
+    {links.map((link) => (
+      <li><a href={link.href}>{link.label}</a></li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+.primary-nav ul {
+  list-style: none;
+  display: flex;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.primary-nav a {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-neutral-500);
+  transition: color 150ms ease;
+}
+
+.primary-nav a:hover,
+.primary-nav a:focus-visible {
+  color: var(--color-neutral-900);
+}
+</style>

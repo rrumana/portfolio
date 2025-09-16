@@ -1,0 +1,51 @@
+---
+interface Props {
+  tone?: 'default' | 'accent' | 'neutral';
+  icon?: string;
+  class?: string;
+}
+
+const {
+  tone = 'default',
+  icon,
+  class: className = '',
+  ...rest
+} = Astro.props as Props;
+---
+<span class={`badge badge--${tone} ${className}`.trim()} {...rest}>
+  {icon && <span aria-hidden="true" class="badge__icon">{icon}</span>}
+  <slot />
+</span>
+
+<style>
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-xs);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.badge__icon {
+  font-size: 1.1em;
+}
+
+.badge--default {
+  background: rgba(17, 23, 42, 0.08);
+  color: var(--color-neutral-700);
+}
+
+.badge--accent {
+  background: rgba(54, 209, 220, 0.15);
+  color: var(--color-accent-500);
+}
+
+.badge--neutral {
+  background: rgba(139, 160, 251, 0.18);
+  color: var(--color-primary-500);
+}
+</style>

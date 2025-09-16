@@ -1,0 +1,112 @@
+---
+import Button from '../ui/Button.astro';
+import Heading from '../ui/Heading.astro';
+import Text from '../ui/Text.astro';
+
+interface Link {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  title: string;
+  summary: string;
+  techStack?: string[];
+  cta?: Link;
+  secondaryCta?: Link;
+  media?: string;
+  mediaAlt?: string;
+}
+
+const {
+  title,
+  summary,
+  techStack = [],
+  cta,
+  secondaryCta,
+  media,
+  mediaAlt,
+} = Astro.props as Props;
+---
+<article class="project-card">
+  {media && (
+    <div class="project-card__media">
+      <img src={media} alt={mediaAlt ?? ''} loading="lazy" />
+    </div>
+  )}
+  <div class="project-card__body">
+    <Heading level={3} size="lg">{title}</Heading>
+    <Text tone="muted">{summary}</Text>
+    {techStack.length > 0 && (
+      <ul class="project-card__tags" aria-label="Tech stack">
+        {techStack.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    )}
+    <div class="project-card__actions">
+      {cta && <Button href={cta.href}>{cta.label}</Button>}
+      {secondaryCta && <Button href={secondaryCta.href} variant="secondary">{secondaryCta.label}</Button>}
+    </div>
+  </div>
+</article>
+
+<style>
+.project-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+  background: var(--color-surface-100);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(17, 23, 42, 0.05);
+}
+
+.project-card__media {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.project-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-card__body {
+  display: grid;
+  gap: var(--space-md);
+  align-content: start;
+}
+
+.project-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  list-style: none;
+}
+
+.project-card__tags li {
+  padding: var(--space-2xs) var(--space-sm);
+  background: rgba(91, 134, 229, 0.12);
+  color: var(--color-primary-500);
+  border-radius: var(--radius-xs);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.project-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+@media (max-width: 900px) {
+  .project-card {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

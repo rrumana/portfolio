@@ -1,0 +1,47 @@
+---
+interface Props {
+  as?: string;
+  tone?: 'default' | 'muted' | 'accent';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const {
+  as: Tag = 'p',
+  tone = 'default',
+  size = 'md',
+  class: className = '',
+  ...rest
+} = Astro.props as Props;
+---
+<Tag class={`text text--${tone} text--${size} ${className}`.trim()} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+.text {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  color: var(--color-neutral-900);
+}
+
+.text--sm {
+  font-size: var(--font-size-sm);
+}
+
+.text--md {
+  font-size: var(--font-size-md);
+}
+
+.text--lg {
+  font-size: var(--font-size-lg);
+}
+
+.text--muted {
+  color: var(--color-neutral-500);
+}
+
+.text--accent {
+  color: var(--color-accent-500);
+}
+</style>
