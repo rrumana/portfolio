@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageSection from '../components/shell/PageSection.astro';
+import SplitSection from '../components/layouts/SplitSection.astro';
+import Text from '../components/ui/Text.astro';
+import Button from '../components/ui/Button.astro';
+import Badge from '../components/callouts/Badge.astro';
+import CallToAction from '../components/callouts/CallToAction.astro';
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '#journey', label: 'Journey' },
+  { href: '#stack', label: 'Tooling' },
+  { href: '#site', label: 'About this site' },
+  { href: '#contact', label: 'Contact' },
+];
+---
+<BaseLayout
+  title="About | Ryan Rumana"
+  description="A closer look at the engineer behind the projects, the tooling I lean on, and how this site is evolving."
+  navLinks={navLinks}
+>
+  <main>
+    <PageSection
+      id="journey"
+      eyebrow="Engineer & Adventurer"
+      title="Curiosity drives everything I build"
+      description="From Florida to the Colorado mountains, I’ve chased problems that mix systems thinking, performance, and hands-on experimentation."
+    >
+      <SplitSection>
+        <img
+          slot="media"
+          src="/images/profile.png"
+          alt="Ryan Rumana portrait"
+          width="450"
+          height="350"
+          loading="lazy"
+        />
+        <div class="about__story">
+          <Text>
+            I’m Ryan Rumana—an engineer with a computer science background and a master’s in machine learning from the Colorado School of Mines. I love the intersection of distributed systems and human-centered tooling, whether that’s Rust services, Kubernetes clusters, or WASM demos.
+          </Text>
+          <Text>
+            Outside of tech you’ll usually find me outdoors: snowboarding, running, or training for triathlons. That combination of endurance and iteration shows up in my work too—I prefer shipping small experiments, measuring them, then leveling up the platform.
+          </Text>
+          <div class="about__cta">
+            <Button href="/assets/resume.pdf">View résumé</Button>
+            <Button href="mailto:ryan.rumana@gmail.com" variant="secondary">Say hello</Button>
+          </div>
+        </div>
+      </SplitSection>
+    </PageSection>
+
+    <PageSection
+      id="stack"
+      title="Daily tooling"
+      description="These are the languages, platforms, and workflows I reach for when shipping resilient systems."
+      variant="alt"
+    >
+      <div class="stack-grid">
+        <article class="stack-card">
+          <Badge tone="accent">Languages</Badge>
+          <Text>Rust, Python, and TypeScript for most builds. C++ when performance demands it.</Text>
+        </article>
+        <article class="stack-card">
+          <Badge tone="neutral">Platform</Badge>
+          <Text>k3s + GitOps for homelab infrastructure, Argo CD app-of-apps, Longhorn for storage.</Text>
+        </article>
+        <article class="stack-card">
+          <Badge tone="accent">Tooling</Badge>
+          <Text>Neovim, tmux, and a heavily customized terminal workflow, all running on self-hosted services.</Text>
+        </article>
+        <article class="stack-card">
+          <Badge tone="neutral">Observability</Badge>
+          <Text>Grafana, Prometheus, and log pipelines on deck as HA improvements land.</Text>
+        </article>
+      </div>
+    </PageSection>
+
+    <PageSection
+      id="site"
+      title="About this site"
+      description="The portfolio is being rebuilt to share a consistent design language while staying Rust-first at runtime."
+    >
+      <div class="site-overview">
+        <Text>
+          The redesign uses Astro for component-driven pages and markdown-backed content collections, while my Rust backend keeps serving requests and WebAssembly demos. Legacy pages remain available during the migration for reference.
+        </Text>
+        <Text>
+          Tokens, layout primitives, and reusable cards keep each page consistent. When a new project ships, I only need to update the content collection—the UI adapts automatically.
+        </Text>
+      </div>
+    </PageSection>
+
+    <CallToAction
+      id="contact"
+      eyebrow="Let’s chat"
+      title="Interested in joining forces?"
+      description="If you want to talk Rust, Kubernetes, homelabs, or triathlon routes, I’m just a message away."
+      actions={[
+        { label: 'Email me', href: 'mailto:ryan.rumana@gmail.com' },
+        { label: 'LinkedIn', href: 'https://linkedin.com/in/ryanrumana', variant: 'secondary' },
+      ]}
+    />
+  </main>
+</BaseLayout>
+
+<style>
+.about__story {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.about__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.stack-grid {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.stack-card {
+  background: var(--color-surface-100);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(17, 23, 42, 0.05);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.site-overview {
+  display: grid;
+  gap: var(--space-md);
+  max-width: 70ch;
+}
+
+html[data-theme='dark'] .stack-card {
+  background: rgba(21, 31, 53, 0.95);
+  border: 1px solid rgba(100, 112, 140, 0.35);
+}
+</style>
