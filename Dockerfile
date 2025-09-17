@@ -1,49 +1,83 @@
-FROM rust:latest AS builder
-RUN rustup default nightly
-RUN rustup component add rust-src
-RUN rustup target add x86_64-unknown-linux-musl wasm32-unknown-unknown
+# syntax=docker/dockerfile:1.6
 
-# Install git and musl tools for cloning dependencies and cross-compilation
-RUN apt-get update && apt-get install -y git musl-tools && rm -rf /var/lib/apt/lists/*
+########################################
+# Frontend build stage
+########################################
+FROM node:20-bullseye-slim AS frontend-builder
+WORKDIR /workspace
 
-WORKDIR /app
+# Install frontend dependencies and build the Astro site
+COPY frontend/package.json ./frontend/package.json
+RUN npm install --prefix frontend
+COPY frontend ./frontend
+RUN mkdir -p static && npm run build --prefix frontend
 
-# Clone the external dependencies from GitHub
+########################################
+# WASM build stage
+########################################
+FROM rust:1.80-bullseye AS wasm-builder
+WORKDIR /workspace
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl git pkg-config libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN rustup target add wasm32-unknown-unknown
+RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+COPY Cargo.toml Cargo.lock ./
+COPY wasm_game_of_life ./wasm_game_of_life
+
+# Clone external dependencies required by the wasm crate
 RUN git clone https://github.com/rrumana/game_of_life.git
 RUN git clone https://github.com/rrumana/text_to_input.git
 
-# Copy portfolio project files
+# Patch path dependencies so they resolve inside the build context
+RUN sed -i 's|../../game_of_life|../game_of_life|g' wasm_game_of_life/Cargo.toml \
+    && sed -i 's|../../text_to_input|../text_to_input|g' wasm_game_of_life/Cargo.toml
+
+RUN wasm-pack build ./wasm_game_of_life \
+    --target web \
+    --release \
+    --out-dir /workspace/wasm-pkg \
+    --out-name wasm_game_of_life
+
+########################################
+# Backend build stage
+########################################
+FROM rust:1.80-bullseye AS backend-builder
+WORKDIR /workspace
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends musl-tools pkg-config libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN rustup target add x86_64-unknown-linux-musl
+
 COPY Cargo.toml Cargo.lock ./
 COPY backend ./backend
-COPY wasm_game_of_life ./wasm_game_of_life
-COPY static ./static
-COPY log4rs.yaml .
-
-# Update the wasm_game_of_life Cargo.toml to use the correct paths for Docker build
-RUN sed -i 's|path = "../../game_of_life"|path = "../game_of_life"|g' wasm_game_of_life/Cargo.toml
-RUN sed -i 's|path = "../../text_to_input"|path = "../text_to_input"|g' wasm_game_of_life/Cargo.toml
+COPY log4rs.yaml ./log4rs.yaml
 
 RUN cargo fetch --locked
 RUN cargo build --release --target x86_64-unknown-linux-musl -p backend
 
-# Build the WASM module
-WORKDIR /app/wasm_game_of_life
-RUN cargo build --release --target wasm32-unknown-unknown
+########################################
+# Runtime image
+########################################
+FROM debian:bookworm-slim AS runtime
 
-# Copy the WASM artifact into the static assets folder.
-# Adjust the artifact name if your crate builds with a different binary name.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
-RUN mkdir -p static/wasm && \
-    cp target/wasm32-unknown-unknown/release/wasm_game_of_life.wasm static/wasm/
 
-FROM alpine:latest
-RUN apk add --no-cache ca-certificates
-WORKDIR /app
-COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/portfolio .
-COPY --from=builder /app/static ./static
-COPY --from=builder /app/log4rs.yaml .
-RUN chmod +x ./portfolio
+COPY --from=backend-builder /workspace/target/x86_64-unknown-linux-musl/release/portfolio ./portfolio
+COPY --from=backend-builder /workspace/log4rs.yaml ./log4rs.yaml
+COPY --from=frontend-builder /workspace/static/dist ./static/dist
+COPY --from=wasm-builder /workspace/wasm-pkg ./static/wasm
 
-EXPOSE 8085
+EXPOSE 8086
+ENV RUST_LOG=info
 
 CMD ["./portfolio"]

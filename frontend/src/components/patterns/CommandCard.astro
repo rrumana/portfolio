@@ -33,8 +33,9 @@ const {
 
 .command-card__header {
   display: flex;
-  align-items: center;
-  gap: var(--space-sm, 0.75rem);
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-xs, 0.5rem) var(--space-sm, 0.75rem);
 }
 
 .command-card__icon {
@@ -48,12 +49,17 @@ const {
   background: var(--color-fill-primary-soft);
   padding: 0.25rem 0.5rem;
   border-radius: var(--radius-sm, 8px);
+  word-break: break-word;
+  white-space: pre-wrap;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .command-card p {
   margin: 0;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm, 0.875rem);
+  overflow-wrap: anywhere;
 }
 
 html[data-theme='dark'] .command-card__command {
