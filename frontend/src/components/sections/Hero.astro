@@ -2,7 +2,6 @@
 import Container from '../shell/Container.astro';
 import Button from '../ui/Button.astro';
 import Text from '../ui/Text.astro';
-import Badge from '../callouts/Badge.astro';
 
 export interface Props {
   eyebrow?: string;
@@ -19,7 +18,7 @@ const { eyebrow, title, description, primaryCta, secondaryCta } = props;
 <section class="hero">
   <Container class="hero__inner">
     <div class="hero__copy">
-      {eyebrow && <Badge tone="accent">{eyebrow}</Badge>}
+      {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
       <h1>{title}</h1>
       <Text size="lg" tone="muted">{description}</Text>
       <div class="hero__actions">
@@ -35,7 +34,7 @@ const { eyebrow, title, description, primaryCta, secondaryCta } = props;
       <div class="hero__card">
         <p class="hero__card-title">Focus Areas</p>
         <ul>
-          <li>Platform Engineering</li>
+          <li>Machine Learning Engineering</li>
           <li>Edge + Homelab Infrastructure</li>
           <li>Rust, WASM, and performance tooling</li>
         </ul>
@@ -64,6 +63,14 @@ const { eyebrow, title, description, primaryCta, secondaryCta } = props;
 .hero__copy {
   display: grid;
   gap: var(--space-md);
+}
+
+.hero__eyebrow {
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-text-muted);
 }
 
 .hero__copy h1 {

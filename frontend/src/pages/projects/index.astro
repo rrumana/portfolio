@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageSection from '../../components/shell/PageSection.astro';
-import GridSection from '../../components/layouts/GridSection.astro';
 import ProjectCard from '../../components/cards/ProjectCard.astro';
 
 const projects = await getCollection('projects');
@@ -19,7 +18,7 @@ projects.sort((a, b) => a.data.order - b.data.order);
       title="Projects"
       description="Browse the latest experiments, infrastructure build-outs, and research from my homelab."
     >
-      <GridSection columns={3}>
+      <div class="project-stack">
         {projects.map((project) => (
           <ProjectCard
             title={project.data.title}
@@ -31,7 +30,18 @@ projects.sort((a, b) => a.data.order - b.data.order);
             secondaryCta={project.data.secondaryAction}
           />
         ))}
-      </GridSection>
+      </div>
     </PageSection>
   </main>
 </BaseLayout>
+
+<style>
+.project-stack {
+  display: grid;
+  gap: var(--space-2xl);
+}
+
+.project-stack > * {
+  width: 100%;
+}
+</style>

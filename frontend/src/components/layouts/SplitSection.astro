@@ -48,9 +48,22 @@ const { reverse = false, align = 'center' } = props;
 }
 
 .split-section__media {
+  position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  aspect-ratio: 4 / 3;
+}
+
+.split-section__media :global(img),
+.split-section__media :global(picture),
+.split-section__media :global(picture img),
+.split-section__media :global(video),
+.split-section__media :global(canvas) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 @media (max-width: 900px) {
@@ -60,6 +73,10 @@ const { reverse = false, align = 'center' } = props;
 
   .split-section--reverse {
     direction: ltr;
+  }
+
+  .split-section__media {
+    aspect-ratio: 3 / 2;
   }
 }
 </style>

@@ -2,7 +2,6 @@
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import BaseLayout from './BaseLayout.astro';
 import Container from '../components/shell/Container.astro';
-import Badge from '../components/callouts/Badge.astro';
 import Button from '../components/ui/Button.astro';
 import Heading from '../components/ui/Heading.astro';
 import Text from '../components/ui/Text.astro';
@@ -44,7 +43,7 @@ const {
     <section class="project__hero">
       <Container class="project__hero-inner">
         <div class="project__heading">
-          {eyebrow && <Badge tone="accent">{eyebrow}</Badge>}
+          {eyebrow && <p class="project__eyebrow">{eyebrow}</p>}
           <Heading level={1} size="3xl">{title}</Heading>
           {description && <Text size="lg" tone="muted">{description}</Text>}
           {actions.length > 0 && (
@@ -111,6 +110,14 @@ const {
 .project__heading {
   display: grid;
   gap: var(--space-md);
+}
+
+.project__eyebrow {
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-text-muted);
 }
 
 .project__actions {

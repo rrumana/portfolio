@@ -4,7 +4,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageSection from '../components/shell/PageSection.astro';
 import Text from '../components/ui/Text.astro';
 import Button from '../components/ui/Button.astro';
-import GridSection from '../components/layouts/GridSection.astro';
 import ProjectCard from '../components/cards/ProjectCard.astro';
 import CallToAction from '../components/callouts/CallToAction.astro';
 import SplitSection from '../components/layouts/SplitSection.astro';
@@ -27,7 +26,7 @@ projects.sort((a, b) => a.data.order - b.data.order);
 >
   <main>
     <Hero
-      eyebrow="Platform Engineer"
+      eyebrow="Machine Learning Engineer"
       title="Hi, I'm Ryan Rumana"
       description="I build resilient systems that blend Rust, Kubernetes, and automation—powering production-ready homelabs, WASM experiences, and AI workloads at the edge."
       primaryCta={{ label: 'Get in touch', href: '#contact' }}
@@ -73,7 +72,7 @@ projects.sort((a, b) => a.data.order - b.data.order);
       title="Featured projects"
       description="Select work that blends platform engineering rigor with hands-on experimentation."
     >
-      <GridSection columns={3}>
+      <div class="project-stack">
         {projects.map((project) => (
           <ProjectCard
             title={project.data.title}
@@ -85,7 +84,7 @@ projects.sort((a, b) => a.data.order - b.data.order);
             secondaryCta={project.data.secondaryAction}
           />
         ))}
-      </GridSection>
+      </div>
     </PageSection>
 
     <CallToAction
@@ -114,5 +113,14 @@ projects.sort((a, b) => a.data.order - b.data.order);
   flex-wrap: wrap;
   gap: var(--space-sm);
   margin-top: var(--space-md);
+}
+
+.project-stack {
+  display: grid;
+  gap: var(--space-2xl);
+}
+
+.project-stack > * {
+  width: 100%;
 }
 </style>
