@@ -1,4 +1,4 @@
-import type { AstroComponentFactory } from 'astro/runtime/server';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import GameOfLifeDemo from './GameOfLifeDemo.astro';
 import GameOfLifeProof from './GameOfLifeProof.astro';
 import HomelabOverview from './HomelabOverview.astro';

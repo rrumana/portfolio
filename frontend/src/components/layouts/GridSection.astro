@@ -1,9 +1,11 @@
 ---
-interface Props {
+export interface Props {
   columns?: 2 | 3 | 4;
 }
 
-const { columns = 3 } = Astro.props as Props;
+const props = Astro.props as Props;
+
+const { columns = 3 } = props;
 ---
 <div class={`grid-section grid-section--${columns}`}> 
   <slot />

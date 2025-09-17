@@ -1,5 +1,5 @@
 ---
-interface Props {
+export interface Props {
   title?: string;
   variant?: 'info' | 'success' | 'warning' | 'danger';
   icon?: string;
@@ -13,13 +13,15 @@ const variantIcon: Record<NonNullable<Props['variant']>, string> = {
   danger: '⛔',
 };
 
+const props = Astro.props as Props & { [key: string]: unknown };
+
 const {
   title,
   variant = 'info',
   icon,
   class: className = '',
   ...rest
-} = Astro.props as Props & { [key: string]: unknown };
+} = props;
 
 const resolvedIcon = icon ?? variantIcon[variant];
 ---

@@ -1,5 +1,5 @@
 ---
-import type { AstroComponentFactory } from 'astro/runtime/server';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import BaseLayout from './BaseLayout.astro';
 import Container from '../components/shell/Container.astro';
 import Badge from '../components/callouts/Badge.astro';
@@ -7,13 +7,13 @@ import Button from '../components/ui/Button.astro';
 import Heading from '../components/ui/Heading.astro';
 import Text from '../components/ui/Text.astro';
 
-interface Action {
+export interface Action {
   label: string;
   href: string;
   variant?: 'primary' | 'secondary' | 'ghost' | 'link';
 }
 
-interface Props {
+export interface Props {
   title: string;
   description?: string;
   eyebrow?: string;
@@ -25,6 +25,8 @@ interface Props {
   sections?: AstroComponentFactory[];
 }
 
+const props = Astro.props as Props;
+
 const {
   title,
   description,
@@ -35,7 +37,7 @@ const {
   actions = [],
   navLinks = [],
   sections = [],
-} = Astro.props as Props;
+} = props;
 ---
 <BaseLayout title={`${title} | Ryan Rumana`} description={description} navLinks={navLinks}>
   <main class="project">

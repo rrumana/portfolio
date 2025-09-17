@@ -1,10 +1,12 @@
 ---
-interface Props {
+export interface Props {
   title?: string;
   description?: string;
 }
 
-const { title, description } = Astro.props as Props;
+const props = Astro.props as Props;
+
+const { title, description } = props;
 ---
 <div class="accordion-group">
   {(title || description) && (

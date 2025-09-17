@@ -4,7 +4,7 @@ import Button from '../ui/Button.astro';
 import Text from '../ui/Text.astro';
 import Badge from '../callouts/Badge.astro';
 
-interface Props {
+export interface Props {
   eyebrow?: string;
   title: string;
   description: string;
@@ -12,7 +12,9 @@ interface Props {
   secondaryCta?: { label: string; href: string };
 }
 
-const { eyebrow, title, description, primaryCta, secondaryCta } = Astro.props as Props;
+const props = Astro.props as Props;
+
+const { eyebrow, title, description, primaryCta, secondaryCta } = props;
 ---
 <section class="hero">
   <Container class="hero__inner">

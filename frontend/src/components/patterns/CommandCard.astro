@@ -1,12 +1,14 @@
 ---
 import SurfaceCard from '../ui/SurfaceCard.astro';
 
-interface Props {
+export interface Props {
   command: string;
   description: string;
   icon?: string;
   class?: string;
 }
+
+const props = Astro.props as Props & { [key: string]: unknown };
 
 const {
   command,
@@ -14,7 +16,7 @@ const {
   icon = '⌨️',
   class: className = '',
   ...rest
-} = Astro.props as Props & { [key: string]: unknown };
+} = props;
 ---
 <SurfaceCard variant="ghost" padding="md" class={`command-card ${className}`.trim()} {...rest}>
   <div class="command-card__header">

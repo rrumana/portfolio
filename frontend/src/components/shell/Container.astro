@@ -1,5 +1,13 @@
 ---
-const { as: Tag = 'div', class: className = '', ...rest } = Astro.props;
+export interface Props {
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const props = Astro.props as Props;
+
+const { as: Tag = 'div', class: className = '', ...rest } = props;
 ---
 <Tag class={`container ${className}`.trim()} {...rest}>
   <slot />

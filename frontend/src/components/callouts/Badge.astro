@@ -1,16 +1,18 @@
 ---
-interface Props {
+export interface Props {
   tone?: 'default' | 'accent' | 'neutral';
   icon?: string;
   class?: string;
 }
+
+const props = Astro.props as Props;
 
 const {
   tone = 'default',
   icon,
   class: className = '',
   ...rest
-} = Astro.props as Props;
+} = props;
 ---
 <span class={`badge badge--${tone} ${className}`.trim()} {...rest}>
   {icon && <span aria-hidden="true" class="badge__icon">{icon}</span>}

@@ -1,16 +1,18 @@
 ---
-interface FeatureItem {
+export interface FeatureItem {
   title: string;
   description: string;
   icon?: string;
 }
 
-interface Props {
+export interface Props {
   items: FeatureItem[];
   columns?: 'auto' | 1 | 2 | 3;
   dense?: boolean;
   class?: string;
 }
+
+const props = Astro.props as Props & { [key: string]: unknown };
 
 const {
   items = [],
@@ -18,7 +20,7 @@ const {
   dense = false,
   class: className = '',
   ...rest
-} = Astro.props as Props & { [key: string]: unknown };
+} = props;
 
 const gridClass =
   columns === 'auto'

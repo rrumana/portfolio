@@ -4,13 +4,13 @@ import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 import Button from '../ui/Button.astro';
 
-interface Link {
+export interface Link {
   href: string;
   label: string;
   variant?: 'primary' | 'secondary' | 'ghost' | 'link';
 }
 
-interface Props {
+export interface Props {
   eyebrow?: string;
   title: string;
   description?: string;
@@ -18,7 +18,9 @@ interface Props {
   id?: string;
 }
 
-const { eyebrow, title, description, actions = [], id } = Astro.props as Props;
+const props = Astro.props as Props;
+
+const { eyebrow, title, description, actions = [], id } = props;
 ---
 <section class="cta" id={id}>
   <Container class="cta__inner">

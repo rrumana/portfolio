@@ -1,4 +1,16 @@
 ---
+export interface Props {
+  id?: string;
+  title?: string;
+  eyebrow?: string;
+  description?: string;
+  accent?: boolean;
+  padding?: 'large' | 'medium';
+  class?: string;
+}
+
+const props = Astro.props as Props & { [key: string]: unknown };
+
 const {
   id,
   title,
@@ -6,9 +18,15 @@ const {
   description,
   accent = false,
   padding = 'large',
-} = Astro.props;
+  class: className = '',
+  ...rest
+} = props;
 ---
-<section id={id} class={`section-shell section-shell--${padding} ${accent ? 'section-shell--accent' : ''}`}>
+<section
+  id={id}
+  class={`section-shell section-shell--${padding} ${accent ? 'section-shell--accent' : ''} ${className}`.trim()}
+  {...rest}
+>
   {(title || eyebrow || description) && (
     <header class="section-shell__header">
       {eyebrow && <p class="section-shell__eyebrow">{eyebrow}</p>}

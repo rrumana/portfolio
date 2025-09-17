@@ -1,9 +1,15 @@
 ---
+export interface Props {
+  nav?: boolean;
+  sticky?: boolean;
+}
+
+const props = Astro.props as Props;
+
 const {
   nav,
-  children,
   sticky = true,
-} = Astro.props;
+} = props;
 ---
 <div class="content-grid">
   {nav && (

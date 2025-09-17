@@ -2,14 +2,16 @@
 import Container from './Container.astro';
 import Heading from '../ui/Heading.astro';
 
-interface Props {
+export interface Props {
   id?: string;
   title?: string;
   eyebrow?: string;
   description?: string;
   variant?: 'default' | 'alt';
-  as?: string;
+  as?: 'section' | 'div' | 'article' | 'aside';
 }
+
+const props = Astro.props as Props;
 
 const {
   id,
@@ -18,7 +20,7 @@ const {
   description,
   variant = 'default',
   as: Tag = 'section',
-} = Astro.props as Props;
+} = props;
 ---
 <Tag id={id} class={`section ${variant === 'alt' ? 'section--alt' : ''}`.trim()}>
   <Container>

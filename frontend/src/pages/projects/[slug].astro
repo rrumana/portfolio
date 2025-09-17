@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntryBySlug } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
 import { projectContentMap } from '../../components/projects/index';
 
@@ -18,7 +18,7 @@ if (!slug) {
   throw new Error('Project slug missing');
 }
 
-const project = await getEntryBySlug('projects', entrySlug);
+const project = await getEntry('projects', entrySlug);
 
 if (!project) {
   throw new Error(`Project with slug ${slug} not found`);

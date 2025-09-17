@@ -1,5 +1,5 @@
 ---
-interface Props {
+export interface Props {
   href?: string;
   variant?: 'primary' | 'secondary' | 'ghost' | 'link';
   size?: 'sm' | 'md';
@@ -8,6 +8,8 @@ interface Props {
   [key: string]: unknown;
 }
 
+const props = Astro.props as Props;
+
 const {
   href,
   variant = 'primary',
@@ -15,7 +17,7 @@ const {
   icon = false,
   class: className = '',
   ...rest
-} = Astro.props as Props;
+} = props;
 
 const baseClass = `button button--${variant} button--${size} ${icon ? 'button--icon' : ''} ${className}`.trim();
 ---

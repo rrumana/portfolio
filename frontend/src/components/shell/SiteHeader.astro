@@ -3,11 +3,13 @@ import Container from './Container.astro';
 import PrimaryNav from '../navigation/PrimaryNav.astro';
 import ThemeToggle from '../ui/ThemeToggle.astro';
 
-interface Props {
+export interface Props {
   navLinks?: { href: string; label: string }[];
 }
 
-const { navLinks = [] } = Astro.props as Props;
+const props = Astro.props as Props;
+
+const { navLinks = [] } = props;
 ---
 <header class="site-header">
   <Container class="site-header__inner">

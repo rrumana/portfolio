@@ -3,13 +3,13 @@ import Button from '../ui/Button.astro';
 import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 
-interface Link {
+export interface Link {
   label: string;
   href: string;
   variant?: 'primary' | 'secondary' | 'ghost' | 'link';
 }
 
-interface Props {
+export interface Props {
   title: string;
   summary: string;
   techStack?: string[];
@@ -19,6 +19,8 @@ interface Props {
   mediaAlt?: string;
 }
 
+const props = Astro.props as Props;
+
 const {
   title,
   summary,
@@ -27,7 +29,7 @@ const {
   secondaryCta,
   media,
   mediaAlt,
-} = Astro.props as Props;
+} = props;
 ---
 <article class="project-card">
   {media && (
