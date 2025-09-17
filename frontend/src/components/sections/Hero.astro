@@ -49,8 +49,8 @@ const { eyebrow, title, description, primaryCta, secondaryCta } = props;
   padding-block: var(--space-3xl);
   background: linear-gradient(
     135deg,
-    color-mix(in srgb, var(--color-accent-500) 24%, var(--color-surface-200)),
-    color-mix(in srgb, var(--color-primary-500) 28%, var(--color-surface-100))
+    color-mix(in srgb, var(--color-accent-500) 68%, transparent),
+    color-mix(in srgb, var(--color-primary-500) 64%, transparent)
   );
 }
 
@@ -123,13 +123,13 @@ const { eyebrow, title, description, primaryCta, secondaryCta } = props;
 html[data-theme='dark'] .hero {
   background: linear-gradient(
     135deg,
-    color-mix(in srgb, var(--color-accent-500) 42%, var(--color-surface-200)),
-    color-mix(in srgb, var(--color-primary-500) 46%, var(--color-surface-300))
+    color-mix(in srgb, var(--color-accent-500) 76%, transparent),
+    color-mix(in srgb, var(--color-primary-500) 70%, transparent)
   );
 }
 
 html[data-theme='dark'] .hero__card {
-  background: var(--color-surface-200);
+  background: var(--color-surface-300);
   border: 1px solid var(--color-border-muted);
   color: var(--color-text-default);
 }
