@@ -162,6 +162,41 @@ declare module 'astro:content' {
   collection: "projects";
   data: InferEntrySchema<"projects">
 } & { render(): Render[".md"] };
+"neovim-configuration.md": {
+	id: "neovim-configuration.md";
+  slug: "neovim-configuration";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
+"random-projects.md": {
+	id: "random-projects.md";
+  slug: "random-projects";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
+"rust-password-manager.md": {
+	id: "rust-password-manager.md";
+  slug: "rust-password-manager";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
+"rust-portfolio-website.md": {
+	id: "rust-portfolio-website.md";
+  slug: "rust-portfolio-website";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
+"rust-programming-lecture-series.md": {
+	id: "rust-programming-lecture-series.md";
+  slug: "rust-programming-lecture-series";
+  body: string;
+  collection: "projects";
+  data: InferEntrySchema<"projects">
+} & { render(): Render[".md"] };
 };
 
 	};

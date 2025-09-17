@@ -34,7 +34,7 @@ const actions = [project.data.primaryAction, project.data.secondaryAction].filte
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/projects', label: 'Projects' },
+  { href: '/#projects', label: 'Projects' },
   ...(project.data.techStack?.length ? [{ href: '#tech', label: 'Tech' }] : []),
   ...(slug === 'game-of-life'
     ? [

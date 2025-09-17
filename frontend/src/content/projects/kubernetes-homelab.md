@@ -13,7 +13,7 @@ heroAlt: "Homelab rack"
 primaryAction:
   label: "Read more"
   href: "/projects/kubernetes-homelab"
-SecondaryAction:
+secondaryAction:
   label: "View repo"
   href: "https://github.com/rrumana/k8s-homelab"
 ---

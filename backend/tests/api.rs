@@ -4,12 +4,10 @@ use axum::{
     http::{Request, StatusCode},
 };
 use backend::game_of_life::{GameOfLife, HEIGHT, WIDTH};
-use backend::routes::{game_api};
-use std::{
-    sync::{Arc, Mutex},
-};
-use tower::util::ServiceExt; // Bring oneshot into scope
+use backend::routes::game_api;
 use serde_json::Value;
+use std::sync::{Arc, Mutex};
+use tower::util::ServiceExt; // Bring oneshot into scope
 
 #[tokio::test]
 async fn test_get_state_endpoint() {

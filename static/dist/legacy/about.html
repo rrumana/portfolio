@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+        <title>About Ryan Rumana | Software Developer</title>
+        <meta name="keywords" content="[rcrumana], [Ryan], [Rumana], [Ryan Rumana], C++, Rust, Java, Python, Software engineering, Machine learning" />
+        <meta name="description" content="Learn more about Ryan Rumana, a software engineer passionate about tech, learning, and adventure. Discover his background, skills, and projects." />
+        
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:title" content="About Ryan Rumana | Software Developer" />
+        <meta property="og:description" content="Learn more about Ryan Rumana, a software engineer passionate about tech, learning, and adventure. Discover his background, skills, and projects." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ryanrumana.com/about.html" />
+        <meta property="og:image" content="https://ryanrumana.com/assets/profile.png" />
+        <meta property="og:image:alt" content="Ryan Rumana - Software Developer" />
+        <meta property="og:site_name" content="Ryan Rumana Portfolio" />
+        <meta property="og:locale" content="en_US" />
+        
+        <!-- Twitter Card Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Ryan Rumana | Software Developer" />
+        <meta name="twitter:description" content="Learn more about Ryan Rumana, a software engineer passionate about tech, learning, and adventure. Discover his background, skills, and projects." />
+        <meta name="twitter:image" content="https://ryanrumana.com/assets/profile.png" />
+        <meta name="twitter:image:alt" content="Ryan Rumana - Software Developer" />
+        
+        <!-- Additional SEO Meta Tags -->
+        <meta name="author" content="Ryan Rumana" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://ryanrumana.com/about.html" />
+        
+        <link rel="icon" type="image/png" href="./assets/favicon.ico" />
+        <meta name="theme-color" content="#36d1dc" />
+        <link rel="preload" as="style" href="./css/main.css" />
+        <link rel="stylesheet" href="./css/main.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+            integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <script defer src="./javascript/scrollreveal.min.js"></script>
+        <script defer type="text/javascript" src="./javascript/scrollveal.js"></script>        <script
+            defer
+            type="text/javascript"
+            src="./javascript/scrollveal.js"
+        ></script>
+        <style>
+            #future-work {
+                margin-bottom: 12em;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- About / Project Spotlight Section -->
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title">Project Spotlight: <br>This Website</h2>
+                <div class="row about-wrapper">
+                    <div class="about-wrapper__image">
+                        <img
+                            class="img-fluid"
+                            src="./images/hosting.png"
+                            alt="Hosting & Homelab"
+                            width="450"
+                            height="350"
+                        />
+                    </div>
+                    <div class="about-wrapper__info">
+                        <p class="about-wrapper__info-text">
+                            Hey there! Welcome to my little corner of the internet. What you're looking at right now is actually running
+                            from my home - yep, I'm hosting this entire website myself, including that Game of Life simulation you might
+                            have seen. Think of this as my digital workshop where I get to show off the stuff I've been tinkering with.
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            The whole idea here is to have one place where I can dump all my random projects, thoughts, and whatever else
+                            I'm working on. Honestly, a year ago I couldn't even spell "HTML" properly, but somehow I've managed to learn
+                            enough web development to put this thing together. It's been quite the journey!
+                        </p>
+                        <p class="about-wrapper__info-text">
+                            I'm hoping you'll find this site interesting - maybe even a little entertaining. I definitely had fun building
+                            it and figuring out all the hosting stuff along the way!
+                        </p>
+                        <span class="about-wrapper__cta">
+                            <a 
+                                href="/assets/resume.pdf" 
+                                class="cta-btn cta-btn--resume" 
+                                target="_blank" 
+                                rel="noopener noreferrer">
+                                View Resume
+                            </a>
+                            <a 
+                                href="https://github.com/rrumana/portfolio" 
+                                class="cta-btn cta-btn--resume" 
+                                target="_blank" 
+                                rel="noopener noreferrer">
+                                Site Github
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Homelab Hardware Section -->
+        <section id="hardware">
+            <div class="container">
+                <h2 class="section-title">Homelab Hardware</h2>
+                <article class="row-mid">
+                    <div class="project-wrapper__text">
+                        <p class="project-wrapper__text-info">
+                            Everything is running on a surprisingly powerful Minisforum mini-PC with a 12-core AMD Ryzen chip. 
+                            For my OS I use Arch Linux (btw) for pretty much everything. For storage, I'm using BTRFS in 3 drive 
+                            RAID 1 - basically means if one drive dies, I don't lose everything. Plus I've got regular snapshots 
+                            and backups going to a spare drive to further protect my data.
+                            <br><br>
+                            This little box is actually doing way more than just hosting this website; it's running triple duty 
+                            as my personal development rig, my gaming pc, and my home server. I've got around 37 Docker containers 
+                            running everything from my media server to phone backups to my own personal cloud. It's basically 
+                            become my everything-computer.
+                            <br><br>
+                            The networking side is handled by a little 1U firewall box running OPNsense.
+                        </p>
+                    </div>
+                    <div class="project-wrapper__image">
+                        <div class="thumbnail">
+                            <img
+                                class="img"
+                                src="./images/homelab.png"
+                                alt="Homelab Hardware"
+                                width="530"
+                            />
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Software Stack Section -->
+        <section id="software-stack">
+            <div class="container">
+                <h2 class="section-title">Software Stack</h2>
+                <article class="row-reverse-mid">
+                    <div class="project-wrapper__image">
+                        <div class="thumbnail">
+                            <img
+                                class="img-fluid"
+                                src="./images/Neovim_long.png"
+                                alt="Homelab Software"
+                                width="530"
+                            />
+                        </div>
+                    </div>
+                    <div class="project-wrapper__text">
+                        <p class="project-wrapper__text-info">
+                            For the tech stack, I went with Rust because, well, I love Rust. The backend uses the Axum framework to serve
+                            up the HTML and CSS (which is actually SCSS that gets compiled). I tried to keep the JavaScript to a minimum -
+                            just enough for some nice animations and transitions.
+                            <br><br>
+                            My favorite part is the Game of Life simulation. Instead of doing it in JavaScript like a normal person,
+                            I wrote it in Rust and compiled it to WebAssembly. It runs super fast and doesn't bog down the browser.
+                            <br><br>
+                            On the desktop side, I'm running Hyprland as my window manager - it's this lightweight Wayland compositor
+                            that's both beautiful and efficient. I do all my development in a custom Neovim setup that I
+                            probably spent way too much time configuring.
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Deployment & DevOps Section -->
+        <section id="deployment">
+            <div class="container">
+                <h2 class="section-title">Deployment & DevOps</h2>
+                <article class="row-mid">
+                    <div class="project-wrapper__text">
+                        <p class="project-wrapper__text-info">
+                            Everything runs in Docker containers, made it super easy to add it to my existing homelab. 
+                            Nginx handles the reverse proxy duties, routing traffic to the right containers.
+                            <br><br>
+                            For the public-facing stuff, I'm using Cloudflare for DNS and all their security features - DDoS protection,
+                            caching, the works. Any traffic that makes it through Cloudflare gets another security check from my own
+                            nginx before it hits the actual server. I keep an eye on everything with BTOP for system monitoring
+                            and a Homarr dashboard that gives me a nice overview of all my services. When I need to access things remotely,
+                            I've got all my personal devices connected to my homelab via a WireGuard VPN for secure connections.
+                        </p>
+                    </div>
+                    <div class="project-wrapper__image">
+                        <div class="thumbnail">
+                            <img
+                                class="img-fluid"
+                                src="./images/btop.png"
+                                alt="Deployment & DevOps"
+                                width="530"
+                            />
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Future Work Section -->
+        <section id="future-work">
+            <div class="container">
+                <h2 class="section-title">Future Work</h2>
+                <article class="row-reverse-mid">
+                    <div class="project-wrapper__image">
+                        <div class="thumbnail">
+                            <img
+                                class="img-fluid"
+                                src="./images/future_work.png"
+                                alt="Future Work"
+                                width="530"
+                            />
+                        </div>
+                    </div>
+                    <div class="project-wrapper__text">
+                        <p class="project-wrapper__text-info">
+                            I've got some pretty ambitious plans for the future. The big one is setting up a proper cluster - multiple
+                            machines working together so if one goes down, the others keep everything running. No more website outages
+                            when I need to reboot for updates!
+                            <br><br>
+                            I'm also thinking about making the site more dynamic. Right now it's mostly static content, but I'd love to
+                            add some interactive features. Maybe React, or since I'm already deep in the Rust ecosystem, I might try
+                            out Yew for some client-side magic. Better logging and user interactions are definitely on the wishlist.
+                            <br><br>
+                            And of course, I want to keep improving the Game of Life simulation. There are some cool optimizations I
+                            could implement, and maybe add support for different rule sets and more complex cellular automata behaviors.
+                            The possibilities are endless!
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Contact Section (with an 8em gap already added by the Future Work section margin) -->
+        <section id="contact">
+            <div class="container">
+                <h2 class="section-title">Get in Touch</h2>
+                <div class="contact-wrapper">
+                    <p class="contact-wrapper__text">
+                        Interested in collaborating or learning more about this project? Feel free to reach out!
+                    </p>
+                    <a href="mailto:ryan.rumana@gmail.com" class="cta-btn cta-btn--resume">Contact Me</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="container">
+                <a href="#about" class="back-to-top" aria-label="go back to top">
+                    <i class="fa fa-angle-up fa-2x" aria-hidden="true"></i>
+                </a>
+                <div class="social-links">
+                    <a href="mailto:ryan.rumana@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Gmail">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/ryanrumana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/rrumana" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+                <hr />
+                <p class="footer__text">
+                    &copy; <span id="year"></span> - Developed by
+                    <a href="https://rcrumana.xyz" target="_blank" rel="noopener noreferrer">Ryan Rumana</a>.
+                </p>
+            </div>
+        </footer>
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+        <script src="./javascript/vanilla-tilt.min.js"></script>
+        <script type="text/javascript" src="./javascript/valtilt.js"></script>
+    </body>
+</html>

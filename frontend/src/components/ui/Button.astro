@@ -53,7 +53,7 @@ const baseClass = `button button--${variant} button--${size} ${icon ? 'button--i
 
 .button--primary {
   background: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-500));
-  color: var(--color-text-inverse);
+  color: #1c2332;
   box-shadow: var(--shadow-sm);
 }
 
@@ -61,6 +61,13 @@ const baseClass = `button button--${variant} button--${size} ${icon ? 'button--i
 .button--primary:focus-visible {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
+  color: #1c2332;
+}
+
+html[data-theme='dark'] .button--primary,
+html[data-theme='dark'] .button--primary:hover,
+html[data-theme='dark'] .button--primary:focus-visible {
+  color: #1c2332;
 }
 
 .button--secondary {

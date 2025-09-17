@@ -12,11 +12,10 @@ import Hero from '../components/sections/Hero.astro';
 const navLinks = [
   { href: '#about', label: 'About' },
   { href: '#projects', label: 'Projects' },
-  { href: '/projects', label: 'All Work' },
   { href: '#contact', label: 'Contact' },
 ];
 
-const projects = (await getCollection('projects')).filter((project) => project.data.featured);
+const projects = await getCollection('projects');
 projects.sort((a, b) => a.data.order - b.data.order);
 ---
 <BaseLayout
@@ -69,8 +68,8 @@ projects.sort((a, b) => a.data.order - b.data.order);
 
     <PageSection
       id="projects"
-      title="Featured projects"
-      description="Select work that blends platform engineering rigor with hands-on experimentation."
+      title="Projects"
+      description="Every build I'm actively maintaining, from homelab platforms to tooling experiments."
     >
       <div class="project-stack">
         {projects.map((project) => (

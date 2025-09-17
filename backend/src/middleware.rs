@@ -1,9 +1,9 @@
 use axum::{
+    body::Body,
     extract::ConnectInfo,
-    http::{Request, HeaderMap},
+    http::{HeaderMap, Request},
     middleware::Next,
     response::IntoResponse,
-    body::Body,
 };
 use std::net::SocketAddr;
 use std::time::Instant;
@@ -15,23 +15,23 @@ pub async fn log_requests(
     next: Next,
 ) -> impl IntoResponse {
     let start = Instant::now();
-    
+
     // Extract request information
     let method = request.method().to_string();
     let uri = request.uri().to_string();
     let headers = request.headers().clone();
-    
+
     // Extract user agent and referer from headers
     let user_agent = extract_header_value(&headers, "user-agent");
     let referer = extract_header_value(&headers, "referer");
-    
+
     // Process the request
     let response = next.run(request).await;
-    
+
     // Extract response information
     let status = response.status().as_u16();
     let duration = start.elapsed();
-    
+
     // Log the request with all captured information
     // Using a dedicated logger target for access logs
     log::info!(
@@ -45,7 +45,7 @@ pub async fn log_requests(
         referer,
         duration.as_millis()
     );
-    
+
     response
 }
 
