@@ -31,21 +31,21 @@ const { links = [] } = props;
 .primary-nav a {
   font-size: var(--font-size-sm);
   font-weight: 500;
-  color: var(--color-neutral-500);
+  color: var(--color-text-muted);
   transition: color 150ms ease;
 }
 
 .primary-nav a:hover,
 .primary-nav a:focus-visible {
-  color: var(--color-neutral-900);
+  color: var(--color-text-default);
 }
 
 html[data-theme='dark'] .primary-nav a {
-  color: var(--color-neutral-500);
+  color: var(--color-text-muted);
 }
 
 html[data-theme='dark'] .primary-nav a:hover,
 html[data-theme='dark'] .primary-nav a:focus-visible {
-  color: var(--color-neutral-900);
+  color: var(--color-text-default);
 }
 </style>

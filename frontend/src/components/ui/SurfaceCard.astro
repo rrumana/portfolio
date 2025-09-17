@@ -26,23 +26,23 @@ const Tag = as as keyof HTMLElementTagNameMap;
 <style>
 .surface-card {
   border-radius: var(--radius-lg, 18px);
-  border: 1px solid rgba(17, 23, 42, 0.08);
-  background: var(--color-surface-100, #ffffff);
-  box-shadow: var(--shadow-sm, 0 4px 12px rgba(15, 23, 42, 0.08));
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-100);
+  box-shadow: var(--shadow-sm);
   display: grid;
   gap: var(--space-md, 1rem);
   transition: border 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
 .surface-card--ghost {
-  background: color-mix(in srgb, var(--color-surface-200, #f3f6ff) 55%, transparent);
-  border: 1px solid rgba(17, 23, 42, 0.05);
+  background: color-mix(in srgb, var(--color-surface-200) 55%, transparent);
+  border: 1px solid var(--color-border-subtle);
   box-shadow: none;
 }
 
 .surface-card--outline {
   background: transparent;
-  border: 1px dashed rgba(17, 23, 42, 0.25);
+  border: 1px dashed var(--color-border-muted);
   box-shadow: none;
 }
 
@@ -63,17 +63,17 @@ const Tag = as as keyof HTMLElementTagNameMap;
 }
 
 html[data-theme='dark'] .surface-card {
-  background: var(--color-surface-200, #0b152d);
-  border: 1px solid rgba(120, 132, 182, 0.32);
+  background: var(--color-surface-200);
+  border: 1px solid var(--color-border-muted);
   box-shadow: none;
 }
 
 html[data-theme='dark'] .surface-card--ghost {
-  background: color-mix(in srgb, var(--color-surface-300, #14203c) 65%, transparent);
-  border: 1px solid rgba(120, 132, 182, 0.25);
+  background: color-mix(in srgb, var(--color-surface-300) 60%, transparent);
+  border: 1px solid var(--color-border-muted);
 }
 
 html[data-theme='dark'] .surface-card--outline {
-  border-color: rgba(120, 132, 182, 0.4);
+  border-color: var(--color-border-strong);
 }
 </style>

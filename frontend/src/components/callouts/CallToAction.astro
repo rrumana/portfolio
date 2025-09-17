@@ -44,7 +44,11 @@ const { eyebrow, title, description, actions = [], id } = props;
 <style>
 .cta {
   padding-block: var(--space-3xl);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-500) 65%, transparent), color-mix(in srgb, var(--color-primary-500) 60%, transparent));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-accent-500) 52%, var(--color-surface-200)),
+    color-mix(in srgb, var(--color-primary-500) 58%, var(--color-surface-100))
+  );
   color: var(--color-surface-100);
 }
 
@@ -77,9 +81,9 @@ const { eyebrow, title, description, actions = [], id } = props;
 }
 
 .cta__actions .button--secondary {
-  background: rgba(255, 255, 255, 0.16);
-  color: var(--color-surface-100);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: color-mix(in srgb, var(--color-text-inverse) 16%, transparent);
+  color: var(--color-text-inverse);
+  border: 1px solid color-mix(in srgb, var(--color-text-inverse) 24%, transparent);
 }
 
 @media (max-width: 768px) {
@@ -90,12 +94,16 @@ const { eyebrow, title, description, actions = [], id } = props;
 }
 
 html[data-theme='dark'] .cta {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent-500) 50%, transparent), color-mix(in srgb, var(--color-primary-500) 48%, transparent));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-accent-500) 58%, var(--color-surface-200)),
+    color-mix(in srgb, var(--color-primary-500) 64%, var(--color-surface-300))
+  );
 }
 
 html[data-theme='dark'] .cta__actions .button--secondary {
-  background: rgba(255, 255, 255, 0.22);
-  color: var(--color-surface-100);
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: color-mix(in srgb, var(--color-text-inverse) 28%, transparent);
+  color: var(--color-text-inverse);
+  border: 1px solid color-mix(in srgb, var(--color-text-inverse) 38%, transparent);
 }
 </style>

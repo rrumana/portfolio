@@ -45,22 +45,22 @@ const {
 .command-card__command {
   font-family: var(--font-family-mono, 'Fira Code', monospace);
   font-size: 0.95rem;
-  background: color-mix(in srgb, var(--color-primary-500, #3b4eff) 12%, transparent);
+  background: var(--color-fill-primary-soft);
   padding: 0.25rem 0.5rem;
   border-radius: var(--radius-sm, 8px);
 }
 
 .command-card p {
   margin: 0;
-  color: var(--color-neutral-500, #5b627a);
+  color: var(--color-text-muted);
   font-size: var(--font-size-sm, 0.875rem);
 }
 
 html[data-theme='dark'] .command-card__command {
-  background: color-mix(in srgb, var(--color-primary-500, #7688ff) 20%, transparent);
+  background: var(--color-fill-primary-strong);
 }
 
 html[data-theme='dark'] .command-card p {
-  color: var(--color-neutral-500, #9aa7d6);
+  color: var(--color-text-muted);
 }
 </style>

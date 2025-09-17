@@ -129,6 +129,77 @@ const solverCliCommands = [
   }
 ];
 
+const systemComponents = [
+  {
+    title: 'Configuration Management',
+    description: 'YAML-based configuration system supporting flexible parameter tuning for grid size, generations, solver backends, optimization levels, and output formats.'
+  },
+  {
+    title: 'Game of Life Engine',
+    description: 'Core cellular automaton implementation with grid representation, rule application, I/O operations, and support for multiple boundary conditions (dead, wrap, mirror).'
+  },
+  {
+    title: 'SAT Encoding & Solving',
+    description: 'Converts Game of Life constraints into SAT problems with support for multiple backends: CaDiCaL (single-threaded) and ParKissat-RS (multithreaded) solvers.'
+  },
+  {
+    title: 'Reverse Problem Solving',
+    description: 'Handles problem definition, solution extraction, validation through forward simulation, and comprehensive output formatting with pattern analysis.'
+  },
+  {
+    title: 'Utility & Display',
+    description: 'Provides display utilities, output formatting, benchmarking tools, and comprehensive logging for performance analysis and debugging.'
+  }
+];
+
+const encodingSteps = [
+  {
+    number: '1',
+    title: 'Primary Variables',
+    description: 'Boolean variable <span class="math-term">cell(x, y, t)</span> for each cell at each time step',
+    formula: String.raw`\[ \text{Variables: } \{cell(i,j,t) \mid 0 \leq i < W, 0 \leq j < H, 0 \leq t \leq G\} \]`
+  },
+  {
+    number: '2',
+    title: 'Auxiliary Variables',
+    description: 'Helper variables for neighbor counts and state transitions to reduce constraint complexity',
+    formula: String.raw`\[ \text{Neighbor count: } n(i,j,t) = \sum_{(dx,dy) \in N} cell(i+dx, j+dy, t) \]`
+  },
+  {
+    number: '3',
+    title: 'Game of Life Constraints',
+    description: "Conway's rules encoded as SAT clauses linking consecutive time steps",
+    formula: String.raw`\[ cell(i,j,t+1) \iff (cell(i,j,t) \land n(i,j,t) \in \{2,3\}) \lor (\neg cell(i,j,t) \land n(i,j,t) = 3) \]`
+  }
+];
+
+const keyFeatures = [
+  {
+    title: 'Multiple SAT Backends',
+    description: 'Supports both CaDiCaL (single-threaded) and ParKissat-RS (multithreaded) solvers for optimal performance across different problem sizes'
+  },
+  {
+    title: 'Multithreaded Solving',
+    description: 'ParKissat-RS backend provides parallel SAT solving capabilities for complex problems with large grids and multiple generations'
+  },
+  {
+    title: 'Multiple Solution Finding',
+    description: 'Discovers all valid predecessor states up to a configurable limit using iterative SAT solving with hybrid encoding strategies'
+  },
+  {
+    title: 'Solution Validation',
+    description: 'Verifies found solutions by forward simulation to ensure correctness and detects known Game of Life patterns'
+  },
+  {
+    title: 'Comprehensive Benchmarking',
+    description: 'Built-in performance analysis tools to compare solver backends and optimization strategies across different problem complexities'
+  },
+  {
+    title: 'Multiple Output Formats',
+    description: 'Supports text, JSON, and visual representations with evolution path visualization and pattern analysis'
+  }
+];
+
 const crateSections = [
   {
     id: 'game-of-life-crate',
@@ -384,7 +455,53 @@ const resultsSections = [
   </AccordionGroup>
 </SectionShell>
 
-<SectionShell id="implementation" title="Crates and Command Line Interface" accent>
+<SectionShell id="implementation" title="Implementation: SAT-Based Reverse Solver" accent>
+  <SurfaceCard padding="lg" class="implementation-card">
+    <h3>System Architecture</h3>
+    <p class="implementation-text">
+      The implementation is structured as a modular Rust application with the following core components:
+    </p>
+    <div class="architecture-grid">
+      {systemComponents.map((item) => (
+        <div class="architecture-component">
+          <h4>{item.title}</h4>
+          <p>{item.description}</p>
+        </div>
+      ))}
+    </div>
+  </SurfaceCard>
+
+  <SurfaceCard padding="lg" class="implementation-card">
+    <h3>SAT Encoding Strategy</h3>
+    <p class="implementation-text">
+      The solver employs a hybrid encoding approach that balances constraint complexity with solving efficiency:
+    </p>
+    <div class="encoding-strategy">
+      {encodingSteps.map((step) => (
+        <div class="encoding-step">
+          <div class="encoding-step__number">{step.number}</div>
+          <div class="encoding-step__body">
+            <h4>{step.title}</h4>
+            <p set:html={step.description}></p>
+            <div class="formula" set:html={String.raw`${step.formula}`}></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </SurfaceCard>
+
+  <SurfaceCard padding="lg" class="implementation-card">
+    <h3>Key Features</h3>
+    <div class="features-grid">
+      {keyFeatures.map((feature) => (
+        <div class="feature-item">
+          <h4>{feature.title}</h4>
+          <p>{feature.description}</p>
+        </div>
+      ))}
+    </div>
+  </SurfaceCard>
+
   <SurfaceCard padding="lg" class="implementation-card">
     <h3>Command Line Interface</h3>
     <p class="implementation-text">
@@ -396,7 +513,9 @@ const resultsSections = [
       ))}
     </div>
   </SurfaceCard>
+</SectionShell>
 
+<SectionShell id="crates" title="Crates and Command Line Interface" accent>
   <div class="implementation-layout">
     <aside class="implementation-nav">
       <h3>Project Crates</h3>
@@ -497,20 +616,20 @@ const resultsSections = [
 
 .section-text p {
   margin: 0;
-  color: var(--color-neutral-500, #5b627a);
+  color: var(--color-text-muted);
 }
 
 .section-text .formula {
   font-family: 'Fira Code', monospace;
   font-size: var(--font-size-md, 1rem);
-  background: color-mix(in srgb, var(--color-surface-200, #f3f6ff) 50%, transparent);
+  background: var(--color-fill-neutral-soft);
   padding: var(--space-sm, 0.75rem);
   border-radius: var(--radius-sm, 8px);
   overflow-x: auto;
 }
 
 .implementation-text {
-  color: var(--color-neutral-500, #5b627a);
+  color: var(--color-text-muted);
   margin: 0;
   font-size: var(--font-size-md, 1rem);
   line-height: var(--line-height-normal);
@@ -525,6 +644,58 @@ const resultsSections = [
 .implementation-card {
   display: grid;
   gap: var(--space-md, 1rem);
+}
+
+.architecture-grid {
+  display: grid;
+  gap: var(--space-lg, 1.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.architecture-component {
+  display: grid;
+  gap: var(--space-2xs, 0.25rem);
+}
+
+.encoding-strategy {
+  display: grid;
+  gap: var(--space-md, 1rem);
+}
+
+.encoding-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-sm, 0.75rem);
+  align-items: start;
+}
+
+.encoding-step__number {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--color-fill-primary-soft);
+  font-weight: 700;
+}
+
+.encoding-step__body h4 {
+  margin: 0 0 var(--space-2xs, 0.25rem);
+}
+
+.encoding-step__body p {
+  margin: 0 0 var(--space-2xs, 0.25rem);
+}
+
+.features-grid {
+  display: grid;
+  gap: var(--space-lg, 1.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.feature-item {
+  display: grid;
+  gap: var(--space-2xs, 0.25rem);
 }
 
 .implementation-layout,
@@ -561,7 +732,7 @@ const resultsSections = [
 .results-nav li a {
   font-size: var(--font-size-sm, 0.875rem);
   font-weight: 600;
-  color: var(--color-neutral-500, #5b627a);
+  color: var(--color-text-muted);
   text-decoration: none;
 }
 
@@ -571,7 +742,7 @@ const resultsSections = [
 .guide-nav li a:focus-visible,
 .results-nav li a:hover,
 .results-nav li a:focus-visible {
-  color: var(--color-neutral-900, #0f172a);
+  color: var(--color-text-default);
 }
 
 .implementation-content,
@@ -603,38 +774,22 @@ const resultsSections = [
   }
 }
 
-html[data-theme='dark'] .section-text p,
-html[data-theme='dark'] .implementation-text {
-  color: var(--color-neutral-500, #9aa7d6);
-}
-
 html[data-theme='dark'] .section-text .formula {
-  background: color-mix(in srgb, var(--color-surface-300, #14203c) 60%, transparent);
+  background: var(--color-fill-neutral-muted);
 }
 
-html[data-theme='dark'] .implementation-nav li a,
-html[data-theme='dark'] .guide-nav li a,
-html[data-theme='dark'] .results-nav li a {
-  color: var(--color-neutral-500, #9aa7d6);
-}
-
-html[data-theme='dark'] .implementation-nav li a:hover,
-html[data-theme='dark'] .implementation-nav li a:focus-visible,
-html[data-theme='dark'] .guide-nav li a:hover,
-html[data-theme='dark'] .guide-nav li a:focus-visible,
-html[data-theme='dark'] .results-nav li a:hover,
-html[data-theme='dark'] .results-nav li a:focus-visible {
-  color: var(--color-primary-500, #7688ff);
+html[data-theme='dark'] .encoding-step__number {
+  background: var(--color-fill-primary-strong);
 }
 
 .code-snippet {
   font-family: 'Fira Code', monospace;
-  background: color-mix(in srgb, var(--color-primary-500, #3b4eff) 12%, transparent);
+  background: var(--color-fill-primary-soft);
   padding: 0 0.25rem;
   border-radius: 4px;
 }
 
 html[data-theme='dark'] .code-snippet {
-  background: color-mix(in srgb, var(--color-primary-500, #7688ff) 20%, transparent);
+  background: var(--color-fill-primary-strong);
 }
 </style>

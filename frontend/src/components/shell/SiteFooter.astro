@@ -21,7 +21,7 @@ const currentYear = new Date().getFullYear();
 .site-footer {
   padding-block: var(--space-2xl);
   background: var(--color-surface-100);
-  border-top: 1px solid var(--color-surface-300);
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 .site-footer__inner {
@@ -37,7 +37,7 @@ const currentYear = new Date().getFullYear();
   flex-direction: column;
   gap: var(--space-xs);
   font-size: var(--font-size-sm);
-  color: var(--color-neutral-500);
+  color: var(--color-text-muted);
 }
 
 .site-footer__links {
@@ -47,22 +47,22 @@ const currentYear = new Date().getFullYear();
 }
 
 .site-footer__links a {
-  color: var(--color-neutral-500);
+  color: var(--color-text-muted);
 }
 
 .site-footer__links a:hover,
 .site-footer__links a:focus-visible {
-  color: var(--color-neutral-900);
+  color: var(--color-text-default);
 }
 
 html[data-theme='dark'] .site-footer {
   background: var(--color-surface-200);
-  border-top: 1px solid rgba(120, 132, 182, 0.35);
+  border-top: 1px solid var(--color-border-muted);
 }
 
 html[data-theme='dark'] .site-footer__meta,
 html[data-theme='dark'] .site-footer__links a {
-  color: var(--color-neutral-500);
+  color: var(--color-text-muted);
 }
 
 html[data-theme='dark'] .site-footer__links a:hover,

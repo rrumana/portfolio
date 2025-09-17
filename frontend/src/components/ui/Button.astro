@@ -53,7 +53,7 @@ const baseClass = `button button--${variant} button--${size} ${icon ? 'button--i
 
 .button--primary {
   background: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-500));
-  color: var(--color-surface-100);
+  color: var(--color-text-inverse);
   box-shadow: var(--shadow-sm);
 }
 
@@ -65,8 +65,8 @@ const baseClass = `button button--${variant} button--${size} ${icon ? 'button--i
 
 .button--secondary {
   background: var(--color-surface-100);
-  color: var(--color-neutral-900);
-  border: 1px solid var(--color-surface-300);
+  color: var(--color-text-default);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .button--secondary:hover,
@@ -76,12 +76,12 @@ const baseClass = `button button--${variant} button--${size} ${icon ? 'button--i
 
 .button--ghost {
   background: transparent;
-  color: var(--color-neutral-900);
+  color: var(--color-text-default);
 }
 
 .button--ghost:hover,
 .button--ghost:focus-visible {
-  background: rgba(54, 93, 240, 0.08);
+  background: var(--color-fill-primary-soft);
 }
 
 .button--link {

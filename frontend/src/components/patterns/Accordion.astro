@@ -33,16 +33,16 @@ const {
 
 <style>
 .accordion {
-  border: 1px solid rgba(17, 23, 42, 0.08);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-md, 12px);
-  background: var(--color-surface-100, #fff);
+  background: var(--color-surface-100);
   overflow: hidden;
   transition: border 180ms ease, box-shadow 180ms ease;
 }
 
 .accordion[open] {
-  border-color: color-mix(in srgb, var(--color-primary-500, #3b4eff) 28%, transparent);
-  box-shadow: var(--shadow-xs, 0 1px 2px rgba(15, 23, 42, 0.08));
+  border-color: color-mix(in srgb, var(--color-primary-500) 32%, transparent);
+  box-shadow: var(--shadow-xs);
 }
 
 .accordion__summary {
@@ -66,7 +66,7 @@ const {
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: color-mix(in srgb, var(--color-primary-500, #3b4eff) 18%, transparent);
+  background: var(--color-fill-primary-soft);
   font-size: var(--font-size-sm, 0.875rem);
   font-weight: 700;
 }
@@ -79,7 +79,7 @@ const {
   display: inline-flex;
   width: 1.5rem;
   height: 1.5rem;
-  color: var(--color-neutral-400, #6b748b);
+  color: var(--color-text-subtle);
   transition: transform 180ms ease;
 }
 
@@ -94,19 +94,19 @@ const {
 }
 
 html[data-theme='dark'] .accordion {
-  background: var(--color-surface-200, #0b152d);
-  border: 1px solid rgba(120, 132, 182, 0.32);
+  background: var(--color-surface-200);
+  border: 1px solid var(--color-border-muted);
 }
 
 html[data-theme='dark'] .accordion[open] {
-  border-color: color-mix(in srgb, var(--color-primary-500, #7688ff) 40%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary-500) 44%, transparent);
 }
 
 html[data-theme='dark'] .accordion__number {
-  background: color-mix(in srgb, var(--color-primary-500, #7688ff) 30%, transparent);
+  background: var(--color-fill-primary-strong);
 }
 
 html[data-theme='dark'] .accordion__icon {
-  color: var(--color-neutral-400, #7f8bb8);
+  color: var(--color-text-subtle);
 }
 </style>

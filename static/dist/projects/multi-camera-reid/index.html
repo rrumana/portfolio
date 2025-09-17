@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Multi-Camera Person Re-identification | Ryan Rumana</title><meta name="description" content="A distributed computer vision pipeline that tracks subjects across cameras with quantized edge inference and a GitOps deployment."><link rel="stylesheet" href="/_astro/_slug_.V7jMusBA.css">
+<link rel="stylesheet" href="/_astro/_slug_.ByPx4nZn.css">
+<style>.heading[data-astro-cid-goh2lvqm]{font-weight:700;line-height:var(--line-height-tight);color:var(--color-text-default)}.heading--sm[data-astro-cid-goh2lvqm]{font-size:var(--font-size-lg)}.heading--md[data-astro-cid-goh2lvqm]{font-size:var(--font-size-xl)}.heading--lg[data-astro-cid-goh2lvqm]{font-size:var(--font-size-2xl)}.heading--xl[data-astro-cid-goh2lvqm]{font-size:var(--font-size-3xl)}.heading--2xl[data-astro-cid-goh2lvqm]{font-size:var(--font-size-4xl)}.heading--3xl[data-astro-cid-goh2lvqm]{font-size:clamp(2.5rem,5vw,3.5rem)}.heading--4xl[data-astro-cid-goh2lvqm]{font-size:clamp(3rem,6vw,4rem)}.text[data-astro-cid-jsr45nuq]{font-size:var(--font-size-md);line-height:var(--line-height-normal);color:var(--color-text-default)}.text--sm[data-astro-cid-jsr45nuq]{font-size:var(--font-size-sm)}.text--md[data-astro-cid-jsr45nuq]{font-size:var(--font-size-md)}.text--lg[data-astro-cid-jsr45nuq]{font-size:var(--font-size-lg)}.text--muted[data-astro-cid-jsr45nuq]{color:var(--color-text-muted)}.text--accent[data-astro-cid-jsr45nuq]{color:var(--color-accent-500)}.button[data-astro-cid-6ygtcg62]{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-xs);font-weight:600;border-radius:var(--radius-sm);padding-inline:var(--space-lg);padding-block:var(--space-sm);transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease;text-decoration:none}.button--sm[data-astro-cid-6ygtcg62]{padding-inline:var(--space-md);padding-block:var(--space-xs);font-size:var(--font-size-sm)}.button--primary[data-astro-cid-6ygtcg62]{background:linear-gradient(135deg,var(--color-primary-500),var(--color-accent-500));color:var(--color-text-inverse);box-shadow:var(--shadow-sm)}.button--primary[data-astro-cid-6ygtcg62]:hover,.button--primary[data-astro-cid-6ygtcg62]:focus-visible{transform:translateY(-1px);box-shadow:var(--shadow-md)}.button--secondary[data-astro-cid-6ygtcg62]{background:var(--color-surface-100);color:var(--color-text-default);border:1px solid var(--color-border-subtle)}.button--secondary[data-astro-cid-6ygtcg62]:hover,.button--secondary[data-astro-cid-6ygtcg62]:focus-visible{background:var(--color-surface-200)}.button--ghost[data-astro-cid-6ygtcg62]{background:transparent;color:var(--color-text-default)}.button--ghost[data-astro-cid-6ygtcg62]:hover,.button--ghost[data-astro-cid-6ygtcg62]:focus-visible{background:var(--color-fill-primary-soft)}.button--link[data-astro-cid-6ygtcg62]{padding:0;background:none;color:var(--color-primary-500)}.button--link[data-astro-cid-6ygtcg62]:hover,.button--link[data-astro-cid-6ygtcg62]:focus-visible{text-decoration:underline}.button--icon[data-astro-cid-6ygtcg62]{padding-inline:var(--space-sm)}
+.badge[data-astro-cid-xy2miwgi]{display:inline-flex;align-items:center;gap:var(--space-2xs);padding:var(--space-2xs) var(--space-sm);border-radius:var(--radius-xs);font-size:var(--font-size-xs);font-weight:600;letter-spacing:.03em;text-transform:uppercase}.badge__icon[data-astro-cid-xy2miwgi]{font-size:1.1em}.badge--default[data-astro-cid-xy2miwgi]{background:var(--color-fill-neutral-soft);color:var(--color-text-muted)}.badge--accent[data-astro-cid-xy2miwgi]{background:var(--color-fill-accent-soft);color:var(--color-accent-500)}.badge--neutral[data-astro-cid-xy2miwgi]{background:var(--color-fill-primary-soft);color:var(--color-primary-500)}
+.split-section[data-astro-cid-ient7cww]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2xl);align-items:center}.split-section--center[data-astro-cid-ient7cww]{align-items:center}.split-section--start[data-astro-cid-ient7cww]{align-items:start}.split-section--reverse[data-astro-cid-ient7cww]{direction:rtl}.split-section--reverse[data-astro-cid-ient7cww]>[data-astro-cid-ient7cww]{direction:ltr}.split-section__media[data-astro-cid-ient7cww],.split-section__content[data-astro-cid-ient7cww]{display:grid;gap:var(--space-md)}.split-section__media[data-astro-cid-ient7cww]{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}@media (max-width: 900px){.split-section[data-astro-cid-ient7cww]{grid-template-columns:1fr}.split-section--reverse[data-astro-cid-ient7cww]{direction:ltr}}
+</style></head> <body> <header class="site-header" data-astro-cid-f7gxlddy> <div class="container site-header__inner" data-astro-cid-f7gxlddy>  <a class="site-header__brand" href="/" data-astro-cid-f7gxlddy>Ryan Rumana</a> <div class="site-header__right" data-astro-cid-f7gxlddy> <nav class="primary-nav" aria-label="Main navigation" data-astro-cid-zrsf3zt6> <ul data-astro-cid-zrsf3zt6> <li data-astro-cid-zrsf3zt6><a href="/" data-astro-cid-zrsf3zt6>Home</a></li><li data-astro-cid-zrsf3zt6><a href="/projects" data-astro-cid-zrsf3zt6>Projects</a></li><li data-astro-cid-zrsf3zt6><a href="#tech" data-astro-cid-zrsf3zt6>Tech</a></li><li data-astro-cid-zrsf3zt6><a href="#details" data-astro-cid-zrsf3zt6>Details</a></li> </ul> </nav>  <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme" aria-pressed="false" data-astro-cid-lfoluaxz> <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true" data-astro-cid-lfoluaxz>🌞</span> <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true" data-astro-cid-lfoluaxz>🌙</span> <span class="theme-toggle__label" data-astro-cid-lfoluaxz>Toggle theme</span> </button> <script>
+  const storageKey = 'rr-theme';
+  const root = document.documentElement;
+  const toggleBtn = document.querySelector('[data-theme-toggle]');
+
+  const applyTheme = (theme) => {
+    if (theme) {
+      root.setAttribute('data-theme', theme);
+    } else {
+      root.removeAttribute('data-theme');
+    }
+    if (toggleBtn) {
+      const isDark = (theme ?? root.getAttribute('data-theme')) === 'dark';
+      toggleBtn.setAttribute('aria-pressed', String(isDark));
+      toggleBtn.classList.toggle('is-dark', isDark);
+    }
+  };
+
+  const storedTheme = localStorage.getItem(storageKey);
+  if (storedTheme) {
+    applyTheme(storedTheme);
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    applyTheme('dark');
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme');
+      const nextTheme = current === 'dark' ? 'light' : 'dark';
+      applyTheme(nextTheme === 'light' ? '' : 'dark');
+      if (nextTheme === 'light') {
+        localStorage.removeItem(storageKey);
+      } else {
+        localStorage.setItem(storageKey, 'dark');
+      }
+    });
+  }
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+    if (!localStorage.getItem(storageKey)) {
+      applyTheme(event.matches ? 'dark' : 'light');
+    }
+  });
+</script>  </div>  </div> </header>   <main class="project" data-astro-cid-eo3wme6m> <section class="project__hero" data-astro-cid-eo3wme6m> <div class="container project__hero-inner" data-astro-cid-eo3wme6m>  <div class="project__heading" data-astro-cid-eo3wme6m> <span class="badge badge--accent" data-astro-cid-eo3wme6m data-astro-cid-xy2miwgi>  Project </span>  <h1 class="heading heading--3xl" data-astro-cid-eo3wme6m data-astro-cid-goh2lvqm> Multi-Camera Person Re-identification </h1>  <p class="text text--muted text--lg" data-astro-cid-eo3wme6m data-astro-cid-jsr45nuq> A distributed computer vision pipeline that tracks subjects across cameras with quantized edge inference and a GitOps deployment. </p>  <div class="project__actions" data-astro-cid-eo3wme6m> <a class="button button--primary button--md" href="/projects/multi-camera-reid" data-astro-cid-eo3wme6m data-astro-cid-6ygtcg62>View project</a><a class="button button--primary button--md" href="/assets/EE292D Final Project Report.pdf" data-astro-cid-eo3wme6m data-astro-cid-6ygtcg62>Read paper</a> </div> </div> <div class="project__media" data-astro-cid-eo3wme6m> <img src="/images/test2.png" alt="Re-identification visualization" loading="lazy" data-astro-cid-eo3wme6m> </div> </div> </section> <div class="container project__meta" id="tech" data-astro-cid-eo3wme6m>  <h2 data-astro-cid-eo3wme6m>Tech Stack</h2> <ul data-astro-cid-eo3wme6m> <li data-astro-cid-eo3wme6m>Python</li><li data-astro-cid-eo3wme6m>PyTorch</li><li data-astro-cid-eo3wme6m>TensorRT</li><li data-astro-cid-eo3wme6m>Kubernetes</li> </ul>  </div> <article class="project__content" data-astro-cid-eo3wme6m> <div class="container project__content-inner" data-astro-cid-eo3wme6m>   <section id="details" class="project-section" data-astro-cid-ovxcmftc> <h2 id="problem-space">Problem space</h2>
+<p>Traditional re-identification systems lean on heavy central servers and latency-prone data
+collection. Our goal was to push inference out to the edge so multiple cameras could collaborate
+without oversaturating the network.</p>
+<h2 id="approach">Approach</h2>
+<ul>
+<li>Built a PyTorch pipeline with EfficientNet-based embeddings and distilled the model for Jetson
+devices using TensorRT.</li>
+<li>Coordinated devices via Kubernetes with GitOps tooling so every camera had a reproducible config and
+secure updates.</li>
+<li>Quantized models to fit edge constraints while keeping accuracy high enough for crowded scenes.</li>
+</ul>
+<h2 id="outcome">Outcome</h2>
+<p>The deployment handled multi-camera handoffs smoothly, and the GitOps flow meant rolling out new
+model weights was as simple as merging a PR. The academic write-up covers the full evaluation if you
+want a deep dive.</p> </section>  <div class="project__sections" data-astro-cid-eo3wme6m> <section class="reid-pipeline" data-astro-cid-kvx2wvlx> <div class="split-section  split-section--center" data-astro-cid-ient7cww> <div class="split-section__media" data-astro-cid-ient7cww> <img src="/images/test2.png" alt="Multi-camera re-identification pipeline" loading="lazy" data-astro-cid-kvx2wvlx> </div> <div class="split-section__content" data-astro-cid-ient7cww>   <div class="reid-pipeline__content" data-astro-cid-kvx2wvlx> <h3 class="heading heading--lg" data-astro-cid-kvx2wvlx data-astro-cid-goh2lvqm> Edge-first architecture </h3>  <p class="text text--default text--md" data-astro-cid-kvx2wvlx data-astro-cid-jsr45nuq> 
+EfficientNet-based embeddings run on NVIDIA Jetsons with TensorRT, pushing inference to the
+        edge so cameras coordinate without saturating the network.
+ </p>  <h4 class="heading heading--md" data-astro-cid-kvx2wvlx data-astro-cid-goh2lvqm> GitOps delivery </h4>  <p class="text text--muted text--md" data-astro-cid-kvx2wvlx data-astro-cid-jsr45nuq> 
+Kustomize overlays and Argo CD keep every camera node in sync. Updating an on-device model is
+        as simple as merging a PR.
+ </p>  </div>  </div> </div>  </section>  </div> </div> </article> </main>  <footer class="site-footer" data-astro-cid-5qnl4gdb> <div class="container site-footer__inner" data-astro-cid-5qnl4gdb>  <div class="site-footer__meta" data-astro-cid-5qnl4gdb> <span data-astro-cid-5qnl4gdb>&copy; 2025 Ryan Rumana</span> <span data-astro-cid-5qnl4gdb>Built with Rust &amp; Astro</span> </div> <div class="site-footer__links" data-astro-cid-5qnl4gdb> <a href="mailto:ryan.rumana@gmail.com" data-astro-cid-5qnl4gdb>Email</a> <a href="https://linkedin.com/in/ryanrumana" target="_blank" rel="noopener noreferrer" data-astro-cid-5qnl4gdb>LinkedIn</a> <a href="https://github.com/rrumana" target="_blank" rel="noopener noreferrer" data-astro-cid-5qnl4gdb>GitHub</a> </div>  </div> </footer>  </body></html>  
