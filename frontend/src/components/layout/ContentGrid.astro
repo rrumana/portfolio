@@ -1,0 +1,46 @@
+---
+const {
+  nav,
+  children,
+  sticky = true,
+} = Astro.props;
+---
+<div class="content-grid">
+  {nav && (
+    <aside class={`content-grid__nav ${sticky ? 'content-grid__nav--sticky' : ''}`}>
+      <slot name="nav" />
+    </aside>
+  )}
+  <div class="content-grid__body">
+    <slot />
+  </div>
+</div>
+
+<style>
+.content-grid {
+  display: grid;
+  gap: var(--space-2xl, 3rem);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 992px) {
+  .content-grid {
+    grid-template-columns: 260px minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.content-grid__nav {
+  position: relative;
+}
+
+.content-grid__nav--sticky {
+  position: sticky;
+  top: var(--space-2xl, 3rem);
+}
+
+.content-grid__body {
+  display: grid;
+  gap: var(--space-2xl, 3rem);
+}
+</style>

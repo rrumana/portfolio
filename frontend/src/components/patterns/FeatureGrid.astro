@@ -1,0 +1,105 @@
+---
+interface FeatureItem {
+  title: string;
+  description: string;
+  icon?: string;
+}
+
+interface Props {
+  items: FeatureItem[];
+  columns?: 'auto' | 1 | 2 | 3;
+  dense?: boolean;
+  class?: string;
+}
+
+const {
+  items = [],
+  columns = 'auto',
+  dense = false,
+  class: className = '',
+  ...rest
+} = Astro.props as Props & { [key: string]: unknown };
+
+const gridClass =
+  columns === 'auto'
+    ? 'feature-grid--auto'
+    : columns === 1
+      ? 'feature-grid--one'
+      : columns === 2
+        ? 'feature-grid--two'
+        : 'feature-grid--three';
+---
+<div class={`feature-grid ${gridClass} ${dense ? 'feature-grid--dense' : ''} ${className}`.trim()} {...rest}>
+  {items.map((item) => (
+    <article class="feature-grid__item">
+      {item.icon && <span class="feature-grid__icon" aria-hidden="true">{item.icon}</span>}
+      <div class="feature-grid__body">
+        <h4>{item.title}</h4>
+        <p>{item.description}</p>
+      </div>
+    </article>
+  ))}
+</div>
+
+<style>
+.feature-grid {
+  display: grid;
+  gap: var(--space-lg, 1.5rem);
+}
+
+.feature-grid--auto {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.feature-grid--one {
+  grid-template-columns: 1fr;
+}
+
+.feature-grid--two {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.feature-grid--three {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.feature-grid--dense {
+  gap: var(--space-md, 1rem);
+}
+
+.feature-grid__item {
+  display: grid;
+  gap: var(--space-sm, 0.75rem);
+  padding: var(--space-lg, 1.5rem);
+  border-radius: var(--radius-md, 12px);
+  background: var(--color-surface-100, #fff);
+  border: 1px solid rgba(17, 23, 42, 0.08);
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(15, 23, 42, 0.08));
+}
+
+.feature-grid__icon {
+  font-size: 1.5rem;
+}
+
+.feature-grid__body h4 {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.4vw, 1.375rem);
+}
+
+.feature-grid__body p {
+  margin: 0;
+  color: var(--color-neutral-500, #5b627a);
+  font-size: 0.95rem;
+  line-height: var(--line-height-normal, 1.6);
+}
+
+html[data-theme='dark'] .feature-grid__item {
+  background: var(--color-surface-200, #0b152d);
+  border: 1px solid rgba(120, 132, 182, 0.3);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .feature-grid__body p {
+  color: var(--color-neutral-500, #9aa7d6);
+}
+</style>

@@ -35,8 +35,16 @@ const actions = [project.data.primaryAction, project.data.secondaryAction].filte
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/projects', label: 'Projects' },
-  { href: '#tech', label: 'Tech' },
-  { href: '#details', label: 'Details' },
+  ...(project.data.techStack?.length ? [{ href: '#tech', label: 'Tech' }] : []),
+  ...(slug === 'game-of-life'
+    ? [
+        { href: '#demo', label: 'Playground' },
+        { href: '#optimizations', label: 'Optimizations' },
+        { href: '#proof', label: 'Proof' },
+        { href: '#implementation', label: 'Implementation' },
+        { href: '#details', label: 'Write-up' },
+      ]
+    : [{ href: '#details', label: 'Details' }]),
 ];
 
 const sections = projectContentMap[project.slug] ?? [];

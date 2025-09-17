@@ -1,29 +1,56 @@
 ---
+import SectionShell from '../layout/SectionShell.astro';
+import SurfaceCard from '../ui/SurfaceCard.astro';
 import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 import Button from '../ui/Button.astro';
 ---
-<section class="gol-demo" aria-labelledby="gol-title">
-  <div class="gol-demo__intro">
-    <Heading id="gol-title" level={2} size="2xl">Interactive playground</Heading>
-    <Text tone="muted">
-      Draw patterns, step forwards or backwards, and record GIFs of the evolution. The simulation
-      still runs entirely in Rust with wasm-bindgen—now presented in the updated layout.
-    </Text>
-  </div>
-
+<SectionShell
+  id="demo"
+  title="Interactive Playground"
+  description="Experiment with the reverse solver directly in the browser. Draw on the grid, rewind generations, or export runs as GIFs—all powered by the Rust + WASM engine."
+  accent
+>
   <div class="gol-demo__layout">
-    <div class="gol-demo__canvas">
-      <canvas id="lifeCanvas" width="400" height="400" aria-label="Game of Life grid"></canvas>
-      <div class="gol-demo__stats">
-        <span id="gridSizeDisplay">Grid: 20x20</span>
-        <span id="liveCellsDisplay">Live cells: 0</span>
+    <SurfaceCard padding="lg" class="gol-demo__canvas">
+      <header class="gol-demo__intro">
+        <Heading level={3} size="xl">Live Simulation</Heading>
+        <Text tone="muted">
+          Every interaction hits the same optimized engine that drives the full reverse solver. Grid
+          updates, text conversions, and GIF recording all execute inside the WASM module.
+        </Text>
+      </header>
+
+      <div class="gol-demo__viewport">
+        <canvas
+          id="lifeCanvas"
+          width="400"
+          height="400"
+          aria-label="Game of Life grid"
+        ></canvas>
       </div>
-    </div>
+
+      <dl class="gol-demo__stats">
+        <div>
+          <dt>Grid</dt>
+          <dd><span id="gridSizeDisplay">Grid: 20x20</span></dd>
+        </div>
+        <div>
+          <dt>Live cells</dt>
+          <dd>
+            <span id="liveCellsDisplay" aria-live="polite">Live cells: 0</span>
+          </dd>
+        </div>
+      </dl>
+    </SurfaceCard>
 
     <div class="gol-demo__controls">
-      <article class="gol-card">
+      <SurfaceCard padding="lg">
         <Heading level={3} size="lg">Simulation controls</Heading>
+        <Text tone="muted">
+          Step through generations, rewind, or record long runs. Multi-step uses the SAT backtracking
+          heuristics to keep playback fast.
+        </Text>
         <div class="gol-buttons">
           <Button id="stepBtn">Step Forward</Button>
           <Button id="backBtn" variant="secondary">Step Back</Button>
@@ -37,40 +64,48 @@ import Button from '../ui/Button.astro';
           <span id="delayDisplay">Frame Delay: 200ms</span>
         </div>
         <div class="gol-input">
-          <label for="genInput">Generations</label>
+          <label for="genInput">Generations per step</label>
           <input type="number" id="genInput" min="1" max="100" value="1" />
         </div>
-      </article>
+      </SurfaceCard>
 
-      <article class="gol-card">
+      <SurfaceCard padding="lg">
         <Heading level={3} size="lg">Text-to-pattern tools</Heading>
+        <Text tone="muted">
+          Quickly seed the grid from phrases or emoji art. The buffer slider controls spacing so
+          strings stay readable after evolution.
+        </Text>
         <div class="gol-input">
           <label for="textInput">Generate from text</label>
           <input type="text" id="textInput" placeholder="Enter text to convert" />
         </div>
         <div class="gol-input">
-          <label for="bufferSizeSlider">Buffer Size</label>
+          <label for="bufferSizeSlider">Buffer size</label>
           <input type="range" id="bufferSizeSlider" min="1" max="10" value="2" />
           <span id="bufferDisplay">2</span>
         </div>
         <Button id="generateTextBtn" variant="secondary">Generate</Button>
-      </article>
+      </SurfaceCard>
 
-      <article class="gol-card">
+      <SurfaceCard padding="lg">
         <Heading level={3} size="lg">Import &amp; export</Heading>
+        <Text tone="muted">
+          Bring in RLE or plaintext patterns, drag files straight onto the canvas, or export the
+          current state for debugging.
+        </Text>
         <div class="gol-file">
           <input type="file" id="fileInput" accept=".txt" hidden />
           <Button id="fileUploadBtn" variant="secondary">Upload Pattern</Button>
           <span id="fileName">No file selected</span>
         </div>
-        <div id="dragDropArea" class="gol-drop" aria-label="Drag and drop area">
+        <div id="dragDropArea" class="gol-drop" aria-label="Drag and drop area" tabindex="0">
           Drag &amp; drop pattern files here
         </div>
         <Button id="downloadBtn" variant="secondary">Download Pattern</Button>
-      </article>
+      </SurfaceCard>
     </div>
   </div>
-</section>
+</SectionShell>
 
 <script type="module" is:inline>
   import { initGameOfLife } from '/legacy/javascript/game_of_life.js';
@@ -81,123 +116,124 @@ import Button from '../ui/Button.astro';
 </script>
 
 <style>
-.gol-demo {
-  display: grid;
-  gap: var(--space-2xl);
-}
-
-.gol-demo__intro {
-  display: grid;
-  gap: var(--space-sm);
-  max-width: 70ch;
-}
-
 .gol-demo__layout {
   display: grid;
-  gap: var(--space-2xl);
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-2xl, 3rem);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   align-items: start;
 }
 
 .gol-demo__canvas {
-  background: var(--color-surface-100);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(17, 23, 42, 0.08);
-  display: grid;
-  gap: var(--space-md);
-  justify-items: center;
+  position: relative;
 }
 
-.gol-demo__canvas canvas {
+.gol-demo__intro {
+  display: grid;
+  gap: var(--space-sm, 0.75rem);
+}
+
+.gol-demo__viewport {
+  background: var(--color-surface-100, #fff);
+  border-radius: var(--radius-md, 12px);
+  border: 1px solid rgba(17, 23, 42, 0.12);
+  overflow: hidden;
+}
+
+.gol-demo__viewport canvas {
   width: 100%;
   height: auto;
-  max-width: 540px;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(17, 23, 42, 0.12);
-  background: var(--color-surface-100);
+  display: block;
 }
 
 .gol-demo__stats {
-  display: flex;
-  gap: var(--space-sm);
-  font-size: var(--font-size-sm);
-  color: var(--color-neutral-500);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-sm, 0.75rem);
+  margin: 0;
+}
+
+.gol-demo__stats div {
+  display: grid;
+  gap: var(--space-2xs, 0.25rem);
+}
+
+.gol-demo__stats dt {
+  font-size: var(--font-size-xs, 0.8125rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-neutral-500, #5b627a);
+}
+
+.gol-demo__stats dd {
+  margin: 0;
+  font-weight: 600;
 }
 
 .gol-demo__controls {
   display: grid;
-  gap: var(--space-xl);
-}
-
-.gol-card {
-  background: var(--color-surface-100);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(17, 23, 42, 0.08);
-  display: grid;
-  gap: var(--space-md);
+  gap: var(--space-xl, 2rem);
 }
 
 .gol-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
+  gap: var(--space-sm, 0.75rem);
 }
 
 .gol-input {
   display: grid;
-  gap: var(--space-2xs);
+  gap: var(--space-2xs, 0.25rem);
 }
 
 .gol-input label {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-sm, 0.875rem);
   font-weight: 600;
-  color: var(--color-neutral-500);
-}
-
-.gol-input input[type='range'] {
-  width: 100%;
+  color: var(--color-neutral-500, #5b627a);
 }
 
 .gol-file {
   display: grid;
-  gap: var(--space-xs);
+  gap: var(--space-xs, 0.5rem);
 }
 
 .gol-file span {
-  font-size: var(--font-size-sm);
-  color: var(--color-neutral-500);
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-neutral-500, #5b627a);
 }
 
 .gol-drop {
   border: 1px dashed rgba(17, 23, 42, 0.2);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
+  border-radius: var(--radius-md, 12px);
+  padding: var(--space-lg, 1.5rem);
   text-align: center;
-  font-size: var(--font-size-sm);
-  color: var(--color-neutral-500);
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-neutral-500, #5b627a);
+  transition: border 180ms ease, background 180ms ease;
 }
 
-html[data-theme='dark'] .gol-demo__canvas,
-html[data-theme='dark'] .gol-card {
-  background: var(--color-surface-200);
-  border: 1px solid rgba(120, 132, 182, 0.35);
+.gol-drop:focus-visible,
+.gol-drop:hover {
+  border-color: color-mix(in srgb, var(--color-primary-500, #3b4eff) 35%, transparent);
+  background: color-mix(in srgb, var(--color-primary-500, #3b4eff) 8%, transparent);
 }
 
-html[data-theme='dark'] .gol-demo__canvas canvas {
-  border: 1px solid rgba(120, 132, 182, 0.35);
-  background: var(--color-surface-100);
+html[data-theme='dark'] .gol-demo__viewport {
+  background: var(--color-surface-200, #0b152d);
+  border-color: rgba(120, 132, 182, 0.32);
+}
+
+html[data-theme='dark'] .gol-demo__stats dt {
+  color: var(--color-neutral-500, #9aa7d6);
+}
+
+html[data-theme='dark'] .gol-file span,
+html[data-theme='dark'] .gol-drop,
+html[data-theme='dark'] .gol-input label,
+html[data-theme='dark'] .gol-demo__intro p {
+  color: var(--color-neutral-500, #9aa7d6);
 }
 
 html[data-theme='dark'] .gol-drop {
   border-color: rgba(120, 132, 182, 0.35);
-  color: var(--color-neutral-500);
-}
-
-html[data-theme='dark'] .gol-demo__stats {
-  color: var(--color-neutral-500);
 }
 </style>

@@ -1,0 +1,95 @@
+---
+interface Props {
+  code: string;
+  language?: string;
+  title?: string;
+}
+
+const { code, language = 'text', title } = Astro.props as Props;
+---
+<figure class={`code-block code-block--${language}`}>
+  <header class="code-block__header">
+    <span class="code-block__title">{title ?? language.toUpperCase()}</span>
+    <button type="button" class="code-block__copy" data-copy>
+      <span data-copy-text>Copy</span>
+    </button>
+  </header>
+  <pre><code>{code}</code></pre>
+</figure>
+
+<script is:inline>
+  const block = document.currentScript?.closest('.code-block');
+  if (block) {
+    const button = block.querySelector('[data-copy]');
+    const label = block.querySelector('[data-copy-text]');
+    const pre = block.querySelector('code');
+    button?.addEventListener('click', async () => {
+      if (!pre) return;
+      try {
+        await navigator.clipboard.writeText(pre.textContent ?? '');
+        if (label) {
+          const original = label.textContent;
+          label.textContent = 'Copied!';
+          setTimeout(() => {
+            if (label) label.textContent = original ?? 'Copy';
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Failed to copy code block', err);
+      }
+    });
+  }
+</script>
+
+<style>
+.code-block {
+  border-radius: var(--radius-lg, 16px);
+  border: 1px solid rgba(17, 23, 42, 0.12);
+  background: #0f172a;
+  color: #f8fafc;
+  font-family: 'Fira Code', monospace;
+  overflow: hidden;
+}
+
+.code-block__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.code-block__title {
+  margin: 0;
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.code-block__copy {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: inherit;
+  background: transparent;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+pre {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+}
+
+code {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  display: block;
+  white-space: pre;
+}
+
+html[data-theme='dark'] .code-block {
+  border-color: rgba(120, 132, 182, 0.35);
+}
+</style>

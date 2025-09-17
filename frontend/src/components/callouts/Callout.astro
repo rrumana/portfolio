@@ -1,0 +1,99 @@
+---
+interface Props {
+  title?: string;
+  variant?: 'info' | 'success' | 'warning' | 'danger';
+  icon?: string;
+  class?: string;
+}
+
+const variantIcon: Record<NonNullable<Props['variant']>, string> = {
+  info: 'ℹ️',
+  success: '✅',
+  warning: '⚠️',
+  danger: '⛔',
+};
+
+const {
+  title,
+  variant = 'info',
+  icon,
+  class: className = '',
+  ...rest
+} = Astro.props as Props & { [key: string]: unknown };
+
+const resolvedIcon = icon ?? variantIcon[variant];
+---
+<aside
+  class={`callout callout--${variant} ${className}`.trim()}
+  role="note"
+  {...rest}
+>
+  <div class="callout__icon" aria-hidden="true">{resolvedIcon}</div>
+  <div class="callout__body">
+    {title && <h3>{title}</h3>}
+    <div class="callout__content">
+      <slot />
+    </div>
+  </div>
+</aside>
+
+<style>
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-md, 1rem);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border-radius: var(--radius-lg, 18px);
+  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--color-surface-100, #fff) 94%, transparent);
+  box-shadow: var(--shadow-xs, 0 1px 2px rgba(15, 23, 42, 0.08));
+}
+
+.callout__icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.callout__body {
+  display: grid;
+  gap: var(--space-xs, 0.5rem);
+}
+
+.callout__body h3 {
+  margin: 0;
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+}
+
+.callout__content {
+  color: var(--color-neutral-500, #5b627a);
+  font-size: var(--font-size-sm, 0.875rem);
+  display: grid;
+  gap: var(--space-xs, 0.5rem);
+}
+
+.callout--info {
+  border-color: color-mix(in srgb, var(--color-primary-400, #6b7bff) 22%, transparent);
+}
+
+.callout--success {
+  border-color: color-mix(in srgb, #22c55e 22%, transparent);
+}
+
+.callout--warning {
+  border-color: color-mix(in srgb, #fbbf24 32%, transparent);
+}
+
+.callout--danger {
+  border-color: color-mix(in srgb, #f87171 30%, transparent);
+}
+
+html[data-theme='dark'] .callout {
+  background: color-mix(in srgb, var(--color-surface-200, #0b152d) 90%, transparent);
+  border-color: rgba(120, 132, 182, 0.35);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .callout__content {
+  color: var(--color-neutral-500, #9aa7d6);
+}
+</style>
