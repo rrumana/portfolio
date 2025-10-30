@@ -4,5 +4,5 @@
 
 OPTIMIZATION_WISHLIST.md
 frontend/node_modules
-frontend/.astro
-frontend/dist
+static/_astro
+static/dist
