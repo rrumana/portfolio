@@ -4,5 +4,4 @@
 
 OPTIMIZATION_WISHLIST.md
 frontend/node_modules
-static/_astro
-static/dist
+/static/dist
