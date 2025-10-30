@@ -77,10 +77,14 @@ COPY --from=backend-builder /workspace/log4rs.yaml ./log4rs.yaml
 COPY --from=frontend-builder /workspace/static/dist ./static/dist
 COPY --from=wasm-builder /workspace/wasm-pkg ./static/wasm
 
+# The application still binds to APP_PORT inside the container; map this port to
+# EXTERNAL_PORT via your orchestration layer to keep staging traffic on 8086.
 ARG APP_PORT=8085
+ARG EXTERNAL_PORT=8086
 ENV APP_PORT=${APP_PORT}
 ENV PORT=${APP_PORT}
+ENV EXTERNAL_PORT=${EXTERNAL_PORT}
 ENV RUST_LOG=info
 
-EXPOSE ${APP_PORT}
+EXPOSE ${EXTERNAL_PORT}
 CMD ["./portfolio"]

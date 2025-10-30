@@ -2,14 +2,18 @@
 import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 import SplitSection from '../layouts/SplitSection.astro';
+import { Image } from 'astro:assets';
 ---
 <section class="reid-pipeline">
   <SplitSection>
-    <img
+    <Image
       slot="media"
       src="/images/test2.png"
       alt="Multi-camera re-identification pipeline"
+      width={1366}
+      height={767}
       loading="lazy"
+      class="reid-pipeline__image"
     />
     <div class="reid-pipeline__content">
       <Heading level={3} size="lg">Edge-first architecture</Heading>
@@ -32,12 +36,12 @@ import SplitSection from '../layouts/SplitSection.astro';
   gap: var(--space-xl);
 }
 
-.reid-pipeline img {
+.reid-pipeline :global(img) {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
 }
 
-html[data-theme='dark'] .reid-pipeline img {
+html[data-theme='dark'] .reid-pipeline :global(img) {
   border: 1px solid var(--color-border-muted);
 }
 </style>

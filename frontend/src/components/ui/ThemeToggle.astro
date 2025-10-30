@@ -11,48 +11,45 @@
 </button>
 
 <script is:inline>
-  const storageKey = 'rr-theme';
-  const root = document.documentElement;
-  const toggleBtn = document.querySelector('[data-theme-toggle]');
+const storageKey = 'rr-theme';
+const root = document.documentElement;
+const toggleBtn = document.querySelector('[data-theme-toggle]');
 
-  const applyTheme = (theme) => {
-    if (theme) {
-      root.setAttribute('data-theme', theme);
-    } else {
-      root.removeAttribute('data-theme');
-    }
-    if (toggleBtn) {
-      const isDark = (theme ?? root.getAttribute('data-theme')) === 'dark';
-      toggleBtn.setAttribute('aria-pressed', String(isDark));
-      toggleBtn.classList.toggle('is-dark', isDark);
-    }
-  };
+const normaliseTheme = (theme) => (theme === 'dark' ? 'dark' : 'light');
 
-  const storedTheme = localStorage.getItem(storageKey);
-  if (storedTheme) {
-    applyTheme(storedTheme);
-  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    applyTheme('dark');
-  }
-
+const applyTheme = (theme) => {
+  const normalised = normaliseTheme(theme);
+  root.setAttribute('data-theme', normalised);
   if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-      const current = root.getAttribute('data-theme');
-      const nextTheme = current === 'dark' ? 'light' : 'dark';
-      applyTheme(nextTheme === 'light' ? '' : 'dark');
-      if (nextTheme === 'light') {
-        localStorage.removeItem(storageKey);
-      } else {
-        localStorage.setItem(storageKey, 'dark');
-      }
-    });
+    const isDark = normalised === 'dark';
+    toggleBtn.setAttribute('aria-pressed', String(isDark));
+    toggleBtn.classList.toggle('is-dark', isDark);
   }
+};
 
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-    if (!localStorage.getItem(storageKey)) {
-      applyTheme(event.matches ? 'dark' : 'light');
-    }
+const storedTheme = localStorage.getItem(storageKey);
+if (storedTheme === 'dark' || storedTheme === 'light') {
+  applyTheme(storedTheme);
+} else {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(prefersDark ? 'dark' : 'light');
+}
+
+if (toggleBtn) {
+  toggleBtn.addEventListener('click', () => {
+    const current = normaliseTheme(root.getAttribute('data-theme'));
+    const nextTheme = current === 'dark' ? 'light' : 'dark';
+    applyTheme(nextTheme);
+    localStorage.setItem(storageKey, nextTheme);
   });
+}
+
+const media = window.matchMedia('(prefers-color-scheme: dark)');
+media.addEventListener('change', (event) => {
+  if (!localStorage.getItem(storageKey)) {
+    applyTheme(event.matches ? 'dark' : 'light');
+  }
+});
 </script>
 
 <style>

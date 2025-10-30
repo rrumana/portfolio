@@ -2,6 +2,7 @@
 import Button from '../ui/Button.astro';
 import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
+import { Image } from 'astro:assets';
 
 export interface Link {
   label: string;
@@ -30,11 +31,25 @@ const {
   media,
   mediaAlt,
 } = props;
+
+const mediaIsGif = typeof media === 'string' && media.toLowerCase().endsWith('.gif');
 ---
 <article class="project-card">
   {media && (
     <div class="project-card__media">
-      <img src={media} alt={mediaAlt ?? ''} loading="lazy" />
+      {mediaIsGif ? (
+        <img src={media} alt={mediaAlt ?? ''} loading="lazy" />
+      ) : (
+        <Image
+          src={media}
+          alt={mediaAlt ?? ''}
+          class="project-card__image"
+          loading="lazy"
+          width={1366}
+          height={767}
+          fit="cover"
+        />
+      )}
     </div>
   )}
   <div class="project-card__body">
@@ -82,6 +97,7 @@ const {
   min-height: clamp(260px, 28vw, 360px);
 }
 
+.project-card__media :global(img),
 .project-card__media img {
   width: 100%;
   height: 100%;

@@ -6,6 +6,7 @@ import Text from '../components/ui/Text.astro';
 import Button from '../components/ui/Button.astro';
 import Badge from '../components/callouts/Badge.astro';
 import CallToAction from '../components/callouts/CallToAction.astro';
+import { Image } from 'astro:assets';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -28,13 +29,14 @@ const navLinks = [
       description="From Florida to the Colorado mountains, I’ve chased problems that mix systems thinking, performance, and hands-on experimentation."
     >
       <SplitSection>
-        <img
+        <Image
           slot="media"
           src="/images/profile.png"
           alt="Ryan Rumana portrait"
-          width="450"
-          height="350"
+          width={450}
+          height={350}
           loading="lazy"
+          class="about__image"
         />
         <div class="about__story">
           <Text>

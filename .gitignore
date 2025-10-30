@@ -2,6 +2,8 @@
 
 /logs
 
+/static
+
 OPTIMIZATION_WISHLIST.md
+
 frontend/node_modules
-/static/dist

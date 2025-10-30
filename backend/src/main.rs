@@ -3,6 +3,7 @@ use backend::game_of_life::{GameOfLife, parse_initial_state};
 use backend::routes::game_api;
 use log::info;
 use log4rs;
+use std::env;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use tokio::net::TcpListener;
@@ -44,8 +45,14 @@ async fn main() {
     let wasm_dir = "static/wasm";
     let app = app(static_root, wasm_dir, api);
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 8086));
+    let port = env::var("PORT")
+        .or_else(|_| env::var("APP_PORT"))
+        .ok()
+        .and_then(|value| value.parse::<u16>().ok())
+        .unwrap_or(8085);
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     println!("Serving portfolio at http://{}", addr);
+    info!("Listening on {}", addr);
 
     let listener = TcpListener::bind(&addr).await.unwrap();
     axum::serve(

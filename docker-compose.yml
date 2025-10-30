@@ -8,7 +8,7 @@ services:
     image: portfolio:latest
     container_name: portfolio
     ports:
-      - "8086:8086"
+      - "8085:8085"
     environment:
       - RUST_LOG=info
     restart: unless-stopped

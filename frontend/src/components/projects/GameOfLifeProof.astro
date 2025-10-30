@@ -4,6 +4,17 @@ import AccordionGroup from '../patterns/AccordionGroup.astro';
 import Accordion from '../patterns/Accordion.astro';
 import SurfaceCard from '../ui/SurfaceCard.astro';
 import CommandCard from '../patterns/CommandCard.astro';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+
+const inlineMath = (tex: string) =>
+  `<span class="math-term">${katex.renderToString(tex, { throwOnError: false })}</span>`;
+
+const blockMath = (tex: string) =>
+  `<div class="formula">${katex.renderToString(tex, {
+    displayMode: true,
+    throwOnError: false,
+  })}</div>`;
 
 const optimizationSections = [
   {
@@ -46,64 +57,74 @@ const optimizationSections = [
 const proofSections = [
   {
     title: 'Definitions & Setup',
-    content: String.raw`<p>Let <span class="math-term">Σ = {0,1}</span>. For a finite grid of size <span class="math-term">N × N</span>, a configuration is a function:</p>
-      <div class="formula">\[ c: \{0,1,\dots,N-1\}^2 \to \{0,1\}. \]</div>
-      <p>Define the local update rule of Conway's Game of Life:</p>
-      <div class="formula">\[ f: \{0,1\}^{N \times N} \to \{0,1\}^{N \times N} \]</div>
-      <p>by</p>
-      <div class="formula">\[
-      f(c)(i,j) = \begin{cases}
-          1 & \text{if } c(i,j)=1 \text{ and } n(i,j) \in \{2,3\}, \\
-          1 & \text{if } c(i,j)=0 \text{ and } n(i,j)=3, \\
-          0 & \text{otherwise},
-      \end{cases}
-      \]</div>
-      <p>where the neighbor count is:</p>
-      <div class="formula">\[
-      n(i,j) = \sum_{(d_1,d_2) \in \{-1,0,1\}^2 \setminus \{(0,0)\}} c(i+d_1,j+d_2).
-      \]</div>`
+    content: [
+      `<p>Let ${inlineMath('\\Sigma = \\{0,1\\}')}.
+      For a finite grid of size ${inlineMath('N \\times N')}, a configuration is a function:</p>`,
+      blockMath('c : \\{0,1,\\dots,N-1\\}^2 \\to \\{0,1\\}'),
+      '<p>The Game of Life update rule is represented as:</p>',
+      blockMath('f : \\{0,1\\}^{N \\times N} \\to \\{0,1\\}^{N \\times N}'),
+      `<p>For each cell ${inlineMath('(i,j)')}:</p>`,
+      blockMath(
+        'f(c)_{i,j} = \\begin{cases} 1 & \\text{if } c_{i,j} = 1 \\text{ and } n(i,j) \\in \\{2,3\\}, \\\\ 1 & \\text{if } c_{i,j} = 0 \\text{ and } n(i,j) = 3, \\\\ 0 & \\text{otherwise}. \\end{cases}'
+      ),
+      '<p>where the neighbor count is:</p>',
+      blockMath(
+        'n(i,j) = \\sum_{(d_1,d_2) \\in \\{-1,0,1\\}^2 \\setminus \\{(0,0)\\}} c(i+d_1,j+d_2)'
+      ),
+    ].join(''),
   },
   {
     title: 'Main Theorem',
-    content: String.raw`<p><strong>Theorem:</strong> The decision problem REV-GOL is NP-Complete.</p>
-      <div class="formula">\[
-      \text{REV-GOL} = \{\, c \in \{0,1\}^{N \times N} \mid \exists\, p \in \{0,1\}^{N \times N} \text{ such that } f(p)=c \,\}.
-      \]</div>
-      <p>In other words, REV-GOL asks: "Given a Game of Life configuration <span class="math-term">c</span>, does there exist a predecessor configuration <span class="math-term">p</span> such that applying one step of the Game of Life rules to <span class="math-term">p</span> produces <span class="math-term">c</span>?"</p>`
+    content: [
+      '<p><strong>Theorem:</strong> The decision problem REV-GOL is NP-Complete.</p>',
+      blockMath(
+        '\\text{REV-GOL} = \\{\\, c \\in \\{0,1\\}^{N \\times N} \\mid \\exists\\, p \\in \\{0,1\\}^{N \\times N} \\text{ such that } f(p)=c \\,\\}'
+      ),
+      `<p>In other words, REV-GOL asks: "Given a Game of Life configuration ${inlineMath('c')}, does there exist a predecessor configuration ${inlineMath('p')} such that applying one step of the Game of Life rules to ${inlineMath('p')} produces ${inlineMath('c')}?"</p>`,
+    ].join(''),
   },
   {
     title: 'NP Membership',
-    content: '<p><strong>REV-GOL ∈ NP:</strong> A nondeterministic algorithm can guess a candidate predecessor <span class="math-term">p</span> and verify in <span class="math-term">O(N²)</span> time that <span class="math-term">f(p) = c</span>.</p><p>The verification process simply applies the Game of Life rules to each cell in the guessed configuration and checks if the result matches the given configuration.</p>'
+    content: [
+      `<p><strong>REV-GOL ${inlineMath('\\in')} NP:</strong> A nondeterministic algorithm can guess a candidate predecessor ${inlineMath('p')} and verify in ${inlineMath('O(N^2)')} time that ${inlineMath('f(p) = c')}.</p>`,
+      '<p>The verification process simply applies the Game of Life rules to each cell in the guessed configuration and checks if the result matches the given configuration.</p>',
+    ].join(''),
   },
   {
     title: 'NP-Hardness',
-    content: '<p>We reduce from 3-SAT. Each boolean variable is modeled using paired wires that encode its true/false states, and clause gadgets ensure at least one incident literal satisfies the clause.</p><p>The reduction ensures the constructed configuration has a predecessor if and only if the original 3-SAT formula is satisfiable.</p>'
+    content:
+      '<p>We reduce from 3-SAT. Each boolean variable is modeled using paired wires that encode its true/false states, and clause gadgets ensure at least one incident literal satisfies the clause.</p><p>The reduction ensures the constructed configuration has a predecessor if and only if the original 3-SAT formula is satisfiable.</p>',
   },
   {
     title: 'Gadget Construction',
-    content: String.raw`<p>Variable gadgets propagate signals along synchronized wires so clauses receive consistent timing. Clause gadgets OR the incoming literals and feed a verification grid.</p>
-      <div class="formula">\[
-      G = \left( \bigcup_{i=1}^n V_i \right) \cup \left( \bigcup_{i=1}^m G_{C_i} \right) \cup (\text{background})
-      \]</div>
-      <p>Additional supporting gadgets handle carry propagation and enforce the timing constraints needed for reversible evolution.</p>`
+    content: [
+      '<p>Variable gadgets propagate signals along synchronized wires so clauses receive consistent timing. Clause gadgets OR the incoming literals and feed a verification grid.</p>',
+      blockMath('G = \\left( \\bigcup_{i=1}^n V_i \\right) \\cup \\left( \\bigcup_{i=1}^m G_{C_i} \\right) \\cup (\\text{background})'),
+      '<p>Additional supporting gadgets handle carry propagation and enforce the timing constraints needed for reversible evolution.</p>',
+    ].join(''),
   },
   {
     title: 'Concrete Example',
-    content: String.raw`<p>Consider the 3-SAT formula:</p>
-      <div class="formula">\[ \phi = (x_1 \vee \neg x_2 \vee x_3) \wedge (\neg x_1 \vee x_2 \vee \neg x_3) \]</div>
-      <p><strong>Clause 1:</strong> <span class="math-term">(x₁ ∨ ¬x₂ ∨ x₃)</span> is satisfied when at least one of:</p>
-      <div class="formula">\[
-      x_1 \text{ is True } (P_{1,T}), \quad x_2 \text{ is False } (P_{2,F}), \quad x_3 \text{ is True } (P_{3,T})
-      \]</div>
-      <p><strong>Clause 2:</strong> <span class="math-term">(¬x₁ ∨ x₂ ∨ ¬x₃)</span> is satisfied when at least one of:</p>
-      <div class="formula">\[
-      x_1 \text{ is False } (P_{1,F}), \quad x_2 \text{ is True } (P_{2,T}), \quad x_3 \text{ is False } (P_{3,F})
-      \]</div>`
+    content: [
+      '<p>Consider the 3-SAT formula:</p>',
+      blockMath('\\varphi = (x_1 \\lor \\neg x_2 \\lor x_3) \\land (\\neg x_1 \\lor x_2 \\lor \\neg x_3)'),
+      `<p><strong>Clause 1:</strong> ${inlineMath('(x_1 \\lor \\neg x_2 \\lor x_3)')} is satisfied when at least one of:</p>`,
+      blockMath(
+        'x_1 \\text{ is True } (P_{1,T}), \\\n+        x_2 \\text{ is False } (P_{2,F}), \\\n+        x_3 \\text{ is True } (P_{3,T})'
+      ),
+      `<p><strong>Clause 2:</strong> ${inlineMath('(\\neg x_1 \\lor x_2 \\lor \\neg x_3)')} is satisfied when at least one of:</p>`,
+      blockMath(
+        'x_1 \\text{ is False } (P_{1,F}), \\\n+        x_2 \\text{ is True } (P_{2,T}), \\\n+        x_3 \\text{ is False } (P_{3,F})'
+      ),
+    ].join(''),
   },
   {
     title: 'Conclusion',
-    content: '<p>Thus, <span class="math-term">c_φ</span> has a predecessor if and only if <span class="math-term">φ</span> is satisfiable. Since 3-SAT is NP-complete and REV-GOL ∈ NP, it follows that <strong>REV-GOL is NP-complete</strong>.</p><p>All progress will be posted on my GitHub first before making its way here.</p>'
-  }
+    content: [
+      `<p>Thus, ${inlineMath('c_\\varphi')} has a predecessor if and only if ${inlineMath('\\varphi')} is satisfiable. Since 3-SAT is NP-complete and REV-GOL ${inlineMath('\\in')} NP, it follows that <strong>REV-GOL is NP-complete</strong>.</p>`,
+      '<p>All progress will be posted on my GitHub first before making its way here.</p>',
+    ].join(''),
+  },
 ];
 
 const solverCliCommands = [
@@ -156,20 +177,21 @@ const encodingSteps = [
   {
     number: '1',
     title: 'Primary Variables',
-    description: 'Boolean variable <span class="math-term">cell(x, y, t)</span> for each cell at each time step',
-    formula: String.raw`\[ \text{Variables: } \{cell(i,j,t) \mid 0 \leq i < W, 0 \leq j < H, 0 \leq t \leq G\} \]`
+    description: `Boolean variable ${inlineMath('cell(x,y,t)')} for each cell at each time step`,
+    formula: '\\text{Variables: } \\{cell(i,j,t) \\mid 0 \\leq i < W, 0 \\leq j < H, 0 \\leq t \\leq G\\}'
   },
   {
     number: '2',
     title: 'Auxiliary Variables',
     description: 'Helper variables for neighbor counts and state transitions to reduce constraint complexity',
-    formula: String.raw`\[ \text{Neighbor count: } n(i,j,t) = \sum_{(dx,dy) \in N} cell(i+dx, j+dy, t) \]`
+    formula: '\\text{Neighbor count: } n(i,j,t) = \\sum_{(d_x,d_y) \\in N} cell(i+d_x, j+d_y, t)'
   },
   {
     number: '3',
     title: 'Game of Life Constraints',
     description: "Conway's rules encoded as SAT clauses linking consecutive time steps",
-    formula: String.raw`\[ cell(i,j,t+1) \iff (cell(i,j,t) \land n(i,j,t) \in \{2,3\}) \lor (\neg cell(i,j,t) \land n(i,j,t) = 3) \]`
+    formula:
+      'cell(i,j,t+1) \\iff (cell(i,j,t) \\land n(i,j,t) \\in \\{2,3\\}) \\lor (\\neg cell(i,j,t) \\land n(i,j,t) = 3)'
   }
 ];
 
@@ -483,7 +505,7 @@ const resultsSections = [
           <div class="encoding-step__body">
             <h4>{step.title}</h4>
             <p set:html={step.description}></p>
-            <div class="formula" set:html={String.raw`${step.formula}`}></div>
+            <div set:html={blockMath(step.formula)}></div>
           </div>
         </div>
       ))}
