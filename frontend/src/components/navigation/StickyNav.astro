@@ -51,6 +51,7 @@ const ariaLabel = title ?? 'On this page';
   display: grid;
   gap: var(--space-sm, 0.75rem);
   position: relative;
+  width: 100%;
 }
 
 .sticky-nav__desktop {
@@ -61,6 +62,7 @@ const ariaLabel = title ?? 'On this page';
   border: 1px solid var(--color-border-subtle);
   background: var(--color-surface-100);
   box-shadow: var(--shadow-xs);
+  width: 100%;
 }
 
 .sticky-nav__title {
@@ -104,6 +106,7 @@ const ariaLabel = title ?? 'On this page';
 
 .sticky-nav__mobile {
   display: none;
+  width: 100%;
 }
 
 .sticky-nav__mobile summary {
@@ -128,10 +131,19 @@ const ariaLabel = title ?? 'On this page';
   gap: var(--space-2xs, 0.25rem);
 }
 
+.sticky-nav__mobile ul {
+  width: 100%;
+}
+
+.sticky-nav__mobile li {
+  width: 100%;
+}
+
 .sticky-nav__mobile a {
   font-size: var(--font-size-sm, 0.875rem);
   color: var(--color-text-muted);
   text-decoration: none;
+  display: block;
 }
 
 .sticky-nav__mobile a:hover,

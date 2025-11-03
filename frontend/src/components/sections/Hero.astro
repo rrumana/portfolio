@@ -60,6 +60,12 @@ const { eyebrow, title, description, primaryCta, secondaryCta } = props;
   align-items: center;
 }
 
+@media (max-width: 720px) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .hero__copy {
   display: grid;
   gap: var(--space-md);
