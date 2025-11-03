@@ -9,12 +9,13 @@ import CallToAction from '../components/callouts/CallToAction.astro';
 import SplitSection from '../components/layouts/SplitSection.astro';
 import Hero from '../components/sections/Hero.astro';
 import { Image } from 'astro:assets';
+import { siteConfig } from '../site.config';
 
-const navLinks = [
-  { href: '#about', label: 'About' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#contact', label: 'Contact' },
-];
+const navLinks = siteConfig.navigation.home;
+const resumeUrl = siteConfig.contact.resumeUrl;
+const emailLink = `mailto:${siteConfig.contact.email}`;
+const githubLink =
+  siteConfig.social.find((link) => link.label === 'GitHub')?.href ?? 'https://github.com/rrumana';
 
 const projects = await getCollection('projects');
 projects.sort((a, b) => a.data.order - b.data.order);
@@ -30,7 +31,7 @@ projects.sort((a, b) => a.data.order - b.data.order);
       title="Hi, I'm Ryan Rumana"
       description="I build resilient systems that blend Rust, Kubernetes, and automation—powering production-ready homelabs, WASM experiences, and AI workloads at the edge."
       primaryCta={{ label: 'Get in touch', href: '#contact' }}
-      secondaryCta={{ label: 'Download résumé', href: '/assets/resume.pdf' }}
+      secondaryCta={{ label: 'Download résumé', href: resumeUrl }}
     />
 
     <PageSection
@@ -61,8 +62,8 @@ projects.sort((a, b) => a.data.order - b.data.order);
             and thoughtful design.
           </Text>
           <div class="about__actions">
-            <Button href="/assets/resume.pdf">View résumé</Button>
-            <Button href="mailto:ryan.rumana@gmail.com" variant="secondary">Contact</Button>
+            <Button href={resumeUrl}>View résumé</Button>
+            <Button href={emailLink} variant="secondary">Contact</Button>
           </div>
         </div>
       </SplitSection>
@@ -94,8 +95,8 @@ projects.sort((a, b) => a.data.order - b.data.order);
       title="Interested in collaborating or trading homelab war stories?"
       description="I’m always open to comparing setups, chatting about Rust, or teaming up on platform engineering projects."
       actions={[
-        { label: 'Email me', href: 'mailto:ryan.rumana@gmail.com' },
-        { label: 'View GitHub', href: 'https://github.com/rrumana', variant: 'secondary' },
+        { label: 'Email me', href: emailLink },
+        { label: 'View GitHub', href: githubLink, variant: 'secondary' },
       ]}
     />
 

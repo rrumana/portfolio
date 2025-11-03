@@ -2,6 +2,7 @@
 import '../styles/globals.css';
 import SiteHeader from '../components/shell/SiteHeader.astro';
 import SiteFooter from '../components/shell/SiteFooter.astro';
+import { siteConfig, defaultNavLinks } from '../site.config';
 
 export interface Props {
   title?: string;
@@ -13,10 +14,10 @@ export interface Props {
 const props = Astro.props as Props;
 
 const {
-  title = 'Ryan Rumana | Portfolio v2',
-  description = 'Scaffolding layout for the portfolio redesign.',
+  title = siteConfig.meta.title,
+  description = siteConfig.meta.description,
   lang = 'en',
-  navLinks = [],
+  navLinks = defaultNavLinks,
 } = props;
 ---
 <!DOCTYPE html>

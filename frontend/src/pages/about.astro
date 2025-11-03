@@ -7,14 +7,14 @@ import Button from '../components/ui/Button.astro';
 import Badge from '../components/callouts/Badge.astro';
 import CallToAction from '../components/callouts/CallToAction.astro';
 import { Image } from 'astro:assets';
+import { siteConfig } from '../site.config';
 
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '#journey', label: 'Journey' },
-  { href: '#stack', label: 'Tooling' },
-  { href: '#site', label: 'About this site' },
-  { href: '#contact', label: 'Contact' },
-];
+const navLinks = siteConfig.navigation.about;
+const resumeUrl = siteConfig.contact.resumeUrl;
+const emailLink = `mailto:${siteConfig.contact.email}`;
+const linkedInLink =
+  siteConfig.social.find((link) => link.label === 'LinkedIn')?.href ??
+  'https://linkedin.com/in/ryanrumana';
 ---
 <BaseLayout
   title="About | Ryan Rumana"
@@ -46,8 +46,8 @@ const navLinks = [
             Outside of tech you’ll usually find me outdoors: snowboarding, running, or training for triathlons. That combination of endurance and iteration shows up in my work too—I prefer shipping small experiments, measuring them, then leveling up the platform.
           </Text>
           <div class="about__cta">
-            <Button href="/assets/resume.pdf">View résumé</Button>
-            <Button href="mailto:ryan.rumana@gmail.com" variant="secondary">Say hello</Button>
+            <Button href={resumeUrl}>View résumé</Button>
+            <Button href={emailLink} variant="secondary">Say hello</Button>
           </div>
         </div>
       </SplitSection>
@@ -100,8 +100,8 @@ const navLinks = [
       title="Interested in joining forces?"
       description="If you want to talk Rust, Kubernetes, homelabs, or triathlon routes, I’m just a message away."
       actions={[
-        { label: 'Email me', href: 'mailto:ryan.rumana@gmail.com' },
-        { label: 'LinkedIn', href: 'https://linkedin.com/in/ryanrumana', variant: 'secondary' },
+        { label: 'Email me', href: emailLink },
+        { label: 'LinkedIn', href: linkedInLink, variant: 'secondary' },
       ]}
     />
   </main>

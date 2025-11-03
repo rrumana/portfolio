@@ -2,6 +2,7 @@
 import Container from './Container.astro';
 import PrimaryNav from '../navigation/PrimaryNav.astro';
 import ThemeToggle from '../ui/ThemeToggle.astro';
+import { siteConfig } from '../../site.config';
 
 export interface Props {
   navLinks?: { href: string; label: string }[];
@@ -10,10 +11,11 @@ export interface Props {
 const props = Astro.props as Props;
 
 const { navLinks = [] } = props;
+const brandLabel = siteConfig.name;
 ---
 <header class="site-header">
   <Container class="site-header__inner">
-    <a class="site-header__brand" href="/">Ryan Rumana</a>
+    <a class="site-header__brand" href="/">{brandLabel}</a>
     <div class="site-header__right">
       <PrimaryNav links={navLinks} />
       <ThemeToggle />

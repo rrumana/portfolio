@@ -1,18 +1,30 @@
 ---
 import Container from './Container.astro';
+import { siteConfig } from '../../site.config';
 
 const currentYear = new Date().getFullYear();
+const footerLinks = [
+  { label: 'Email', href: `mailto:${siteConfig.contact.email}` },
+  ...siteConfig.social,
+];
+const ownerName = siteConfig.name;
 ---
 <footer class="site-footer">
   <Container class="site-footer__inner">
     <div class="site-footer__meta">
-      <span>&copy; {currentYear} Ryan Rumana</span>
+      <span>&copy; {currentYear} {ownerName}</span>
       <span>Built with Rust &amp; Astro</span>
     </div>
     <div class="site-footer__links">
-      <a href="mailto:ryan.rumana@gmail.com">Email</a>
-      <a href="https://linkedin.com/in/ryanrumana" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a href="https://github.com/rrumana" target="_blank" rel="noopener noreferrer">GitHub</a>
+      {footerLinks.map((link) => (
+        <a
+          href={link.href}
+          target={link.href.startsWith('http') ? '_blank' : undefined}
+          rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
     </div>
   </Container>
 </footer>
