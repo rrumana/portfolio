@@ -1,0 +1,167 @@
+---
+export interface NavItem {
+  href: string;
+  label: string;
+}
+
+export interface Props {
+  title?: string;
+  items: NavItem[];
+  collapseLabel?: string;
+}
+
+const props = Astro.props as Props;
+
+const {
+  title = 'On this page',
+  items = [],
+  collapseLabel = 'Navigate',
+} = props;
+
+const hasItems = items.length > 0;
+const ariaLabel = title ?? 'On this page';
+---
+{hasItems && (
+  <div class="sticky-nav">
+    <nav class="sticky-nav__desktop" aria-label={ariaLabel}>
+      <p class="sticky-nav__title">{title}</p>
+      <ul class="sticky-nav__list">
+        {items.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <details class="sticky-nav__mobile">
+      <summary>{collapseLabel}</summary>
+      <ul>
+        {items.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </details>
+  </div>
+)}
+
+<style>
+.sticky-nav {
+  display: grid;
+  gap: var(--space-sm, 0.75rem);
+  position: relative;
+}
+
+.sticky-nav__desktop {
+  display: grid;
+  gap: var(--space-sm, 0.75rem);
+  padding: var(--space-md, 1rem);
+  border-radius: var(--radius-md, 12px);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-100);
+  box-shadow: var(--shadow-xs);
+}
+
+.sticky-nav__title {
+  margin: 0;
+  font-size: var(--font-size-sm, 0.875rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+  font-weight: 600;
+}
+
+.sticky-nav__list {
+  list-style: none;
+  display: grid;
+  gap: var(--space-xs, 0.5rem);
+  padding: 0;
+  margin: 0;
+}
+
+.sticky-nav__list a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs, 0.25rem);
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+.sticky-nav__list a::before {
+  content: '—';
+  color: var(--color-text-subtle);
+  font-weight: 600;
+}
+
+.sticky-nav__list a:hover,
+.sticky-nav__list a:focus-visible {
+  color: var(--color-text-default);
+  transform: translateX(2px);
+}
+
+.sticky-nav__mobile {
+  display: none;
+}
+
+.sticky-nav__mobile summary {
+  list-style: none;
+  font-weight: 600;
+  padding: var(--space-xs, 0.5rem) var(--space-sm, 0.75rem);
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-100);
+  cursor: pointer;
+}
+
+.sticky-nav__mobile summary::-webkit-details-marker {
+  display: none;
+}
+
+.sticky-nav__mobile ul {
+  list-style: none;
+  margin: var(--space-xs, 0.5rem) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2xs, 0.25rem);
+}
+
+.sticky-nav__mobile a {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.sticky-nav__mobile a:hover,
+.sticky-nav__mobile a:focus-visible {
+  color: var(--color-text-default);
+}
+
+@media (max-width: 900px) {
+  .sticky-nav__desktop {
+    display: none;
+  }
+
+  .sticky-nav__mobile {
+    display: block;
+  }
+}
+
+html[data-theme='dark'] .sticky-nav__desktop,
+html[data-theme='dark'] .sticky-nav__mobile summary {
+  background: var(--color-surface-300);
+  border: 1px solid var(--color-border-muted);
+  color: var(--color-text-muted);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .sticky-nav__title {
+  color: var(--color-text-muted);
+}
+
+html[data-theme='dark'] .sticky-nav__list a::before {
+  color: var(--color-text-subtle);
+}
+</style>

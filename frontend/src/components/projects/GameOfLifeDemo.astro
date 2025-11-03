@@ -4,9 +4,16 @@ import SurfaceCard from '../ui/SurfaceCard.astro';
 import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 import Button from '../ui/Button.astro';
+
+export interface Props {
+  id?: string;
+}
+
+const props = Astro.props as Props;
+const { id = 'demo' } = props;
 ---
 <SectionShell
-  id="demo"
+  id={id}
   title="Interactive Playground"
   description="Experiment with the reverse solver directly in the browser. Draw on the grid, rewind generations, or export runs as GIFs—all powered by the Rust + WASM engine."
   accent

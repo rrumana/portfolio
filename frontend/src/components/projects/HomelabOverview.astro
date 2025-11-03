@@ -2,8 +2,16 @@
 import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 import Badge from '../callouts/Badge.astro';
+
+export interface Props {
+  id?: string;
+  class?: string;
+}
+
+const props = Astro.props as Props & { [key: string]: unknown };
+const { id, class: className = '', ...rest } = props;
 ---
-<section class="homelab-overview">
+<section id={id} class={`homelab-overview ${className}`.trim()} {...rest}>
   <div class="homelab-overview__grid">
     <article class="panel">
       <Badge tone="accent">Cluster</Badge>

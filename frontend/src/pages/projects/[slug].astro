@@ -32,22 +32,33 @@ const actions = [project.data.primaryAction, project.data.secondaryAction].filte
   variant?: 'primary' | 'secondary' | 'ghost' | 'link';
 }[];
 
-const navLinks = [
+const sections = projectContentMap[project.slug] ?? [];
+
+const baseNav = [
   { href: '/', label: 'Home' },
   { href: '/#projects', label: 'Projects' },
   ...(project.data.techStack?.length ? [{ href: '#tech', label: 'Tech' }] : []),
-  ...(slug === 'game-of-life'
-    ? [
-        { href: '#demo', label: 'Playground' },
-        { href: '#optimizations', label: 'Optimizations' },
-        { href: '#proof', label: 'Proof' },
-        { href: '#implementation', label: 'Implementation' },
-        { href: '#details', label: 'Write-up' },
-      ]
-    : [{ href: '#details', label: 'Details' }]),
 ];
 
-const sections = projectContentMap[project.slug] ?? [];
+const sectionLinks = [
+  { href: '#details', label: 'Details' },
+  ...sections.flatMap((section) => [
+    { href: `#${section.id}`, label: section.label },
+    ...(section.anchors?.map((anchor) => ({ href: `#${anchor.id}`, label: anchor.label })) ?? []),
+  ]),
+];
+
+const seen = new Set<string>();
+const navLinks = [
+  ...baseNav,
+  ...sectionLinks.filter((link) => {
+    if (seen.has(link.href)) {
+      return false;
+    }
+    seen.add(link.href);
+    return true;
+  }),
+];
 ---
 <ProjectLayout
   title={project.data.title}

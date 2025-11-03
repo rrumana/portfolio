@@ -3,8 +3,16 @@ import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 import SplitSection from '../layouts/SplitSection.astro';
 import { Image } from 'astro:assets';
+
+export interface Props {
+  id?: string;
+  class?: string;
+}
+
+const props = Astro.props as Props & { [key: string]: unknown };
+const { id, class: className = '', ...rest } = props;
 ---
-<section class="reid-pipeline">
+<section id={id} class={`reid-pipeline ${className}`.trim()} {...rest}>
   <SplitSection>
     <Image
       slot="media"

@@ -1,11 +1,14 @@
 ---
-import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import BaseLayout from './BaseLayout.astro';
 import Container from '../components/shell/Container.astro';
+import ContentGrid from '../components/layout/ContentGrid.astro';
 import Button from '../components/ui/Button.astro';
 import Heading from '../components/ui/Heading.astro';
 import Text from '../components/ui/Text.astro';
+import StickyNav from '../components/navigation/StickyNav.astro';
+import MediaFrame from '../components/patterns/MediaFrame.astro';
 import { Image } from 'astro:assets';
+import type { ProjectSection } from '../components/projects';
 
 export interface Action {
   label: string;
@@ -22,7 +25,8 @@ export interface Props {
   techStack?: string[];
   actions?: Action[];
   navLinks?: { href: string; label: string }[];
-  sections?: AstroComponentFactory[];
+  sections?: ProjectSection[];
+  toc?: { id: string; label: string }[];
 }
 
 const props = Astro.props as Props;
@@ -37,9 +41,30 @@ const {
   actions = [],
   navLinks = [],
   sections = [],
+  toc,
 } = props;
 
 const heroIsGif = typeof heroImage === 'string' && heroImage.toLowerCase().endsWith('.gif');
+const sectionAnchors = sections.flatMap((section) => [
+  { id: section.id, label: section.label },
+  ...(section.anchors ?? []),
+]);
+
+const defaultToc = [{ id: 'details', label: 'Details' }, ...sectionAnchors];
+
+const tocMap = new Map<string, string>();
+for (const item of (toc ?? defaultToc)) {
+  if (!tocMap.has(item.id)) {
+    tocMap.set(item.id, item.label);
+  }
+}
+
+const stickyNavItems = Array.from(tocMap.entries()).map(([id, label]) => ({
+  href: `#${id}`,
+  label,
+}));
+
+const hasStickyNav = stickyNavItems.length > 1;
 ---
 <BaseLayout title={`${title} | Ryan Rumana`} description={description} navLinks={navLinks}>
   <main class="project">
@@ -60,7 +85,7 @@ const heroIsGif = typeof heroImage === 'string' && heroImage.toLowerCase().endsW
           )}
         </div>
         {heroImage && (
-          <div class="project__media">
+          <MediaFrame class="project__media" bleed>
             {heroIsGif ? (
               <img src={heroImage} alt={heroAlt ?? ''} loading="lazy" />
             ) : (
@@ -73,7 +98,7 @@ const heroIsGif = typeof heroImage === 'string' && heroImage.toLowerCase().endsW
                 fit="cover"
               />
             )}
-          </div>
+          </MediaFrame>
         )}
       </Container>
     </section>
@@ -90,15 +115,22 @@ const heroIsGif = typeof heroImage === 'string' && heroImage.toLowerCase().endsW
     )}
 
     <article class="project__content">
-      <Container class="project__content-inner">
-        <slot />
-        {sections.length > 0 && (
-          <div class="project__sections">
-            {sections.map((Section, index) => (
-              <Section data-section-index={index} />
-            ))}
+      <Container>
+        <ContentGrid nav={hasStickyNav}>
+          {hasStickyNav && <StickyNav slot="nav" items={stickyNavItems} />}
+          <div class="project__content-inner">
+            <slot />
+            {sections.length > 0 && (
+              <div class="project__sections">
+                {sections.map((section, index) => {
+                  const SectionComponent = section.component;
+                  const sectionProps = section.props ?? {};
+                  return <SectionComponent data-section-index={index} {...sectionProps} />;
+                })}
+              </div>
+            )}
           </div>
-        )}
+        </ContentGrid>
       </Container>
     </article>
   </main>
@@ -138,21 +170,6 @@ const heroIsGif = typeof heroImage === 'string' && heroImage.toLowerCase().endsW
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
-}
-
-.project__media {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--color-border-subtle);
-}
-
-.project__media :global(img),
-.project__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
 }
 
 .project__meta {
