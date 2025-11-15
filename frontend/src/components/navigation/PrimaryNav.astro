@@ -26,6 +26,7 @@ const { links = [] } = props;
   display: flex;
   gap: var(--space-lg);
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .primary-nav a {
@@ -47,5 +48,16 @@ html[data-theme='dark'] .primary-nav a {
 html[data-theme='dark'] .primary-nav a:hover,
 html[data-theme='dark'] .primary-nav a:focus-visible {
   color: var(--color-text-default);
+}
+
+@media (max-width: 720px) {
+  .primary-nav ul {
+    justify-content: center;
+    gap: var(--space-sm);
+  }
+
+  .primary-nav a {
+    font-size: var(--font-size-sm);
+  }
 }
 </style>

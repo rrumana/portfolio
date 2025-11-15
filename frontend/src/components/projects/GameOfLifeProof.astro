@@ -643,16 +643,22 @@ const resultsSections = [
 
 .formula {
   font-family: 'STIX Two Math', 'Cambria Math', 'Times New Roman', serif;
-  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  font-size: clamp(0.9rem, 1.1vw + 0.6rem, 1.15rem);
   background: var(--color-fill-neutral-soft);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-sm, 8px);
   padding: var(--space-sm, 0.75rem) clamp(0.75rem, 1vw, 1.25rem);
-  overflow-x: auto;
   margin: var(--space-sm, 0.75rem) 0;
   display: block;
-  white-space: pre-wrap;
+  overflow-x: auto;
+  overflow-y: hidden;
   color: var(--color-text-default);
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .math-term {
@@ -661,8 +667,11 @@ const resultsSections = [
   color: var(--color-text-default);
   padding: 0.05rem 0.35rem;
   border-radius: var(--radius-xs, 4px);
-  display: inline-block;
+  display: inline;
   line-height: 1.25;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .implementation-text {
@@ -670,6 +679,7 @@ const resultsSections = [
   margin: 0;
   font-size: var(--font-size-md, 1rem);
   line-height: var(--line-height-normal);
+  overflow-wrap: anywhere;
 }
 
 .cli-grid {
@@ -742,6 +752,8 @@ const resultsSections = [
   gap: var(--space-xl, 2rem);
   grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
   align-items: start;
+  width: 100%;
+  min-width: 0;
 }
 
 .implementation-nav,
@@ -787,6 +799,7 @@ const resultsSections = [
 .results-content {
   display: grid;
   gap: var(--space-xl, 2rem);
+  min-width: 0;
 }
 
 .implementation-panel,
@@ -794,6 +807,7 @@ const resultsSections = [
 .results-panel {
   display: grid;
   gap: var(--space-md, 1rem);
+  min-width: 0;
 }
 
 @media (max-width: 900px) {
@@ -823,6 +837,40 @@ html[data-theme='dark'] .math-term {
 
 html[data-theme='dark'] .encoding-step__number {
   background: var(--color-fill-primary-strong);
+}
+
+.formula .katex-display {
+  display: inline-block;
+  min-width: max-content;
+  max-width: 100%;
+}
+
+.formula .katex-display > .katex {
+  display: inline-block;
+  min-width: max-content;
+  max-width: 100%;
+}
+
+.math-term .katex {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+  .formula {
+    font-size: clamp(0.8rem, 2.4vw + 0.2rem, 1rem);
+  }
+
+  .formula .katex-display > .katex {
+    font-size: 0.95em;
+  }
+}
+
+@media (max-width: 480px) {
+  .formula .katex-display > .katex {
+    font-size: 0.9em;
+  }
 }
 
 .code-snippet {

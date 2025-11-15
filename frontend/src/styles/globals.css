@@ -72,19 +72,19 @@ main {
 
 /* Layout Helpers */
 .container {
-  width: min(1100px, calc(100% - clamp(2rem, 6vw, 4rem)));
+  width: min(1100px, calc(100% - 2 * var(--space-xl)));
   margin-inline: auto;
 }
 
 @media (max-width: 720px) {
   .container {
-    width: calc(100% - clamp(1.5rem, 6vw, 2.5rem));
+    width: calc(100% - 2 * var(--space-lg));
   }
 }
 
 @media (max-width: 480px) {
   .container {
-    width: calc(100% - clamp(1.25rem, 8vw, 2rem));
+    width: calc(100% - 2 * var(--space-md));
   }
 }
 

@@ -144,6 +144,7 @@ const hasStickyNav = stickyNavItems.length > 1;
     color-mix(in srgb, var(--color-primary-500) 66%, transparent),
     color-mix(in srgb, var(--color-accent-500) 62%, transparent)
   );
+  overflow: hidden;
 }
 
 .project__hero-inner {
@@ -204,11 +205,14 @@ const hasStickyNav = stickyNavItems.length > 1;
 
 .project__content {
   padding-block: var(--space-3xl);
+  width: 100%;
 }
 
 .project__content-inner {
   display: grid;
   gap: var(--space-xl);
+  width: 100%;
+  min-width: 0;
 }
 
 .project__content-inner > * {
@@ -218,6 +222,8 @@ const hasStickyNav = stickyNavItems.length > 1;
 .project__sections {
   display: grid;
   gap: var(--space-2xl);
+  width: 100%;
+  min-width: 0;
 }
 
 .project__sections > * {
