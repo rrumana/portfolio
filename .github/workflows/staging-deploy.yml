@@ -12,6 +12,7 @@ permissions:
 
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/portfolio:staging
+  HAS_KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_STAGING != '' }}
 
 jobs:
   build-and-push:
@@ -40,11 +41,11 @@ jobs:
           no-cache: true
 
       - name: Set up kubectl (optional)
-        if: ${{ secrets.KUBE_CONFIG_STAGING != '' }}
+        if: ${{ env.HAS_KUBE_CONFIG == 'true' }}
         uses: azure/setup-kubectl@v4
 
       - name: Configure kubeconfig (optional)
-        if: ${{ secrets.KUBE_CONFIG_STAGING != '' }}
+        if: ${{ env.HAS_KUBE_CONFIG == 'true' }}
         run: |
           mkdir -p "$HOME/.kube"
           echo "${KUBE_CONFIG_STAGING}" | base64 --decode > "$HOME/.kube/config"
@@ -52,5 +53,5 @@ jobs:
           KUBE_CONFIG_STAGING: ${{ secrets.KUBE_CONFIG_STAGING }}
 
       - name: Restart staging deployment (optional)
-        if: ${{ secrets.KUBE_CONFIG_STAGING != '' }}
+        if: ${{ env.HAS_KUBE_CONFIG == 'true' }}
         run: kubectl rollout restart -n dev deployment/portfolio-dev
