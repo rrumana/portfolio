@@ -265,20 +265,20 @@ const hasStickyNav = stickyNavItems.length > 1;
   height: auto;
 }
 
-:global(.media-frame__media .project__hero-img--dark) {
-  display: none;
+:global(.media-frame__media img.project__hero-img--dark) {
+  display: none !important;
 }
 
-:global(.media-frame__media .project__hero-img--light) {
-  display: block;
+:global(html:not([data-theme='dark']) .media-frame__media img.project__hero-img--light) {
+  display: block !important;
 }
 
-html[data-theme='dark'] :global(.media-frame__media .project__hero-img--light) {
-  display: none;
+:global(html[data-theme='dark'] .media-frame__media img.project__hero-img--light) {
+  display: none !important;
 }
 
-html[data-theme='dark'] :global(.media-frame__media .project__hero-img--dark) {
-  display: block;
+:global(html[data-theme='dark'] .media-frame__media img.project__hero-img--dark) {
+  display: block !important;
 }
 
 .project__hero-img--dark {

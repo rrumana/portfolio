@@ -114,7 +114,7 @@ const { id = 'demo' } = props;
 </SectionShell>
 
 <script type="module" is:inline>
-  const scriptUrl = "{gameOfLifeScriptUrl}";
+  const scriptUrl = {JSON.stringify(gameOfLifeScriptUrl)};
   import(scriptUrl)
     .then(({ initGameOfLife }) => initGameOfLife())
     .catch((error) => {
