@@ -8,7 +8,6 @@ import ProjectCard from '../components/cards/ProjectCard.astro';
 import CallToAction from '../components/callouts/CallToAction.astro';
 import SplitSection from '../components/layouts/SplitSection.astro';
 import Hero from '../components/sections/Hero.astro';
-import { Image } from 'astro:assets';
 import { siteConfig } from '../site.config';
 
 const navLinks = siteConfig.navigation.home;
@@ -41,15 +40,16 @@ projects.sort((a, b) => a.data.order - b.data.order);
       variant="alt"
     >
       <SplitSection>
-        <Image
-          slot="media"
-          src="/images/profile.png"
-          alt="Ryan Rumana portrait"
-          width={450}
-          height={350}
-          loading="lazy"
-          class="about__image"
-        />
+        <picture slot="media" class="about__image">
+          <source srcset="/images/profile.webp" type="image/webp" />
+          <img
+            src="/images/profile.png"
+            alt="Ryan Rumana portrait"
+            width="450"
+            height="350"
+            loading="lazy"
+          />
+        </picture>
         <div class="about__copy">
           <Text>
             I'm a software engineer with roots in Tallahassee and degrees in Computer Science and Machine Learning from

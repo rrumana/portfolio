@@ -51,66 +51,64 @@ const { id = 'demo' } = props;
       </dl>
     </SurfaceCard>
 
-    <div class="gol-demo__controls">
-      <SurfaceCard padding="lg">
-        <Heading level={3} size="lg">Simulation controls</Heading>
-        <Text tone="muted">
-          Step through generations, rewind, or record long runs. Multi-step uses the SAT backtracking
-          heuristics to keep playback fast.
-        </Text>
-        <div class="gol-buttons">
-          <Button id="stepBtn">Step Forward</Button>
-          <Button id="backBtn" variant="secondary">Step Back</Button>
-          <Button id="resetBtn" variant="secondary">Reset</Button>
-          <Button id="multiStepBtn" variant="secondary">Multi-Step</Button>
-          <Button id="recordBtn" variant="secondary">Record GIF</Button>
-        </div>
-        <div class="gol-input">
-          <label for="speedRange">Speed</label>
-          <input type="range" id="speedRange" min="50" max="1000" value="200" />
-          <span id="delayDisplay">Frame Delay: 200ms</span>
-        </div>
-        <div class="gol-input">
-          <label for="genInput">Generations per step</label>
-          <input type="number" id="genInput" min="1" max="100" value="1" />
-        </div>
-      </SurfaceCard>
+    <SurfaceCard padding="lg" class="gol-demo__panel">
+      <Heading level={3} size="lg">Simulation controls</Heading>
+      <Text tone="muted">
+        Step through generations, rewind, or record long runs. Multi-step uses the SAT backtracking
+        heuristics to keep playback fast.
+      </Text>
+      <div class="gol-buttons">
+        <Button id="stepBtn">Step Forward</Button>
+        <Button id="backBtn" variant="secondary">Step Back</Button>
+        <Button id="resetBtn" variant="secondary">Reset</Button>
+        <Button id="multiStepBtn" variant="secondary">Multi-Step</Button>
+        <Button id="recordBtn" variant="secondary">Record GIF</Button>
+      </div>
+      <div class="gol-input">
+        <label for="speedRange">Speed</label>
+        <input type="range" id="speedRange" min="50" max="1000" value="200" />
+        <span id="delayDisplay">Frame Delay: 200ms</span>
+      </div>
+      <div class="gol-input">
+        <label for="genInput">Generations per step</label>
+        <input type="number" id="genInput" min="1" max="100" value="1" />
+      </div>
+    </SurfaceCard>
 
-      <SurfaceCard padding="lg">
-        <Heading level={3} size="lg">Text-to-pattern tools</Heading>
-        <Text tone="muted">
-          Quickly seed the grid from phrases or emoji art. The buffer slider controls spacing so
-          strings stay readable after evolution.
-        </Text>
-        <div class="gol-input">
-          <label for="textInput">Generate from text</label>
-          <input type="text" id="textInput" placeholder="Enter text to convert" />
-        </div>
-        <div class="gol-input">
-          <label for="bufferSizeSlider">Buffer size</label>
-          <input type="range" id="bufferSizeSlider" min="1" max="10" value="2" />
-          <span id="bufferDisplay">2</span>
-        </div>
-        <Button id="generateTextBtn" variant="secondary">Generate</Button>
-      </SurfaceCard>
+    <SurfaceCard padding="lg" class="gol-demo__panel">
+      <Heading level={3} size="lg">Text-to-pattern tools</Heading>
+      <Text tone="muted">
+        Quickly seed the grid from phrases or emoji art. The buffer slider controls spacing so
+        strings stay readable after evolution.
+      </Text>
+      <div class="gol-input">
+        <label for="textInput">Generate from text</label>
+        <input type="text" id="textInput" placeholder="Enter text to convert" />
+      </div>
+      <div class="gol-input">
+        <label for="bufferSizeSlider">Buffer size</label>
+        <input type="range" id="bufferSizeSlider" min="1" max="10" value="2" />
+        <span id="bufferDisplay">2</span>
+      </div>
+      <Button id="generateTextBtn" variant="secondary">Generate</Button>
+    </SurfaceCard>
 
-      <SurfaceCard padding="lg">
-        <Heading level={3} size="lg">Import &amp; export</Heading>
-        <Text tone="muted">
-          Bring in RLE or plaintext patterns, drag files straight onto the canvas, or export the
-          current state for debugging.
-        </Text>
-        <div class="gol-file">
-          <input type="file" id="fileInput" accept=".txt" hidden />
-          <Button id="fileUploadBtn" variant="secondary">Upload Pattern</Button>
-          <span id="fileName">No file selected</span>
-        </div>
-        <div id="dragDropArea" class="gol-drop" aria-label="Drag and drop area" tabindex="0">
-          Drag &amp; drop pattern files here
-        </div>
-        <Button id="downloadBtn" variant="secondary">Download Pattern</Button>
-      </SurfaceCard>
-    </div>
+    <SurfaceCard padding="lg" class="gol-demo__panel">
+      <Heading level={3} size="lg">Import &amp; export</Heading>
+      <Text tone="muted">
+        Bring in RLE or plaintext patterns, drag files straight onto the canvas, or export the
+        current state for debugging.
+      </Text>
+      <div class="gol-file">
+        <input type="file" id="fileInput" accept=".txt" hidden />
+        <Button id="fileUploadBtn" variant="secondary">Upload Pattern</Button>
+        <span id="fileName">No file selected</span>
+      </div>
+      <div id="dragDropArea" class="gol-drop" aria-label="Drag and drop area" tabindex="0">
+        Drag &amp; drop pattern files here
+      </div>
+      <Button id="downloadBtn" variant="secondary">Download Pattern</Button>
+    </SurfaceCard>
   </div>
 </SectionShell>
 
@@ -126,12 +124,14 @@ const { id = 'demo' } = props;
 .gol-demo__layout {
   display: grid;
   gap: var(--space-2xl, 3rem);
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   align-items: start;
+  grid-auto-flow: row dense;
 }
 
 .gol-demo__canvas {
   position: relative;
+  grid-column: 1 / -1;
 }
 
 .gol-demo__intro {
@@ -174,11 +174,6 @@ const { id = 'demo' } = props;
 .gol-demo__stats dd {
   margin: 0;
   font-weight: 600;
-}
-
-.gol-demo__controls {
-  display: grid;
-  gap: var(--space-xl, 2rem);
 }
 
 .gol-buttons {

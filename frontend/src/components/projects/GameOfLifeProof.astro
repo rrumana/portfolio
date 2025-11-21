@@ -11,10 +11,10 @@ const inlineMath = (tex: string) =>
   `<span class="math-term">${katex.renderToString(tex, { throwOnError: false })}</span>`;
 
 const blockMath = (tex: string) =>
-  `<div class="formula">${katex.renderToString(tex, {
+  `<div class="formula"><div class="formula__scroll">${katex.renderToString(tex, {
     displayMode: true,
     throwOnError: false,
-  })}</div>`;
+  })}</div></div>`;
 
 const optimizationSections = [
   {
@@ -529,7 +529,7 @@ const resultsSections = [
     <p class="implementation-text">
       The solver provides a comprehensive CLI with multiple commands for different use cases:
     </p>
-    <div class="cli-grid">
+    <div class="cli-grid cli-grid--single">
       {solverCliCommands.map((cmd) => (
         <CommandCard command={cmd.command} description={cmd.description} />
       ))}
@@ -538,95 +538,59 @@ const resultsSections = [
 </SectionShell>
 
 <SectionShell id="crates" title="Crates and Command Line Interface" accent>
-  <div class="implementation-layout">
-    <aside class="implementation-nav">
-      <h3>Project Crates</h3>
-      <ul>
-        {crateSections.map((section) => (
-          <li>
-            <a href={`#${section.id}`}>{section.navLabel}</a>
-          </li>
+  <div class="stacked-content">
+    {crateSections.map((section) => (
+      <SurfaceCard id={section.id} padding="lg" class="implementation-panel">
+        <h3>{section.title}</h3>
+        {section.paragraphs.map((paragraph) => (
+          <p class="implementation-text" set:html={paragraph}></p>
         ))}
-      </ul>
-    </aside>
-    <div class="implementation-content">
-      {crateSections.map((section) => (
-        <SurfaceCard id={section.id} padding="lg" class="implementation-panel">
-          <h3>{section.title}</h3>
-          {section.paragraphs.map((paragraph) => (
-            <p class="implementation-text" set:html={paragraph}></p>
-          ))}
-          {section.commands && section.commands.length > 0 && (
-            <div class="cli-grid">
-              {section.commands.map((cmd) => (
-                <CommandCard command={cmd.command} description={cmd.description} />
-              ))}
-            </div>
-          )}
-          <p class="implementation-text">
-            <strong>Repository Link:</strong>{' '}
-            <a href={section.repository} target="_blank" rel="noopener noreferrer">Link</a>
-          </p>
-        </SurfaceCard>
-      ))}
-    </div>
+        {section.commands && section.commands.length > 0 && (
+          <div class="cli-grid">
+            {section.commands.map((cmd) => (
+              <CommandCard command={cmd.command} description={cmd.description} />
+            ))}
+          </div>
+        )}
+        <p class="implementation-text">
+          <strong>Repository Link:</strong>{' '}
+          <a href={section.repository} target="_blank" rel="noopener noreferrer">Link</a>
+        </p>
+      </SurfaceCard>
+    ))}
   </div>
 </SectionShell>
 
 <SectionShell id="chaos-emergence" title="Make Your Name Emerge From Chaos" accent>
-  <div class="guide-layout">
-    <aside class="guide-nav">
-      <h3>Step-by-Step Guide</h3>
-      <ul>
-        {chaosSteps.map((step) => (
-          <li>
-            <a href={`#${step.id}`}>{step.navLabel}</a>
-          </li>
+  <div class="stacked-content">
+    {chaosSteps.map((step) => (
+      <SurfaceCard id={step.id} padding="lg" class="guide-panel">
+        <h3>{step.title}</h3>
+        {step.body.map((paragraph) => (
+          <p class="implementation-text" set:html={paragraph}></p>
         ))}
-      </ul>
-    </aside>
-    <div class="guide-content">
-      {chaosSteps.map((step) => (
-        <SurfaceCard id={step.id} padding="lg" class="guide-panel">
-          <h3>{step.title}</h3>
-          {step.body.map((paragraph) => (
-            <p class="implementation-text" set:html={paragraph}></p>
-          ))}
-          {step.commands && step.commands.length > 0 && (
-            <div class="cli-grid">
-              {step.commands.map((cmd) => (
-                <CommandCard command={cmd.command} description={cmd.description} />
-              ))}
-            </div>
-          )}
-        </SurfaceCard>
-      ))}
-    </div>
+        {step.commands && step.commands.length > 0 && (
+          <div class="cli-grid">
+            {step.commands.map((cmd) => (
+              <CommandCard command={cmd.command} description={cmd.description} />
+            ))}
+          </div>
+        )}
+      </SurfaceCard>
+    ))}
   </div>
 </SectionShell>
 
 <SectionShell id="results-analysis" title="Results and Analysis" accent>
-  <div class="results-layout">
-    <aside class="results-nav">
-      <h3>Project Analysis</h3>
-      <ul>
-        {resultsSections.map((section) => (
-          <li>
-            <a href={`#${section.id}`}>{section.navLabel}</a>
-          </li>
+  <div class="stacked-content">
+    {resultsSections.map((section) => (
+      <SurfaceCard id={section.id} padding="lg" class="results-panel">
+        <h3>{section.title}</h3>
+        {section.paragraphs.map((paragraph) => (
+          <p class="implementation-text" set:html={paragraph}></p>
         ))}
-      </ul>
-    </aside>
-    <div class="results-content">
-      {resultsSections.map((section) => (
-        <SurfaceCard id={section.id} padding="lg" class="results-panel">
-          <h3>{section.title}</h3>
-          {section.paragraphs.map((paragraph) => (
-            <p class="implementation-text" set:html={paragraph}></p>
-          ))}
-        </SurfaceCard>
-      ))}
-    </div>
+      </SurfaceCard>
+    ))}
   </div>
 </SectionShell>
 
@@ -634,6 +598,7 @@ const resultsSections = [
 .section-text {
   display: grid;
   gap: var(--space-sm, 0.75rem);
+  min-width: 0;
 }
 
 .section-text p {
@@ -641,27 +606,33 @@ const resultsSections = [
   color: var(--color-text-muted);
 }
 
-.formula {
+:global(.formula) {
   font-family: 'STIX Two Math', 'Cambria Math', 'Times New Roman', serif;
   font-size: clamp(0.9rem, 1.1vw + 0.6rem, 1.15rem);
-  background: var(--color-fill-neutral-soft);
-  border: 1px solid var(--color-border-subtle);
+  background: transparent;
+  border: none;
   border-radius: var(--radius-sm, 8px);
-  padding: var(--space-sm, 0.75rem) clamp(0.75rem, 1vw, 1.25rem);
+  padding: 0;
   margin: var(--space-sm, 0.75rem) 0;
   display: block;
-  overflow-x: auto;
-  overflow-y: hidden;
   color: var(--color-text-default);
   max-width: 100%;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 }
 
-.math-term {
+:global(.formula__scroll) {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  padding: var(--space-xs, 0.5rem) clamp(0.5rem, 1vw, 1rem);
+}
+
+:global(.math-term) {
   font-family: 'STIX Two Math', 'Cambria Math', 'Times New Roman', serif;
   background: var(--color-fill-neutral-soft);
   color: var(--color-text-default);
@@ -682,10 +653,14 @@ const resultsSections = [
   overflow-wrap: anywhere;
 }
 
-.cli-grid {
+:global(.cli-grid) {
   display: grid;
   gap: var(--space-sm, 0.75rem);
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+:global(.cli-grid--single) {
+  grid-template-columns: 1fr;
 }
 
 .implementation-card {
@@ -714,6 +689,7 @@ const resultsSections = [
   grid-template-columns: auto 1fr;
   gap: var(--space-sm, 0.75rem);
   align-items: start;
+  min-width: 0;
 }
 
 .encoding-step__number {
@@ -724,6 +700,10 @@ const resultsSections = [
   place-items: center;
   background: var(--color-fill-primary-soft);
   font-weight: 700;
+}
+
+.encoding-step__body {
+  min-width: 0;
 }
 
 .encoding-step__body h4 {
@@ -743,6 +723,12 @@ const resultsSections = [
 .feature-item {
   display: grid;
   gap: var(--space-2xs, 0.25rem);
+}
+
+.stacked-content {
+  display: grid;
+  gap: var(--space-xl, 2rem);
+  min-width: 0;
 }
 
 .implementation-layout,
@@ -810,6 +796,21 @@ const resultsSections = [
   min-width: 0;
 }
 
+@media (max-width: 720px) {
+  .encoding-step {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'number'
+      'body';
+  }
+
+  .encoding-step__number {
+    width: 2.25rem;
+    height: 2.25rem;
+    justify-self: start;
+  }
+}
+
 @media (max-width: 900px) {
   .implementation-layout,
   .guide-layout,
@@ -825,12 +826,7 @@ const resultsSections = [
   }
 }
 
-html[data-theme='dark'] .formula {
-  background: var(--color-fill-neutral-muted);
-  border-color: var(--color-border-muted);
-}
-
-html[data-theme='dark'] .math-term {
+html[data-theme='dark'] :global(.math-term) {
   background: var(--color-fill-neutral-muted);
   color: var(--color-text-default);
 }
@@ -839,48 +835,48 @@ html[data-theme='dark'] .encoding-step__number {
   background: var(--color-fill-primary-strong);
 }
 
-.formula .katex-display {
-  display: inline-block;
+:global(.formula__scroll .katex-display) {
+  display: inline-flex;
+  margin: 0;
+  width: auto;
   min-width: max-content;
-  max-width: 100%;
 }
 
-.formula .katex-display > .katex {
-  display: inline-block;
+:global(.formula__scroll .katex-display > .katex) {
+  display: inline-flex;
   min-width: max-content;
-  max-width: 100%;
 }
 
-.math-term .katex {
+:global(.math-term .katex) {
   max-width: 100%;
   white-space: normal;
   overflow-wrap: anywhere;
 }
 
 @media (max-width: 768px) {
-  .formula {
+  :global(.formula) {
     font-size: clamp(0.8rem, 2.4vw + 0.2rem, 1rem);
   }
 
-  .formula .katex-display > .katex {
+  :global(.formula__scroll .katex-display > .katex) {
     font-size: 0.95em;
   }
 }
 
 @media (max-width: 480px) {
-  .formula .katex-display > .katex {
+  :global(.formula__scroll .katex-display > .katex) {
     font-size: 0.9em;
   }
 }
 
-.code-snippet {
+:global(.code-snippet) {
   font-family: 'Fira Code', monospace;
   background: var(--color-fill-primary-soft);
   padding: 0 0.25rem;
   border-radius: 4px;
 }
 
-html[data-theme='dark'] .code-snippet {
+html[data-theme='dark'] :global(.code-snippet) {
   background: var(--color-fill-primary-strong);
 }
 </style>

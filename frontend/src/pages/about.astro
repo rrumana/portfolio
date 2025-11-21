@@ -6,7 +6,6 @@ import Text from '../components/ui/Text.astro';
 import Button from '../components/ui/Button.astro';
 import Badge from '../components/callouts/Badge.astro';
 import CallToAction from '../components/callouts/CallToAction.astro';
-import { Image } from 'astro:assets';
 import { siteConfig } from '../site.config';
 
 const navLinks = siteConfig.navigation.about;
@@ -29,15 +28,16 @@ const linkedInLink =
       description="From Florida to the Colorado mountains, I’ve chased problems that mix systems thinking, performance, and hands-on experimentation."
     >
       <SplitSection>
-        <Image
-          slot="media"
-          src="/images/profile.png"
-          alt="Ryan Rumana portrait"
-          width={450}
-          height={350}
-          loading="lazy"
-          class="about__image"
-        />
+        <picture slot="media" class="about__image">
+          <source srcset="/images/profile.webp" type="image/webp" />
+          <img
+            src="/images/profile.png"
+            alt="Ryan Rumana portrait"
+            width="450"
+            height="350"
+            loading="lazy"
+          />
+        </picture>
         <div class="about__story">
           <Text>
             I’m Ryan Rumana—an engineer with a computer science background and a master’s in machine learning from the Colorado School of Mines. I love the intersection of distributed systems and human-centered tooling, whether that’s Rust services, Kubernetes clusters, or WASM demos.
