@@ -16,6 +16,7 @@ env:
   GHCR_USERNAME: ${{ secrets.GHCR_USERNAME || github.actor }}
   GHCR_TOKEN: ${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}
   USE_LOCAL_KUBECONFIG: true
+  BUILDKIT_PROGRESS: plain
 
 jobs:
   build-and-push:
@@ -42,6 +43,7 @@ jobs:
           push: true
           tags: ${{ env.IMAGE_NAME }}
           no-cache: true
+          network: host
 
       # Optional: configure kubeconfig from secret if you don't want to rely on the runner's local kubeconfig
       - name: Configure kubeconfig (optional)
