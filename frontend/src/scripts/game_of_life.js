@@ -1,13 +1,141 @@
-import {
-    installGlobalErrorHandlers,
-    logDebug,
-    logError,
-    logInfo,
-    logWarn,
-    makeWasmLogSink,
-} from "../utils/logger";
-
 // static/javascript/game_of_life.js
+
+const LOG_ENDPOINT = "/api/logs";
+const CLIENT_COOKIE = "portfolio_client_id";
+const ONE_YEAR_SECONDS = 31_536_000;
+const isDev =
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1");
+
+let cachedClientId = null;
+let remoteLoggingFailed = false;
+let globalHandlersInstalled = false;
+
+function getCookie(name) {
+    return document.cookie
+        .split(";")
+        .map((part) => part.trim())
+        .find((part) => part.startsWith(`${name}=`))
+        ?.split("=")[1] ?? null;
+}
+
+function setCookie(name, value, maxAgeSeconds) {
+    document.cookie = `${name}=${value}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax`;
+}
+
+function ensureClientId() {
+    if (cachedClientId) return cachedClientId;
+    const fromCookie = getCookie(CLIENT_COOKIE);
+    if (fromCookie) {
+        cachedClientId = fromCookie;
+        return cachedClientId;
+    }
+    const generated =
+        (typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID()) ||
+        `${Date.now()}`;
+    cachedClientId = generated;
+    setCookie(CLIENT_COOKIE, generated, ONE_YEAR_SECONDS);
+    return cachedClientId;
+}
+
+async function sendLog(level, message, ctx = {}) {
+    if (remoteLoggingFailed) return;
+
+    const clientId = ensureClientId();
+    const payload = {
+        level,
+        message,
+        component: ctx.component,
+        page: ctx.page || (typeof window !== "undefined" ? window.location.pathname : undefined),
+        request_id: ctx.requestId,
+        client_id: clientId,
+        context: ctx.context,
+    };
+
+    if (isDev) {
+        const fn =
+            level === "error" ? console.error : level === "warn" ? console.warn : console.log;
+        fn("[frontend]", level.toUpperCase(), message, ctx);
+    }
+
+    const body = JSON.stringify(payload);
+    try {
+        if (navigator.sendBeacon && level !== "debug") {
+            const ok = navigator.sendBeacon(LOG_ENDPOINT, new Blob([body], { type: "application/json" }));
+            if (ok) return;
+        }
+        await fetch(LOG_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body,
+            keepalive: true,
+        });
+    } catch (err) {
+        remoteLoggingFailed = true;
+        if (isDev) {
+            console.warn("Remote logging disabled after failure:", err);
+        }
+    }
+}
+
+function logInfo(message, ctx = {}) {
+    return sendLog("info", message, ctx);
+}
+
+function logWarn(message, ctx = {}) {
+    return sendLog("warn", message, ctx);
+}
+
+function logError(message, ctx = {}) {
+    return sendLog("error", message, ctx);
+}
+
+function logDebug(message, ctx = {}) {
+    return sendLog("debug", message, ctx);
+}
+
+function installGlobalErrorHandlers(component = "frontend") {
+    if (globalHandlersInstalled) return;
+    globalHandlersInstalled = true;
+
+    window.addEventListener("error", (event) => {
+        logError("Unhandled error", {
+            component,
+            context: {
+                message: event.message,
+                filename: event.filename,
+                lineno: event.lineno,
+                colno: event.colno,
+            },
+        });
+    });
+
+    window.addEventListener("unhandledrejection", (event) => {
+        logError("Unhandled rejection", {
+            component,
+            context: {
+                reason: String(event.reason),
+            },
+        });
+    });
+}
+
+function makeWasmLogSink(component = "wasm") {
+    return (level, message) => {
+        const normalized = level && level.toLowerCase();
+        if (normalized === "warn" || normalized === "warning") {
+            return logWarn(message, { component });
+        }
+        if (normalized === "error") {
+            return logError(message, { component });
+        }
+        if (normalized === "debug") {
+            return logDebug(message, { component });
+        }
+        return logInfo(message, { component });
+    };
+}
 
 // WASM bindings (populated dynamically to keep dev-server happy when assets live in /public)
 let wasmInit;
