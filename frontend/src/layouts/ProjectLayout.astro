@@ -259,6 +259,12 @@ const hasStickyNav = stickyNavItems.length > 1;
   object-fit: contain;
 }
 
+:global(.project__media .media-frame__media img.project__hero-img),
+:global(.project__media .media-frame__media picture img.project__hero-img) {
+  object-fit: contain;
+  height: auto;
+}
+
 .project__hero-img--dark {
   display: none;
 }
