@@ -47,7 +47,6 @@ const {
 
 const heroIsGif = typeof heroImage === 'string' && heroImage.toLowerCase().endsWith('.gif');
 const heroDarkIsGif = typeof heroImageDark === 'string' && heroImageDark.toLowerCase().endsWith('.gif');
-const useImgTag = heroIsGif || heroDarkIsGif;
 const heroAltText = heroAlt ?? '';
 const sectionAnchors = sections.flatMap((section) => [
   { id: section.id, label: section.label },
@@ -90,20 +89,23 @@ const hasStickyNav = stickyNavItems.length > 1;
         </div>
         {heroImage && (
           <MediaFrame class="project__media" bleed>
-            {useImgTag ? (
-              <picture>
-                {heroImageDark && (
-                  <source srcset={heroImageDark} media="(prefers-color-scheme: dark)" />
-                )}
-                <img src={heroImage} alt={heroAltText} loading="lazy" />
-              </picture>
+            {heroImageDark ? (
+              <>
+                <img
+                  src={heroImage}
+                  alt={heroAltText}
+                  loading="lazy"
+                  class="project__hero-img project__hero-img--light"
+                />
+                <img
+                  src={heroImageDark}
+                  alt={heroAltText}
+                  loading="lazy"
+                  class="project__hero-img project__hero-img--dark"
+                />
+              </>
             ) : (
-              <picture>
-                {heroImageDark && (
-                  <source srcset={heroImageDark} media="(prefers-color-scheme: dark)" />
-                )}
-                <img src={heroImage} alt={heroAltText} loading="lazy" />
-              </picture>
+              <img src={heroImage} alt={heroAltText} loading="lazy" class="project__hero-img" />
             )}
           </MediaFrame>
         )}
@@ -248,6 +250,24 @@ const hasStickyNav = stickyNavItems.length > 1;
   line-height: var(--line-height-normal);
   color: var(--color-text-muted);
   max-width: 70ch;
+}
+
+.project__hero-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.project__hero-img--dark {
+  display: none;
+}
+
+html[data-theme='dark'] .project__hero-img--light {
+  display: none;
+}
+
+html[data-theme='dark'] .project__hero-img--dark {
+  display: block;
 }
 
 html[data-theme='dark'] .project__hero {
