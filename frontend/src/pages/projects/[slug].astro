@@ -34,19 +34,19 @@ const actions = [project.data.primaryAction, project.data.secondaryAction].filte
 
 const sections = projectContentMap[project.slug] ?? [];
 
-const baseNav = [
+const navLinks = [
   { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
   { href: '/#projects', label: 'Projects' },
-  ...(project.data.techStack?.length ? [{ href: '#tech', label: 'Tech' }] : []),
+  { href: '/#contact', label: 'Contacts' },
 ];
-
-const navLinks = baseNav;
 ---
 <ProjectLayout
   title={project.data.title}
   description={project.data.summary}
   eyebrow="Project"
   heroImage={project.data.heroImage}
+  heroImageDark={project.data.heroImageDark}
   heroAlt={project.data.heroAlt}
   techStack={project.data.techStack}
   actions={actions}

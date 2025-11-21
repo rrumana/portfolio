@@ -9,6 +9,7 @@ const projects = defineCollection({
     order: z.number().default(0),
     techStack: z.array(z.string()).default([]),
     heroImage: z.string().optional(),
+    heroImageDark: z.string().optional(),
     heroAlt: z.string().optional(),
     primaryAction: z
       .object({

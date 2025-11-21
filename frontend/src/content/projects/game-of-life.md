@@ -9,6 +9,7 @@ techStack:
   - SAT Solvers
   - TypeScript
 heroImage: "/images/Gospers_glider_gun_crop.gif"
+heroImageDark: "/images/Gospers_glider_gun_crop_dark.gif"
 heroAlt: "Conway's Game of Life simulation"
 primaryAction:
   label: "View project"

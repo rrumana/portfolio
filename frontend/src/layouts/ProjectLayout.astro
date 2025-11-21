@@ -7,7 +7,6 @@ import Heading from '../components/ui/Heading.astro';
 import Text from '../components/ui/Text.astro';
 import StickyNav from '../components/navigation/StickyNav.astro';
 import MediaFrame from '../components/patterns/MediaFrame.astro';
-import { Image } from 'astro:assets';
 import type { ProjectSection } from '../components/projects';
 
 export interface Action {
@@ -21,6 +20,7 @@ export interface Props {
   description?: string;
   eyebrow?: string;
   heroImage?: string;
+  heroImageDark?: string;
   heroAlt?: string;
   techStack?: string[];
   actions?: Action[];
@@ -36,6 +36,7 @@ const {
   description,
   eyebrow,
   heroImage,
+  heroImageDark,
   heroAlt,
   techStack = [],
   actions = [],
@@ -45,6 +46,9 @@ const {
 } = props;
 
 const heroIsGif = typeof heroImage === 'string' && heroImage.toLowerCase().endsWith('.gif');
+const heroDarkIsGif = typeof heroImageDark === 'string' && heroImageDark.toLowerCase().endsWith('.gif');
+const useImgTag = heroIsGif || heroDarkIsGif;
+const heroAltText = heroAlt ?? '';
 const sectionAnchors = sections.flatMap((section) => [
   { id: section.id, label: section.label },
   ...(section.anchors ?? []),
@@ -86,17 +90,20 @@ const hasStickyNav = stickyNavItems.length > 1;
         </div>
         {heroImage && (
           <MediaFrame class="project__media" bleed>
-            {heroIsGif ? (
-              <img src={heroImage} alt={heroAlt ?? ''} loading="lazy" />
+            {useImgTag ? (
+              <picture>
+                {heroImageDark && (
+                  <source srcset={heroImageDark} media="(prefers-color-scheme: dark)" />
+                )}
+                <img src={heroImage} alt={heroAltText} loading="lazy" />
+              </picture>
             ) : (
-              <Image
-                src={heroImage}
-                alt={heroAlt ?? ''}
-                loading="lazy"
-                width={1366}
-                height={767}
-                fit="cover"
-              />
+              <picture>
+                {heroImageDark && (
+                  <source srcset={heroImageDark} media="(prefers-color-scheme: dark)" />
+                )}
+                <img src={heroImage} alt={heroAltText} loading="lazy" />
+              </picture>
             )}
           </MediaFrame>
         )}
