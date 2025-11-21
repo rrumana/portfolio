@@ -40,25 +40,7 @@ const baseNav = [
   ...(project.data.techStack?.length ? [{ href: '#tech', label: 'Tech' }] : []),
 ];
 
-const sectionLinks = [
-  { href: '#details', label: 'Details' },
-  ...sections.flatMap((section) => [
-    { href: `#${section.id}`, label: section.label },
-    ...(section.anchors?.map((anchor) => ({ href: `#${anchor.id}`, label: anchor.label })) ?? []),
-  ]),
-];
-
-const seen = new Set<string>();
-const navLinks = [
-  ...baseNav,
-  ...sectionLinks.filter((link) => {
-    if (seen.has(link.href)) {
-      return false;
-    }
-    seen.add(link.href);
-    return true;
-  }),
-];
+const navLinks = baseNav;
 ---
 <ProjectLayout
   title={project.data.title}

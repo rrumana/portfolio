@@ -27,6 +27,8 @@ export const projectContentMap: Record<string, ProjectSection[]> = {
       anchors: [
         { id: 'proof', label: 'Proof' },
         { id: 'implementation', label: 'Implementation' },
+        { id: 'crates', label: 'Crates and Command Line Interface' },
+        { id: 'chaos-emergence', label: 'Make Your Name Emerge From Chaos' },
         { id: 'results-analysis', label: 'Results' },
       ],
     },
