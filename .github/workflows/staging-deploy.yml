@@ -15,10 +15,11 @@ env:
   HAS_KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_STAGING != '' }}
   GHCR_USERNAME: ${{ secrets.GHCR_USERNAME || github.actor }}
   GHCR_TOKEN: ${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}
+  USE_LOCAL_KUBECONFIG: true
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, portfolio-dev]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,10 +43,7 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}
           no-cache: true
 
-      - name: Set up kubectl (optional)
-        if: ${{ env.HAS_KUBE_CONFIG == 'true' }}
-        uses: azure/setup-kubectl@v4
-
+      # Optional: configure kubeconfig from secret if you don't want to rely on the runner's local kubeconfig
       - name: Configure kubeconfig (optional)
         if: ${{ env.HAS_KUBE_CONFIG == 'true' }}
         run: |
@@ -55,5 +53,5 @@ jobs:
           KUBE_CONFIG_STAGING: ${{ secrets.KUBE_CONFIG_STAGING }}
 
       - name: Restart staging deployment (optional)
-        if: ${{ env.HAS_KUBE_CONFIG == 'true' }}
+        if: ${{ env.HAS_KUBE_CONFIG == 'true' || env.USE_LOCAL_KUBECONFIG == 'true' }}
         run: kubectl rollout restart -n dev deployment/portfolio-dev
