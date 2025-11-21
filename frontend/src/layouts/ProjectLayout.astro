@@ -265,6 +265,22 @@ const hasStickyNav = stickyNavItems.length > 1;
   height: auto;
 }
 
+:global(.media-frame__media .project__hero-img--dark) {
+  display: none;
+}
+
+:global(.media-frame__media .project__hero-img--light) {
+  display: block;
+}
+
+html[data-theme='dark'] :global(.media-frame__media .project__hero-img--light) {
+  display: none;
+}
+
+html[data-theme='dark'] :global(.media-frame__media .project__hero-img--dark) {
+  display: block;
+}
+
 .project__hero-img--dark {
   display: none;
 }
