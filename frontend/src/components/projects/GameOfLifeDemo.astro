@@ -114,7 +114,7 @@ const { id = 'demo' } = props;
 </SectionShell>
 
 <script type="module" is:inline>
-  import { initGameOfLife } from '{gameOfLifeScriptUrl}';
+  import { initGameOfLife } from '${gameOfLifeScriptUrl}';
 
   initGameOfLife().catch((error) => {
     console.error('Failed to initialize Game of Life demo:', error);
