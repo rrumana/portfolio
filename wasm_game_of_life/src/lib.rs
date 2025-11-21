@@ -1,9 +1,10 @@
 use game_of_life::engines::{GameOfLifeEngine, UltimateEngine};
 use game_of_life::grid::{Grid, StandardGrid};
 use gif::{Encoder, Frame, Repeat};
-use js_sys::Array;
-use log::info;
+use js_sys::{Array, Function};
+use log::Level;
 use serde::Serialize;
+use std::cell::RefCell;
 use text_to_input::text_to_pixel_art;
 use wasm_bindgen::prelude::*;
 use web_sys::console;
@@ -11,6 +12,27 @@ use web_sys::console;
 // Default grid dimensions for backward compatibility
 const DEFAULT_WIDTH: usize = 20;
 const DEFAULT_HEIGHT: usize = 20;
+
+thread_local! {
+    static JS_LOGGER: RefCell<Option<Function>> = RefCell::new(None);
+}
+
+fn forward_log(level: Level, message: &str) {
+    JS_LOGGER.with(|logger| {
+        if let Some(callback) = logger.borrow().as_ref() {
+            let _ = callback.call2(
+                &JsValue::NULL,
+                &JsValue::from_str(level.as_str()),
+                &JsValue::from_str(message),
+            );
+        }
+    });
+}
+
+fn log_with_level(level: Level, message: String) {
+    log::log!(level, "{}", message);
+    forward_log(level, &message);
+}
 
 #[wasm_bindgen]
 extern "C" {
@@ -20,7 +42,17 @@ extern "C" {
 #[wasm_bindgen]
 pub fn init_logging() {
     console_log::init_with_level(log::Level::Info).expect("Failed to initialize console_log");
-    info!("WASM logging initialized with UltimateEngine");
+    log_with_level(
+        Level::Info,
+        "WASM logging initialized with UltimateEngine".to_string(),
+    );
+}
+
+#[wasm_bindgen]
+pub fn set_log_hook(callback: Function) {
+    JS_LOGGER.with(|logger| {
+        *logger.borrow_mut() = Some(callback);
+    });
 }
 
 /// Game of Life WASM wrapper that maintains compatibility with existing interface
@@ -36,9 +68,12 @@ impl GameOfLifeWasm {
     #[wasm_bindgen(constructor)]
     pub fn new(width: usize, height: usize) -> GameOfLifeWasm {
         let engine = UltimateEngine::new(width, height);
-        info!(
-            "Created new GameOfLifeWasm with dimensions {}x{}",
-            width, height
+        log_with_level(
+            Level::Info,
+            format!(
+                "Created new GameOfLifeWasm with dimensions {}x{}",
+                width, height
+            ),
         );
         GameOfLifeWasm {
             engine,
@@ -118,7 +153,7 @@ impl GameOfLifeWasm {
         self.engine = UltimateEngine::new(width, height);
         self.width = width;
         self.height = height;
-        info!("Resized grid to {}x{}", width, height);
+        log_with_level(Level::Info, format!("Resized grid to {}x{}", width, height));
     }
 
     /// Load grid from a flat array
@@ -148,9 +183,12 @@ impl GameOfLifeWasm {
         }
 
         self.engine.set_grid(&grid);
-        info!(
-            "Loaded grid from array with dimensions {}x{}",
-            width, height
+        log_with_level(
+            Level::Info,
+            format!(
+                "Loaded grid from array with dimensions {}x{}",
+                width, height
+            ),
         );
         Ok(())
     }
@@ -215,9 +253,12 @@ impl GifRecorder {
         self.frames = Vec::new();
         self.is_recording = true;
 
-        info!(
-            "Started GIF recording: {}x{} at {}ms per frame",
-            width, height, frame_delay_ms
+        log_with_level(
+            Level::Info,
+            format!(
+                "Started GIF recording: {}x{} at {}ms per frame",
+                width, height, frame_delay_ms
+            ),
         );
         Ok(())
     }
@@ -285,10 +326,13 @@ impl GifRecorder {
         self.is_recording = false;
         let gif_data = self.buffer.clone();
 
-        info!(
-            "Stopped GIF recording, generated {} bytes from {} frames",
-            gif_data.len(),
-            self.frames.len()
+        log_with_level(
+            Level::Info,
+            format!(
+                "Stopped GIF recording, generated {} bytes from {} frames",
+                gif_data.len(),
+                self.frames.len()
+            ),
         );
 
         // Clear frames to free memory
@@ -315,7 +359,7 @@ impl GifRecorder {
 /// Legacy tick function for backward compatibility
 #[wasm_bindgen]
 pub fn tick(current: &[u8]) -> Vec<u8> {
-    info!("Using legacy tick function");
+    log_with_level(Level::Info, "Using legacy tick function".to_string());
 
     // Assume default dimensions for legacy calls
     let width = DEFAULT_WIDTH;
@@ -366,7 +410,10 @@ pub fn sample_grid() -> Vec<u8> {
     grid[index(1, 2)] = 1;
     grid[index(2, 2)] = 1;
 
-    info!("Returning legacy sample grid with glider pattern");
+    log_with_level(
+        Level::Info,
+        "Returning legacy sample grid with glider pattern".to_string(),
+    );
     grid
 }
 

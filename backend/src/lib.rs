@@ -1,11 +1,12 @@
 pub mod game_of_life;
+pub mod logging;
 pub mod middleware;
 pub mod routes;
 
 use axum::{
     Router,
     middleware::from_fn,
-    routing::{get, get_service},
+    routing::{get, get_service, post},
 };
 
 use axum::http::{HeaderValue, header::CACHE_CONTROL};
@@ -38,6 +39,7 @@ pub fn app(static_dir: &str, wasm_dir: &str, game_api: Router) -> Router {
 
     Router::new()
         .route("/sitemap.xml", get(routes::sitemap))
+        .route("/api/logs", post(logging::ingest_frontend_log))
         .nest("/api/game-of-life", game_api)
         .nest_service(
             "/wasm",

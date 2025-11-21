@@ -1,5 +1,6 @@
 // backend/src/routes.rs
 use crate::game_of_life::{GameOfLife, HEIGHT, WIDTH};
+use crate::middleware::RequestContext;
 use axum::{
     Router,
     extract::{Extension, Query},
@@ -9,6 +10,7 @@ use axum::{
 };
 use log::info;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Serialize)]
@@ -24,20 +26,50 @@ pub struct ToggleQuery {
     pub col: usize,
 }
 
-pub async fn get_state(Extension(state): Extension<Arc<Mutex<GameOfLife>>>) -> Json<GameState> {
-    info!("Received GET state request");
+pub async fn get_state(
+    Extension(state): Extension<Arc<Mutex<GameOfLife>>>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Json<GameState> {
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.get_state",
+            "request_id": ctx.request_id,
+            "client_id": ctx.client_id,
+        })
+    );
     let gol = state.lock().unwrap();
     let response = GameState {
         grid: gol.current.clone(),
         width: WIDTH,
         height: HEIGHT,
     };
-    info!("Responding with updated state");
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.get_state.response",
+            "request_id": ctx.request_id,
+            "grid_cells": response.grid.len(),
+        })
+    );
     Json(response)
 }
 
-pub async fn step(Extension(state): Extension<Arc<Mutex<GameOfLife>>>) -> Json<GameState> {
-    info!("Received POST step request");
+pub async fn step(
+    Extension(state): Extension<Arc<Mutex<GameOfLife>>>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Json<GameState> {
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.step",
+            "request_id": ctx.request_id,
+            "client_id": ctx.client_id,
+        })
+    );
     let mut gol = state.lock().unwrap();
     gol.step();
     let response = GameState {
@@ -45,12 +77,31 @@ pub async fn step(Extension(state): Extension<Arc<Mutex<GameOfLife>>>) -> Json<G
         width: WIDTH,
         height: HEIGHT,
     };
-    info!("Responding with updated state");
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.step.response",
+            "request_id": ctx.request_id,
+            "grid_cells": response.grid.len(),
+        })
+    );
     Json(response)
 }
 
-pub async fn step_back(Extension(state): Extension<Arc<Mutex<GameOfLife>>>) -> Json<GameState> {
-    info!("Received POST step_back request");
+pub async fn step_back(
+    Extension(state): Extension<Arc<Mutex<GameOfLife>>>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Json<GameState> {
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.step_back",
+            "request_id": ctx.request_id,
+            "client_id": ctx.client_id,
+        })
+    );
     let mut gol = state.lock().unwrap();
     gol.step_back();
     let response = GameState {
@@ -58,17 +109,33 @@ pub async fn step_back(Extension(state): Extension<Arc<Mutex<GameOfLife>>>) -> J
         width: WIDTH,
         height: HEIGHT,
     };
-    info!("Responding with updated state");
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.step_back.response",
+            "request_id": ctx.request_id,
+            "grid_cells": response.grid.len(),
+        })
+    );
     Json(response)
 }
 
 pub async fn toggle_cell(
     Query(query): Query<ToggleQuery>,
     Extension(state): Extension<Arc<Mutex<GameOfLife>>>,
+    Extension(ctx): Extension<RequestContext>,
 ) -> Json<GameState> {
     info!(
-        "Received POST toggle request for row: {}, col: {}",
-        query.row, query.col
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.toggle_cell",
+            "request_id": ctx.request_id,
+            "client_id": ctx.client_id,
+            "row": query.row,
+            "col": query.col,
+        })
     );
     let mut gol = state.lock().unwrap();
     gol.toggle_cell(query.row, query.col);
@@ -77,12 +144,31 @@ pub async fn toggle_cell(
         width: WIDTH,
         height: HEIGHT,
     };
-    info!("Responding with updated state");
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.toggle_cell.response",
+            "request_id": ctx.request_id,
+            "grid_cells": response.grid.len(),
+        })
+    );
     Json(response)
 }
 
-pub async fn reset(Extension(state): Extension<Arc<Mutex<GameOfLife>>>) -> Json<GameState> {
-    info!("Received POST reset request");
+pub async fn reset(
+    Extension(state): Extension<Arc<Mutex<GameOfLife>>>,
+    Extension(ctx): Extension<RequestContext>,
+) -> Json<GameState> {
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.reset",
+            "request_id": ctx.request_id,
+            "client_id": ctx.client_id,
+        })
+    );
     let mut gol = state.lock().unwrap();
     gol.reset();
     let response = GameState {
@@ -90,13 +176,28 @@ pub async fn reset(Extension(state): Extension<Arc<Mutex<GameOfLife>>>) -> Json<
         width: WIDTH,
         height: HEIGHT,
     };
-    info!("Responding with updated state");
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "gol.reset.response",
+            "request_id": ctx.request_id,
+            "grid_cells": response.grid.len(),
+        })
+    );
     Json(response)
 }
 
 /// Generates XML sitemap for the portfolio website
 pub async fn sitemap() -> Response {
-    info!("Received sitemap request");
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "sitemap",
+            "message": "Received sitemap request"
+        })
+    );
 
     let sitemap_xml = r#"<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

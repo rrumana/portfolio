@@ -1,19 +1,50 @@
+import {
+    installGlobalErrorHandlers,
+    logDebug,
+    logError,
+    logInfo,
+    logWarn,
+    makeWasmLogSink,
+} from "../utils/logger";
+
 // static/javascript/game_of_life.js
 
-// Import the WASM module functions - now with enhanced UltimateEngine support
-import init, {
-    init_logging,
-    tick,
-    sample_grid,
-    GameOfLifeWasm,
-    GifRecorder,
-    create_game,
-    create_game_with_size,
-    text_to_grid_with_buffer,
-    parse_text_file,
-    validate_dimensions,
-    get_version
-} from "/wasm/wasm_game_of_life.js";
+// WASM bindings (populated dynamically to keep dev-server happy when assets live in /public)
+let wasmInit;
+let init_logging;
+let tick;
+let sample_grid;
+let GameOfLifeWasm;
+let GifRecorder;
+let create_game;
+let create_game_with_size;
+let text_to_grid_with_buffer;
+let parse_text_file;
+let validate_dimensions;
+let get_version;
+let set_log_hook;
+
+async function loadWasmModule() {
+    if (wasmInit) {
+        return;
+    }
+    const wasmModuleUrl = new URL('/wasm/wasm_game_of_life.js', window.location.origin).href;
+    const mod = await import(/* @vite-ignore */ wasmModuleUrl);
+    wasmInit = mod.default;
+    init_logging = mod.init_logging;
+    tick = mod.tick;
+    sample_grid = mod.sample_grid;
+    GameOfLifeWasm = mod.GameOfLifeWasm;
+    GifRecorder = mod.GifRecorder;
+    create_game = mod.create_game;
+    create_game_with_size = mod.create_game_with_size;
+    text_to_grid_with_buffer = mod.text_to_grid_with_buffer;
+    parse_text_file = mod.parse_text_file;
+    validate_dimensions = mod.validate_dimensions;
+    get_version = mod.get_version;
+    set_log_hook = mod.set_log_hook;
+    await wasmInit();
+}
 
 // Grab DOM elements
 const canvas = document.getElementById("lifeCanvas");
@@ -26,6 +57,8 @@ const recordBtn = document.getElementById("recordBtn");
 const speedRange = document.getElementById("speedRange");
 const genInput = document.getElementById("genInput");
 const delayDisplay = document.getElementById("delayDisplay");
+
+installGlobalErrorHandlers("game-of-life");
 
 // New UI elements for enhanced features
 let textInput, bufferSizeSlider, bufferDisplay, generateTextBtn;
@@ -124,9 +157,13 @@ async function generateFromText() {
     try {
         const result = text_to_grid_with_buffer(text, bufferSize);
         await loadGridFromData(result.grid, result.width, result.height);
-        showSuccess(`Generated ${result.width}x${result.height} grid from "${text}"`);
+        showSuccess(`Generated ${result.width}x${result.height} grid from "${text}"`, {
+            width: result.width,
+            height: result.height,
+            bufferSize,
+        });
     } catch (error) {
-        showError(`Text generation failed: ${error}`);
+        showError("Text generation failed", { error: String(error), bufferSize });
     }
 }
 
@@ -155,7 +192,7 @@ async function handleFileDrop(event) {
 // Process uploaded file
 async function processFile(file) {
     if (!file.name.endsWith('.txt')) {
-        showError("Please select a .txt file");
+        showError("Please select a .txt file", { fileName: file.name });
         return;
     }
 
@@ -163,10 +200,14 @@ async function processFile(file) {
         const content = await file.text();
         const result = parse_text_file(content);
         await loadGridFromData(result.grid, result.width, result.height);
-        showSuccess(`Loaded ${result.width}x${result.height} grid from ${file.name}`);
+        showSuccess(`Loaded ${result.width}x${result.height} grid from ${file.name}`, {
+            width: result.width,
+            height: result.height,
+            fileName: file.name,
+        });
         document.getElementById("fileName").textContent = file.name;
     } catch (error) {
-        showError(`File loading failed: ${error}`);
+        showError("File loading failed", { error: String(error), fileName: file.name });
     }
 }
 
@@ -313,15 +354,31 @@ function toggleCellAtPosition(x, y) {
     const col = Math.floor(x / CELL_SIZE);
     const row = Math.floor(y / CELL_SIZE);
     
-    console.log(`Click at (${x}, ${y}) -> Grid (${row}, ${col}) | CELL_SIZE: ${CELL_SIZE} | Grid: ${GRID_WIDTH}x${GRID_HEIGHT}`);
+    logDebug("Canvas click", {
+        component: "game-of-life",
+        context: {
+            x,
+            y,
+            row,
+            col,
+            cellSize: CELL_SIZE,
+            grid: `${GRID_WIDTH}x${GRID_HEIGHT}`,
+        },
+    });
     
     if (row >= 0 && row < GRID_HEIGHT && col >= 0 && col < GRID_WIDTH) {
         gameInstance.toggle_cell(row, col);
         drawGrid();
         updateInfo();
-        console.log(`Toggled cell (${row}, ${col})`);
+        logInfo("Toggled cell", {
+            component: "game-of-life",
+            context: { row, col },
+        });
     } else {
-        console.log(`Click outside bounds: (${row}, ${col})`);
+        logWarn("Canvas click outside bounds", {
+            component: "game-of-life",
+            context: { row, col },
+        });
     }
 }
 
@@ -349,6 +406,10 @@ function downloadCurrentState() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    logInfo("Downloaded current pattern", {
+        component: "game-of-life",
+        context: { width: GRID_WIDTH, height: GRID_HEIGHT },
+    });
 }
 
 // GIF Recording Functions
@@ -383,9 +444,13 @@ async function startRecording() {
         recordBtn.textContent = "Stop Recording";
         recordBtn.style.backgroundColor = "#dc3545"; // Red color
         
-        showSuccess(`Started GIF recording at ${frameDelay}ms per frame (${canvas.width}x${canvas.height})`);
+        showSuccess("Started GIF recording", {
+            frameDelayMs: frameDelay,
+            width: canvas.width,
+            height: canvas.height,
+        });
     } catch (error) {
-        showError(`Failed to start recording: ${error}`);
+        showError("Failed to start recording", { error: String(error) });
         isRecording = false;
         recordBtn.textContent = "Record GIF";
         recordBtn.style.backgroundColor = "";
@@ -412,7 +477,10 @@ async function captureCanvasFrame() {
         // Send RGB data to WASM recorder
         await gifRecorder.capture_frame(rgbData);
     } catch (error) {
-        console.error("Failed to capture canvas frame:", error);
+        logError("Failed to capture canvas frame", {
+            component: "game-of-life",
+            context: { error: String(error) },
+        });
     }
 }
 
@@ -444,9 +512,13 @@ async function stopRecording() {
         recordBtn.textContent = "Record GIF";
         recordBtn.style.backgroundColor = "";
         
-        showSuccess(`GIF saved! Size: ${(gifData.length / 1024).toFixed(1)} KB`);
+        showSuccess("GIF saved", {
+            sizeKb: Number((gifData.length / 1024).toFixed(1)),
+            width: GRID_WIDTH,
+            height: GRID_HEIGHT,
+        });
     } catch (error) {
-        showError(`Failed to stop recording: ${error}`);
+        showError("Failed to stop recording", { error: String(error) });
         isRecording = false;
         gifRecorder = null;
         recordBtn.textContent = "Record GIF";
@@ -454,51 +526,60 @@ async function stopRecording() {
     }
 }
 
-// Show success message
-function showSuccess(message) {
-    console.log("SUCCESS:", message);
-    // Could add a toast notification here
+// Show success message and emit to backend logs
+function showSuccess(message, context = {}) {
+    logInfo(message, { component: "game-of-life", context });
 }
 
-// Show error message
-function showError(message) {
-    console.error("ERROR:", message);
+// Show error message and emit to backend logs
+function showError(message, context = {}) {
+    logError(message, { component: "game-of-life", context });
     alert(message); // Simple error display for now
 }
 
 // Initialize the simulation using WASM with enhanced features
 async function initializeSimulation() {
     try {
-        await init();
+        await loadWasmModule();
         init_logging();
-        console.log("WASM module loaded and logging initialized.");
+        if (set_log_hook) {
+            try {
+                set_log_hook(makeWasmLogSink("wasm-engine"));
+            } catch (hookError) {
+                logWarn("Failed to attach WASM log hook", {
+                    component: "game-of-life",
+                    context: { error: String(hookError) },
+                });
+            }
+        }
+        logInfo("WASM module loaded and logging initialized", {
+            component: "game-of-life",
+        });
         
-        // Display version info
-        // Version display removed - no longer needed
-        
-        // Initialize enhanced UI
         initializeEnhancedUI();
-        
-        // Initialize with default game size
+
+        // Initialize with text-to-pattern sample: "Hello World" with buffer size 2
         GRID_WIDTH = 20;
         GRID_HEIGHT = 20;
+        const initial = text_to_grid_with_buffer("Hello World", 1);
+        GRID_WIDTH = initial.width;
+        GRID_HEIGHT = initial.height;
         gameInstance = create_game_with_size(GRID_WIDTH, GRID_HEIGHT);
-        
-        // Load sample pattern
-        const sampleData = sample_grid();
-        await gameInstance.load_from_array(sampleData, GRID_WIDTH, GRID_HEIGHT);
-        
-        // Resize canvas to match grid dimensions
+        await gameInstance.load_from_array(initial.grid, GRID_WIDTH, GRID_HEIGHT);
+
         resizeCanvas();
-        
         gridHistory = [];
         drawGrid();
         updateInfo();
-        
-        console.log("Enhanced Game of Life initialized with UltimateEngine");
+
+        logInfo("Game initialized with Hello World pattern", {
+            component: "game-of-life",
+            context: { width: GRID_WIDTH, height: GRID_HEIGHT },
+        });
     } catch (error) {
-        console.error("Error initializing WASM module:", error);
-        showError("Failed to initialize Game of Life engine");
+        showError("Failed to initialize Game of Life engine", {
+            error: String(error),
+        });
     }
 }
 
@@ -522,7 +603,10 @@ async function localStepForward() {
         }
         updateInfo();
     } catch (error) {
-        console.error("Error during local step forward:", error);
+        logError("Error during local step forward", {
+            component: "game-of-life",
+            context: { error: String(error) },
+        });
     }
 }
 
@@ -537,10 +621,13 @@ async function localStepBack() {
             drawGrid();
             updateInfo();
         } else {
-            console.warn("No previous state to revert to.");
+            logWarn("No previous state to revert to", { component: "game-of-life" });
         }
     } catch (error) {
-        console.error("Error during step back:", error);
+        logError("Error during step back", {
+            component: "game-of-life",
+            context: { error: String(error) },
+        });
     }
 }
 
@@ -567,8 +654,12 @@ async function resetSimulation() {
         gridHistory = [];
         drawGrid();
         updateInfo();
+        logInfo("Simulation reset", { component: "game-of-life" });
     } catch (error) {
-        console.error("Error during simulation reset:", error);
+        logError("Error during simulation reset", {
+            component: "game-of-life",
+            context: { error: String(error) },
+        });
     }
 }
 
@@ -579,16 +670,32 @@ async function localMultiStep() {
     const generations = parseInt(genInput.value, 10);
     const delayMs = parseInt(speedRange.value, 10);
     multiStepActive = true;
+    let cancelled = false;
+
+    logInfo("Multi-step started", {
+        component: "game-of-life",
+        context: { generations, delayMs },
+    });
     
     for (let i = 0; i < generations; i++) {
         if (!multiStepActive) {
-            console.log("Multi-step cancelled");
+            logInfo("Multi-step cancelled", {
+                component: "game-of-life",
+                context: { completed: i, requested: generations },
+            });
+            cancelled = true;
             break;
         }
         await localStepForward();
         await delay(delayMs);
     }
     multiStepActive = false;
+    if (!cancelled) {
+        logInfo("Multi-step completed", {
+            component: "game-of-life",
+            context: { generations, delayMs },
+        });
+    }
 }
 
 // Legacy canvas click handler removed - using mousedown handler instead

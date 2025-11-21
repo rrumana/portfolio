@@ -20,96 +20,80 @@ const { id = 'demo' } = props;
   accent
 >
   <div class="gol-demo__layout">
-    <SurfaceCard padding="lg" class="gol-demo__canvas">
-      <header class="gol-demo__intro">
-        <Heading level={3} size="xl">Live Simulation</Heading>
-        <Text tone="muted">
-          Every interaction hits the same optimized engine that drives the full reverse solver. Grid
-          updates, text conversions, and GIF recording all execute inside the WASM module.
-        </Text>
-      </header>
-
-      <div class="gol-demo__viewport">
-        <canvas
-          id="lifeCanvas"
-          width="400"
-          height="400"
-          aria-label="Game of Life grid"
-        ></canvas>
-      </div>
-
-      <dl class="gol-demo__stats">
-        <div>
-          <dt>Grid</dt>
-          <dd><span id="gridSizeDisplay">Grid: 20x20</span></dd>
+    <div class="gol-demo__column">
+      <SurfaceCard padding="lg" class="gol-demo__canvas">
+        <div class="gol-demo__viewport">
+          <canvas
+            id="lifeCanvas"
+            width="400"
+            height="400"
+            aria-label="Game of Life grid"
+          ></canvas>
         </div>
-        <div>
-          <dt>Live cells</dt>
-          <dd>
-            <span id="liveCellsDisplay" aria-live="polite">Live cells: 0</span>
-          </dd>
-        </div>
-      </dl>
-    </SurfaceCard>
 
-    <SurfaceCard padding="lg" class="gol-demo__panel">
-      <Heading level={3} size="lg">Simulation controls</Heading>
-      <Text tone="muted">
-        Step through generations, rewind, or record long runs. Multi-step uses the SAT backtracking
-        heuristics to keep playback fast.
-      </Text>
-      <div class="gol-buttons">
+        <dl class="gol-demo__stats">
+          <div>
+            <dt>Grid</dt>
+            <dd><span id="gridSizeDisplay">Grid: 20x20</span></dd>
+          </div>
+          <div>
+            <dt>Live cells</dt>
+            <dd>
+              <span id="liveCellsDisplay" aria-live="polite">Live cells: 0</span>
+            </dd>
+          </div>
+        </dl>
+      </SurfaceCard>
+
+      <SurfaceCard padding="lg" class="gol-demo__panel">
+        <Heading level={3} size="lg">Simulation controls</Heading>
+        <div class="gol-buttons">
         <Button id="stepBtn">Step Forward</Button>
         <Button id="backBtn" variant="secondary">Step Back</Button>
         <Button id="resetBtn" variant="secondary">Reset</Button>
         <Button id="multiStepBtn" variant="secondary">Multi-Step</Button>
         <Button id="recordBtn" variant="secondary">Record GIF</Button>
       </div>
-      <div class="gol-input">
-        <label for="speedRange">Speed</label>
-        <input type="range" id="speedRange" min="50" max="1000" value="200" />
-        <span id="delayDisplay">Frame Delay: 200ms</span>
-      </div>
-      <div class="gol-input">
-        <label for="genInput">Generations per step</label>
-        <input type="number" id="genInput" min="1" max="100" value="1" />
-      </div>
-    </SurfaceCard>
+        <div class="gol-input">
+          <label for="speedRange">Speed</label>
+          <input type="range" id="speedRange" min="50" max="1000" value="200" />
+          <span id="delayDisplay">Frame Delay: 200ms</span>
+        </div>
+        <div class="gol-input">
+          <label for="genInput">Generations per step</label>
+          <input type="number" id="genInput" min="1" max="100" value="1" />
+        </div>
+      </SurfaceCard>
+    </div>
 
-    <SurfaceCard padding="lg" class="gol-demo__panel">
-      <Heading level={3} size="lg">Text-to-pattern tools</Heading>
-      <Text tone="muted">
-        Quickly seed the grid from phrases or emoji art. The buffer slider controls spacing so
-        strings stay readable after evolution.
-      </Text>
-      <div class="gol-input">
-        <label for="textInput">Generate from text</label>
-        <input type="text" id="textInput" placeholder="Enter text to convert" />
-      </div>
-      <div class="gol-input">
-        <label for="bufferSizeSlider">Buffer size</label>
-        <input type="range" id="bufferSizeSlider" min="1" max="10" value="2" />
-        <span id="bufferDisplay">2</span>
-      </div>
-      <Button id="generateTextBtn" variant="secondary">Generate</Button>
-    </SurfaceCard>
+    <div class="gol-demo__column">
+      <SurfaceCard padding="lg" class="gol-demo__panel">
+        <Heading level={3} size="lg">Text-to-pattern tools</Heading>
+        <div class="gol-input">
+          <label for="textInput">Generate from text</label>
+          <input type="text" id="textInput" placeholder="Enter text to convert" />
+        </div>
+        <div class="gol-input">
+          <label for="bufferSizeSlider">Buffer size</label>
+          <input type="range" id="bufferSizeSlider" min="1" max="10" value="2" />
+          <span id="bufferDisplay">2</span>
+        </div>
+        <Button id="generateTextBtn" variant="secondary">Generate</Button>
+      </SurfaceCard>
 
-    <SurfaceCard padding="lg" class="gol-demo__panel">
-      <Heading level={3} size="lg">Import &amp; export</Heading>
-      <Text tone="muted">
-        Bring in RLE or plaintext patterns, drag files straight onto the canvas, or export the
-        current state for debugging.
-      </Text>
-      <div class="gol-file">
-        <input type="file" id="fileInput" accept=".txt" hidden />
-        <Button id="fileUploadBtn" variant="secondary">Upload Pattern</Button>
-        <span id="fileName">No file selected</span>
-      </div>
-      <div id="dragDropArea" class="gol-drop" aria-label="Drag and drop area" tabindex="0">
-        Drag &amp; drop pattern files here
-      </div>
-      <Button id="downloadBtn" variant="secondary">Download Pattern</Button>
-    </SurfaceCard>
+      <SurfaceCard padding="lg" class="gol-demo__panel">
+        <Heading level={3} size="lg">Import &amp; export</Heading>
+        <div class="gol-file">
+          <input type="file" id="fileInput" accept=".txt" hidden />
+          <Button id="fileUploadBtn" variant="secondary">Upload Pattern</Button>
+          <span id="fileName">No file selected</span>
+        </div>
+        <div id="dragDropArea" class="gol-drop" aria-label="Drag and drop area" tabindex="0">
+          Drag &amp; drop pattern files here
+        </div>
+        <Button id="downloadBtn" variant="secondary">Download Pattern</Button>
+      </SurfaceCard>
+    </div>
   </div>
 </SectionShell>
 
@@ -126,14 +110,21 @@ const { id = 'demo' } = props;
 .gol-demo__layout {
   display: grid;
   gap: var(--space-2xl, 3rem);
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
   align-items: start;
-  grid-auto-flow: row dense;
+}
+
+.gol-demo__column {
+  display: grid;
+  gap: var(--space-2xl, 3rem);
 }
 
 .gol-demo__canvas {
   position: relative;
-  grid-column: 1 / -1;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .gol-demo__intro {
@@ -142,10 +133,10 @@ const { id = 'demo' } = props;
 }
 
 .gol-demo__viewport {
-  background: var(--color-surface-100);
-  border-radius: var(--radius-md, 12px);
-  border: 1px solid var(--color-border-subtle);
-  overflow: hidden;
+  background: none;
+  border-radius: 0;
+  border: none;
+  overflow: visible;
 }
 
 .gol-demo__viewport canvas {
@@ -222,8 +213,8 @@ const { id = 'demo' } = props;
 }
 
 html[data-theme='dark'] .gol-demo__viewport {
-  background: var(--color-surface-300);
-  border-color: var(--color-border-muted);
+  background: none;
+  border-color: transparent;
 }
 
 html[data-theme='dark'] .gol-demo__stats dt {
@@ -239,5 +230,18 @@ html[data-theme='dark'] .gol-demo__intro p {
 
 html[data-theme='dark'] .gol-drop {
   border-color: var(--color-border-muted);
+}
+
+@media (max-width: 980px) {
+  .gol-demo__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+:global(.gol-demo__canvas.surface-card) {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 </style>

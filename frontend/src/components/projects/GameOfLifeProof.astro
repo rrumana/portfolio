@@ -152,22 +152,27 @@ const solverCliCommands = [
 
 const systemComponents = [
   {
+    icon: 'fa fa-sitemap',
     title: 'Configuration Management',
     description: 'YAML-based configuration system supporting flexible parameter tuning for grid size, generations, solver backends, optimization levels, and output formats.'
   },
   {
+    icon: 'fa fa-cubes',
     title: 'Game of Life Engine',
     description: 'Core cellular automaton implementation with grid representation, rule application, I/O operations, and support for multiple boundary conditions (dead, wrap, mirror).'
   },
   {
+    icon: 'fa fa-project-diagram',
     title: 'SAT Encoding & Solving',
     description: 'Converts Game of Life constraints into SAT problems with support for multiple backends: CaDiCaL (single-threaded) and ParKissat-RS (multithreaded) solvers.'
   },
   {
+    icon: 'fa fa-magic',
     title: 'Reverse Problem Solving',
     description: 'Handles problem definition, solution extraction, validation through forward simulation, and comprehensive output formatting with pattern analysis.'
   },
   {
+    icon: 'fa fa-eye',
     title: 'Utility & Display',
     description: 'Provides display utilities, output formatting, benchmarking tools, and comprehensive logging for performance analysis and debugging.'
   }
@@ -197,26 +202,32 @@ const encodingSteps = [
 
 const keyFeatures = [
   {
+    icon: 'fa fa-microchip',
     title: 'Multiple SAT Backends',
     description: 'Supports both CaDiCaL (single-threaded) and ParKissat-RS (multithreaded) solvers for optimal performance across different problem sizes'
   },
   {
+    icon: 'fa fa-tasks',
     title: 'Multithreaded Solving',
     description: 'ParKissat-RS backend provides parallel SAT solving capabilities for complex problems with large grids and multiple generations'
   },
   {
+    icon: 'fa fa-cogs',
     title: 'Multiple Solution Finding',
     description: 'Discovers all valid predecessor states up to a configurable limit using iterative SAT solving with hybrid encoding strategies'
   },
   {
+    icon: 'fa fa-check-circle',
     title: 'Solution Validation',
     description: 'Verifies found solutions by forward simulation to ensure correctness and detects known Game of Life patterns'
   },
   {
+    icon: 'fa fa-chart-line',
     title: 'Comprehensive Benchmarking',
     description: 'Built-in performance analysis tools to compare solver backends and optimization strategies across different problem complexities'
   },
   {
+    icon: 'fa fa-file-export',
     title: 'Multiple Output Formats',
     description: 'Supports text, JSON, and visual representations with evolution path visualization and pattern analysis'
   }
@@ -395,11 +406,11 @@ const chaosSteps = [
   },
   {
     id: 'step-gif',
-    navLabel: '6. Create GIF (Coming Soon)',
-    title: 'Create GIF (Coming Soon)',
+    navLabel: '6. Create GIF',
+    title: 'Create GIF',
     body: [
-      `<strong>TODO:</strong> I am planning on adding a function to turn this evolution into a downloadable GIF. The implementation approach is still being determined, but this feature will allow you to easily share your name emergence animation.`,
-      `This section will be updated once the GIF generation functionality is implemented.`
+      `<strong>Now Available:</strong> GIF recording is live. Use the <em>Record GIF</em> button above to capture your evolution and download an animated GIF.`,
+      `Tip: Start recording before running Multi-Step so the full emergence is captured. Higher generation counts mean longer GIFs.`
     ]
   },
   {
@@ -478,7 +489,7 @@ const resultsSections = [
 </SectionShell>
 
 <SectionShell id="implementation" title="Implementation: SAT-Based Reverse Solver" accent>
-  <SurfaceCard padding="lg" class="implementation-card">
+<SurfaceCard padding="lg" class="implementation-card">
     <h3>System Architecture</h3>
     <p class="implementation-text">
       The implementation is structured as a modular Rust application with the following core components:
@@ -486,14 +497,17 @@ const resultsSections = [
     <div class="architecture-grid">
       {systemComponents.map((item) => (
         <div class="architecture-component">
-          <h4>{item.title}</h4>
-          <p>{item.description}</p>
+          <span class={`feature-icon ${item.icon}`} aria-hidden="true"></span>
+          <div class="feature-copy">
+            <h4>{item.title}</h4>
+            <p>{item.description}</p>
+          </div>
         </div>
       ))}
     </div>
   </SurfaceCard>
 
-  <SurfaceCard padding="lg" class="implementation-card">
+<SurfaceCard padding="lg" class="implementation-card">
     <h3>SAT Encoding Strategy</h3>
     <p class="implementation-text">
       The solver employs a hybrid encoding approach that balances constraint complexity with solving efficiency:
@@ -512,19 +526,22 @@ const resultsSections = [
     </div>
   </SurfaceCard>
 
-  <SurfaceCard padding="lg" class="implementation-card">
+<SurfaceCard padding="lg" class="implementation-card">
     <h3>Key Features</h3>
     <div class="features-grid">
       {keyFeatures.map((feature) => (
         <div class="feature-item">
-          <h4>{feature.title}</h4>
-          <p>{feature.description}</p>
+          <span class={`feature-icon ${feature.icon}`} aria-hidden="true"></span>
+          <div class="feature-copy">
+            <h4>{feature.title}</h4>
+            <p>{feature.description}</p>
+          </div>
         </div>
       ))}
     </div>
   </SurfaceCard>
 
-  <SurfaceCard padding="lg" class="implementation-card">
+<SurfaceCard padding="lg" class="implementation-card">
     <h3>Command Line Interface</h3>
     <p class="implementation-text">
       The solver provides a comprehensive CLI with multiple commands for different use cases:
@@ -671,10 +688,21 @@ const resultsSections = [
 .architecture-grid {
   display: grid;
   gap: var(--space-lg, 1.5rem);
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .architecture-component {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-sm, 0.75rem);
+  align-items: start;
+}
+
+.architecture-component .feature-icon {
+  background: var(--color-fill-primary-soft);
+}
+
+.architecture-component .feature-copy {
   display: grid;
   gap: var(--space-2xs, 0.25rem);
 }
@@ -717,10 +745,28 @@ const resultsSections = [
 .features-grid {
   display: grid;
   gap: var(--space-lg, 1.5rem);
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .feature-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-sm, 0.75rem);
+  align-items: start;
+}
+
+.feature-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--color-fill-primary-soft);
+  color: var(--color-text-default);
+  font-size: 1rem;
+}
+
+.feature-copy {
   display: grid;
   gap: var(--space-2xs, 0.25rem);
 }
@@ -834,6 +880,7 @@ html[data-theme='dark'] :global(.math-term) {
 html[data-theme='dark'] .encoding-step__number {
   background: var(--color-fill-primary-strong);
 }
+
 
 :global(.formula__scroll .katex-display) {
   display: inline-flex;

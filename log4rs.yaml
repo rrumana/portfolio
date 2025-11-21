@@ -1,31 +1,42 @@
 refresh_rate: 30 seconds
 
 appenders:
-  stdout:
+  stdout_json:
     kind: console
     encoder:
-      pattern: "{d} - {l} - {m}{n}"
-  file:
+      kind: json
+  app_file:
     kind: file
     path: "logs/app.log"
     encoder:
-      pattern: "{d} - {l} - {m}{n}"
-  access:
+      kind: json
+  access_file:
     kind: file
     path: "logs/access.log"
     encoder:
-      pattern: "[{d}] {m}{n}"
+      kind: json
+  frontend_file:
+    kind: file
+    path: "logs/frontend.log"
+    encoder:
+      kind: json
 
 loggers:
   access:
     level: info
     appenders:
-      - access
+      - stdout_json
+      - access_file
+    additive: false
+  frontend:
+    level: debug
+    appenders:
+      - stdout_json
+      - frontend_file
     additive: false
 
 root:
   level: info
   appenders:
-    - stdout
-    - file
-
+    - stdout_json
+    - app_file

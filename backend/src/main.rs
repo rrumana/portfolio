@@ -3,6 +3,7 @@ use backend::game_of_life::{GameOfLife, parse_initial_state};
 use backend::routes::game_api;
 use log::info;
 use log4rs;
+use serde_json::json;
 use std::env;
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
@@ -12,7 +13,14 @@ use tokio::net::TcpListener;
 async fn main() {
     log4rs::init_file("log4rs.yaml", Default::default()).expect("Failed to initialize log4rs");
 
-    info!("Starting the portfolio server...");
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "server_start",
+            "message": "Starting the portfolio server",
+        })
+    );
 
     let initial_state = [
         "00100000000000000000",
@@ -52,7 +60,14 @@ async fn main() {
         .unwrap_or(8085);
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
     println!("Serving portfolio at http://{}", addr);
-    info!("Listening on {}", addr);
+    info!(
+        target: "app",
+        "{}",
+        json!({
+            "event": "listening",
+            "addr": addr.to_string()
+        })
+    );
 
     let listener = TcpListener::bind(&addr).await.unwrap();
     axum::serve(
