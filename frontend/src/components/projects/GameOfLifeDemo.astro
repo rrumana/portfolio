@@ -4,6 +4,7 @@ import SurfaceCard from '../ui/SurfaceCard.astro';
 import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 import Button from '../ui/Button.astro';
+import gameOfLifeScriptUrl from '../../scripts/game_of_life.js?url';
 
 export interface Props {
   id?: string;
@@ -11,7 +12,6 @@ export interface Props {
 
 const props = Astro.props as Props;
 const { id = 'demo' } = props;
-const golScript = Astro.resolve('../../scripts/game_of_life.js');
 ---
 <SectionShell
   id={id}
@@ -114,7 +114,7 @@ const golScript = Astro.resolve('../../scripts/game_of_life.js');
 </SectionShell>
 
 <script type="module" is:inline>
-  import { initGameOfLife } from '{golScript}';
+  import { initGameOfLife } from '{gameOfLifeScriptUrl}';
 
   initGameOfLife().catch((error) => {
     console.error('Failed to initialize Game of Life demo:', error);
