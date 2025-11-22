@@ -464,7 +464,11 @@ const resultsSections = [
   description="Performance notes brought over from the original write-up, organized into a reusable accordion pattern."
   accent
 >
-  <AccordionGroup title="Engine Architecture">
+  <div class="accordion-header">
+    <h3 class="accordion-title">Engine Architecture</h3>
+    <button class="accordion-toggle" data-target="optimizations" data-state="close">Open all</button>
+  </div>
+  <AccordionGroup>
     {optimizationSections.map((section, index) => (
       <Accordion title={section.title} number={index + 1}>
         <div class="section-text" set:html={section.content}></div>
@@ -479,7 +483,11 @@ const resultsSections = [
   description="The original MathJax-heavy proof has been migrated as-is using the new accordion components."
   accent
 >
-  <AccordionGroup title="Proof Structure">
+  <div class="accordion-header">
+    <h3 class="accordion-title">Proof Structure</h3>
+    <button class="accordion-toggle" data-target="proof" data-state="close">Open all</button>
+  </div>
+  <AccordionGroup>
     {proofSections.map((section, index) => (
       <Accordion title={section.title} number={index + 1}>
         <div class="section-text" set:html={section.content}></div>
@@ -487,6 +495,31 @@ const resultsSections = [
     ))}
   </AccordionGroup>
 </SectionShell>
+
+<script>
+  if (typeof document !== 'undefined') {
+    const toggleAccordions = (rootId: string, action: 'open' | 'close') => {
+      const root = document.getElementById(rootId);
+      if (!root) return;
+      const details = root.querySelectorAll('details.accordion');
+      details.forEach((el) => {
+        el.open = action === 'open';
+      });
+    };
+
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (!target.classList.contains('accordion-toggle')) return;
+      const rootId = target.dataset.target;
+      const state = target.dataset.state as 'open' | 'close' | undefined;
+      if (!rootId || !state) return;
+      const nextState = state === 'open' ? 'close' : 'open';
+      toggleAccordions(rootId, nextState);
+      target.dataset.state = nextState;
+      target.textContent = nextState === 'open' ? 'Close all' : 'Open all';
+    });
+  }
+</script>
 
 <SectionShell id="implementation" title="Implementation: SAT-Based Reverse Solver" accent>
 <SurfaceCard padding="lg" class="implementation-card">
@@ -879,6 +912,46 @@ html[data-theme='dark'] :global(.math-term) {
 
 html[data-theme='dark'] .encoding-step__number {
   background: var(--color-fill-primary-strong);
+}
+
+:global(.accordion-actions) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+:global(.accordion-toggle) {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xs) var(--space-sm);
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+:global(.accordion-toggle:hover),
+:global(.accordion-toggle:focus-visible) {
+  color: var(--color-text-default);
+  border-color: var(--color-border-strong);
+}
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.accordion-title {
+  margin: 0;
+}
+
+.accordion-header :global(.accordion-toggle) {
+  position: absolute;
+  top: clamp(1rem, 2vw, 2rem);
+  right: clamp(1rem, 2vw, 2rem);
 }
 
 
