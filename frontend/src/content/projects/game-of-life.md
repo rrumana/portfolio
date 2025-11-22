@@ -1,6 +1,6 @@
 ---
 title: "Reverse Game of Life"
-summary: "A Rust-powered exploration into inferring prior states of Conway's Game of Life using SAT solvers and WASM for interactive visualization."
+summary: "A full-stack experiment in reversing Conway's Game of Life: SIMD-optimized engines, SAT-based predecessors, and a browser playground powered by Rust + WASM."
 featured: true
 order: 1
 techStack:
@@ -8,30 +8,26 @@ techStack:
   - WebAssembly
   - SAT Solvers
   - TypeScript
+  - Vite / Astro
 heroImage: "/images/Gospers_glider_gun_crop.gif"
 heroImageDark: "/images/Gospers_glider_gun_crop_dark.gif"
 heroAlt: "Conway's Game of Life simulation"
 primaryAction:
-  label: "View project"
+  label: "Read more"
   href: "/projects/game-of-life"
 secondaryAction:
-  label: "Source code"
+  label: "View repo"
   href: "https://github.com/rrumana/game_of_life_reverse"
 ---
 ## Overview
-Reverse Game of Life turns Conway's classic cellular automaton on its head. Instead of only simulating
-future states, the project asks a harder question: *what grid could have produced this pattern?* The
-solution encodes the game rules as a SAT problem, leans on Rust for performance, and ships a WASM
-front end so visitors can experiment in the browser.
+Reverse Game of Life turns Conway's classic cellular automaton on its head. Instead of just pushing the grid forward, it asks the inverse question: *what state could have produced this pattern?* The stack spans several crates bundled with a Rust+WASM playground so you can watch your own phrases emerge from chaos in the browser.
 
 ## Highlights
-- Encodes cell transitions as boolean constraints and solves them via SAT to backtrack prior states.
-- Ships a WASM-powered playground where you can draw patterns, step forward or backward, and export
-  GIFs of the evolution.
-- Includes Rust crates for simulation, constraint building, and wasm-bindgen bindings to keep the
-  codebase modular and testable.
+- SIMD-bit-packed engine auto-detects hardware features, hitting 10,000x speedup over baseline.
+- SAT-based reverse solver supports both CaDiCaL and ParKissat backends, validated by forward engine.
+- Browser playground is WASM-first: draw, rewind, multi-step, convert text to grids, and export GIFs
 
 ## Lessons learned
-Modeling the automaton as SAT exposed performance trade-offs quickly: naïve encodings ballooned in
-size, so I leaned on Rust's iterators and memory ownership to keep generation tight. The WASM layer
-proved invaluable for debugging, because every change could be visualized immediately.
+- Constraint shape matters as much as solver choice: trimming clause duplication delivered order-of-magnitude speedup before any solver tuning.
+- In the engine portion bit-packing and SIMD delivered the biggest runtime gains
+- The SAT portion benefited more from clean encodings than exotic heuristics.

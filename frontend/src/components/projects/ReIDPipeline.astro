@@ -2,6 +2,7 @@
 import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 import SplitSection from '../layouts/SplitSection.astro';
+import SurfaceCard from '../ui/SurfaceCard.astro';
 import { Image } from 'astro:assets';
 
 export interface Props {
@@ -24,18 +25,32 @@ const { id, class: className = '', ...rest } = props;
       class="reid-pipeline__image"
     />
     <div class="reid-pipeline__content">
-      <Heading level={3} size="lg">Edge-first architecture</Heading>
+      <Heading level={3} size="lg" id="edge-architecture">Edge-first architecture</Heading>
       <Text>
-        EfficientNet-based embeddings run on NVIDIA Jetsons with TensorRT, pushing inference to the
-        edge so cameras coordinate without saturating the network.
+        EfficientNet-based embeddings run on NVIDIA Jetsons with TensorRT, pushing inference to the edge so cameras coordinate without saturating the network.
       </Text>
-      <Heading level={4} size="md">GitOps delivery</Heading>
+      <Heading level={4} size="md" id="delivery">GitOps delivery</Heading>
       <Text tone="muted">
-        Kustomize overlays and Argo CD keep every camera node in sync. Updating an on-device model is
-        as simple as merging a PR.
+        Kustomize overlays and Argo CD keep every camera node in sync. Updating an on-device model is as simple as merging a PR.
       </Text>
     </div>
   </SplitSection>
+
+  <div class="reid-grid">
+    <SurfaceCard padding="lg" class="panel">
+      <h3 id="results">Results</h3>
+      <p>
+        Multi-camera handoffs stayed smooth even under quantization, and swapping model weights across the fleet was a PR away thanks to GitOps.
+      </p>
+    </SurfaceCard>
+    <SurfaceCard padding="lg" class="panel">
+      <h3>Next Steps</h3>
+      <ul>
+        <li>Experiment with lighter backbones to cut power draw on edge devices.</li>
+        <li>Add telemetry to measure per-camera drift and re-train cadence.</li>
+      </ul>
+    </SurfaceCard>
+  </div>
 </section>
 
 <style>
@@ -51,5 +66,19 @@ const { id, class: className = '', ...rest } = props;
 
 html[data-theme='dark'] .reid-pipeline :global(img) {
   border: 1px solid var(--color-border-muted);
+}
+
+.reid-grid {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--color-text-muted);
+  display: grid;
+  gap: var(--space-2xs);
 }
 </style>

@@ -1,0 +1,77 @@
+---
+import SectionShell from '../layout/SectionShell.astro';
+import SurfaceCard from '../ui/SurfaceCard.astro';
+
+export interface Props {
+  id?: string;
+}
+
+const props = Astro.props as Props;
+const { id = 'lecture' } = props;
+---
+<SectionShell
+  id={id}
+  title="Rust Programming Lecture"
+  description="Three-hour live session for engineers who need a fast, opinionated on-ramp to Rust."
+  accent
+>
+  <div class="grid">
+    <SurfaceCard padding="lg" class="panel" id="format">
+      <h3>Format</h3>
+      <ul>
+        <li>Live-coding with Cargo workspaces and unit tests to show feedback loops.</li>
+        <li>Slides contrast Rust idioms with C++/Python to highlight when to use enums, pattern matching, or zero-cost abstractions.</li>
+        <li>Demos of borrow checker invariants and async/await without the footguns.</li>
+      </ul>
+    </SurfaceCard>
+    <SurfaceCard padding="lg" class="panel" id="curriculum">
+      <h3>Curriculum</h3>
+      <ul>
+        <li>Ownership, borrowing, lifetimes.</li>
+        <li>Error handling and ergonomics with enums and traits.</li>
+        <li>Async fundamentals and when to reach for it in systems work.</li>
+      </ul>
+    </SurfaceCard>
+    <SurfaceCard padding="lg" class="panel" id="status">
+      <h3>What’s Next</h3>
+      <p>
+        Recording the session with companion labs so teams can self-pace. The repo already contains slides, code samples, and facilitator notes.
+      </p>
+      <a class="panel-link" href="https://github.com/rrumana/rust_lecture" target="_blank" rel="noopener noreferrer">
+        View materials
+      </a>
+    </SurfaceCard>
+  </div>
+</SectionShell>
+
+<style>
+.grid {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.panel {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--color-text-muted);
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.panel-link {
+  font-weight: 600;
+  color: var(--color-primary-500);
+  text-decoration: none;
+}
+
+.panel-link:hover,
+.panel-link:focus-visible {
+  text-decoration: underline;
+}
+</style>

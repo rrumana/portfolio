@@ -1,0 +1,65 @@
+---
+import SectionShell from '../layout/SectionShell.astro';
+import SurfaceCard from '../ui/SurfaceCard.astro';
+
+export interface Props {
+  id?: string;
+}
+
+const props = Astro.props as Props;
+const { id = 'portfolio' } = props;
+---
+<SectionShell
+  id={id}
+  title="Portfolio Platform"
+  description="Rust backend, Astro front end, and WASM demos bundled into a single deployable stack."
+  accent
+>
+  <div class="grid">
+    <SurfaceCard padding="lg" class="panel" id="stack">
+      <h3>Stack</h3>
+      <ul>
+        <li>Axum backend serves APIs, static assets, and WASM bundles.</li>
+        <li>Astro for the front end, with content collections shared across pages.</li>
+        <li>WASM demos built from Rust crates and shipped alongside static output.</li>
+      </ul>
+    </SurfaceCard>
+    <SurfaceCard padding="lg" class="panel" id="delivery">
+      <h3>Delivery</h3>
+      <ul>
+        <li>Docker images bundle the backend binary with pre-rendered Astro assets.</li>
+        <li>CI runs `cargo fmt`, Clippy, and frontend builds before deployment.</li>
+        <li>k3s homelab deploys refreshed images via GitOps.</li>
+      </ul>
+    </SurfaceCard>
+    <SurfaceCard padding="lg" class="panel" id="features">
+      <h3>Features</h3>
+      <ul>
+        <li>Dark-mode aware design, sticky navs, and project-specific sidebars.</li>
+        <li>Interactive Game of Life WASM demo and SAT solver walk-throughs.</li>
+        <li>Shared typography and UI primitives to keep pages consistent.</li>
+      </ul>
+    </SurfaceCard>
+  </div>
+</SectionShell>
+
+<style>
+.grid {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.panel {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--color-text-muted);
+  display: grid;
+  gap: var(--space-2xs);
+}
+</style>

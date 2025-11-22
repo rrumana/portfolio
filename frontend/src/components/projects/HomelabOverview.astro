@@ -2,6 +2,8 @@
 import Heading from '../ui/Heading.astro';
 import Text from '../ui/Text.astro';
 import Badge from '../callouts/Badge.astro';
+import SectionShell from '../layout/SectionShell.astro';
+import SurfaceCard from '../ui/SurfaceCard.astro';
 
 export interface Props {
   id?: string;
@@ -12,40 +14,109 @@ const props = Astro.props as Props & { [key: string]: unknown };
 const { id, class: className = '', ...rest } = props;
 ---
 <section id={id} class={`homelab-overview ${className}`.trim()} {...rest}>
-  <div class="homelab-overview__grid">
-    <article class="panel">
-      <Badge tone="accent">Cluster</Badge>
-      <Heading level={3} size="lg">Two-node k3s + Longhorn</Heading>
-      <Text>
-        k3s keeps the control plane lightweight while Longhorn replicates every PVC, giving me
-        instant failover for HAProxy, LibreChat, Vaultwarden, and more.
-      </Text>
-    </article>
-    <article class="panel">
-      <Badge tone="neutral">GitOps</Badge>
-      <Heading level={3} size="lg">Argo CD app-of-apps</Heading>
-      <Text>
-        Every platform service and application is reconciled from Git. The <code>platform/test</code>
-        workloads smoke-test new nodes before promotion.
-      </Text>
-    </article>
-    <article class="panel">
-      <Badge tone="accent">AI Stack</Badge>
-      <Heading level={3} size="lg">LibreChat + llama.cpp</Heading>
-      <Text>
-        Swapped out Ollama for a multi-node friendly llama.cpp deployment backed by MongoDB and
-        Qdrant so conversational memory survives node loss.
-      </Text>
-    </article>
-  </div>
-  <div class="homelab-overview__note">
-    <Heading level={3} size="lg">Ops snapshot</Heading>
-    <Text tone="muted">
-      MetalLB advertises services directly to my home network, HAProxy terminates TLS sourced from
-      cert-manager, and nightly Longhorn backups land on the NAS. The result is a homelab that feels
-      like a production platform without losing tinkering power.
-    </Text>
-  </div>
+  <SectionShell id="architecture" title="Architecture Snapshot" accent>
+    <div class="homelab-overview__grid">
+      <article class="panel">
+        <Badge tone="accent">Cluster</Badge>
+        <Heading level={3} size="lg">Longhorn</Heading>
+        <Text>
+          Longhorn replicates every PVC on both nodes and backups to my NAS, giving me instant failover for HAProxy, LibreChat, Vaultwarden, and more.
+        </Text>
+      </article>
+      <article class="panel">
+        <Badge tone="neutral">GitOps</Badge>
+        <Heading level={3} size="lg">ArgoCD</Heading>
+        <Text>
+          Every platform service and application is reconciled from Git. The <code>platform/test</code> workloads smoke-test new nodes before promotion.
+        </Text>
+      </article>
+      <article class="panel">
+        <Badge tone="accent">AI Stack</Badge>
+        <Heading level={3} size="lg">LibreChat + llama.cpp</Heading>
+        <Text>
+          Swapped out Ollama for a multi-node friendly llama.cpp deployment backed by Postgres and Qdrant so conversational memory survives node loss.
+        </Text>
+      </article>
+      <article class="panel">
+        <Badge tone="neutral">Network</Badge>
+        <Heading level={3} size="lg">Cloudflare → HAProxy → Services</Heading>
+        <Text>
+          MetalLB advertises services directly to my LAN, HAProxy terminates TLS from cert-manager, and ingress classes split public vs. private apps.
+        </Text>
+      </article>
+    </div>
+  </SectionShell>
+
+  <SectionShell id="operations" title="Operational Rhythm" accent>
+    <div class="homelab-layout">
+      <div class="homelab-card">
+        <h3>Day-to-Day Flow</h3>
+        <ul>
+          <li>Edit manifests ➜ push ➜ Argo CD reconciles within minutes.</li>
+          <li>Smoke-test new nodes and ingress paths with <code>platform/test</code>.</li>
+          <li>Storage migrations, node maintenance, and upgrades happen with no downtime.</li>
+        </ul>
+      </div>
+      <div class="homelab-card">
+        <h3>Why It Works</h3>
+        <ul>
+          <li>App-of-apps structure separates platform, apps, and infra.</li>
+          <li>PDBs, HPAs, and anti-affinity rules protect critical workloads.</li>
+          <li>Ingress templates and ADRs make change history explicit.</li>
+        </ul>
+      </div>
+    </div>
+  </SectionShell>
+
+  <SectionShell id="services" title="What Runs Here" accent>
+    <div class="homelab-services">
+      <SurfaceCard padding="lg" class="homelab-service-card">
+        <h3>Platform Essentials</h3>
+        <p>Argo CD, cert-manager, HAProxy, MetalLB, Longhorn, Uptime Kuma, and coredns form the backbone services.</p>
+      </SurfaceCard>
+      <SurfaceCard padding="lg" class="homelab-service-card">
+        <h3>AI & Development</h3>
+        <p><code>llama.cpp</code> handles inference, LibreChat runs across replicas, Postgres + Qdrant back memory.</p>
+      </SurfaceCard>
+      <SurfaceCard padding="lg" class="homelab-service-card">
+        <h3>Productivity & Security</h3>
+        <p>Vaultwarden, Nextcloud + Collabora, and Immich replace third-party SaaS.</p>
+      </SurfaceCard>
+      <SurfaceCard padding="lg" class="homelab-service-card">
+        <h3>Media & Entertainment</h3>
+        <p>Plex, qBittorrent behind Gluetun, and a full *arr stack keep the library fresh.</p>
+      </SurfaceCard>
+    </div>
+  </SectionShell>
+
+  <SectionShell id="resilience" title="What's next?" accent>
+    <div class="homelab-metrics">
+      <div class="metric">
+        <span class="metric-label">Third Node</span>
+        <p>For added capacity, reliability, and better failover behavior with HA control plane.</p>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Migration to Rook/Ceph</span>
+        <p>Switching to Rook/Ceph for greater scalability and resilience.</p>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Expansion of services</span>
+        <p>Further justify this project by using it to replace as many SaaS services in my life as possible.</p>
+      </div>
+      <div class="metric">
+        <span class="metric-label">SSO integration</span>
+        <p>Integrate identity services into cluster for SSO access with TFA instead of per service passwords.</p>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Increased visibility and control</span>
+        <p>Time investment into logging and metrics analysis infrastructure for better monitoring and alerting.</p>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Expand service to family and friends</span>
+        <p>Ultimately provide access to trusted individuals for shared resources, services, and secure backups.</p>
+      </div>
+    </div>
+  </SectionShell>
 </section>
 
 <style>
@@ -82,6 +153,76 @@ const { id, class: className = '', ...rest } = props;
 
 html[data-theme='dark'] .panel,
 html[data-theme='dark'] .homelab-overview__note {
+  background: var(--color-surface-200);
+  border: 1px solid var(--color-border-muted);
+}
+
+.panel :global(.badge) {
+  color: var(--color-text-default);
+}
+
+html[data-theme='dark'] .panel :global(.badge) {
+  color: #fff;
+}
+
+.homelab-layout {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.homelab-card {
+  background: var(--color-surface-100);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border-subtle);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.homelab-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--color-text-muted);
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.homelab-services {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.homelab-service-card {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.homelab-metrics {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.metric {
+  display: grid;
+  gap: var(--space-2xs);
+  background: var(--color-surface-100);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+}
+
+.metric-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-subtle);
+}
+
+html[data-theme='dark'] .homelab-card,
+html[data-theme='dark'] .metric {
   background: var(--color-surface-200);
   border: 1px solid var(--color-border-muted);
 }

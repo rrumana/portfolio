@@ -1,0 +1,58 @@
+---
+import SectionShell from '../layout/SectionShell.astro';
+import SurfaceCard from '../ui/SurfaceCard.astro';
+
+export interface Props {
+  id?: string;
+}
+
+const props = Astro.props as Props;
+const { id = 'neovim' } = props;
+---
+<SectionShell id={id} title="Editor Build: Neovim" description="Fast, observable, and ergonomic—built to live in the terminal every day." accent>
+  <div class="grid">
+    <SurfaceCard padding="lg" class="panel" id="format">
+      <h3>Philosophy</h3>
+      <p>
+        Lean Lua modules, predictable startup, and intentional defaults. Everything is documented so future tweaks stay deliberate instead of accidental.
+      </p>
+    </SurfaceCard>
+    <SurfaceCard padding="lg" class="panel" id="curriculum">
+      <h3>Daily Toolkit</h3>
+      <ul>
+        <li>Treesitter for structural editing and incremental selection.</li>
+        <li>LSP client wrappers with consistent diagnostics and formatting.</li>
+        <li>Telescope pickers and a command palette for fast navigation.</li>
+      </ul>
+    </SurfaceCard>
+    <SurfaceCard padding="lg" class="panel" id="status">
+      <h3>Quality of Life</h3>
+      <ul>
+        <li>Statusline telemetry for mode, LSP, and git state.</li>
+        <li>Ergonomic keymaps and window management that make pairing painless.</li>
+        <li>Startup profiling baked in to keep the config honest as it grows.</li>
+      </ul>
+    </SurfaceCard>
+  </div>
+</SectionShell>
+
+<style>
+.grid {
+  display: grid;
+  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.panel {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.panel ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--color-text-muted);
+  display: grid;
+  gap: var(--space-2xs);
+}
+</style>
