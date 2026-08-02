@@ -1,0 +1,107 @@
+---
+export interface Props {
+  title: string;
+  summary: string;
+  href: string;
+  kind: 'whitepaper' | 'academic-report' | 'working-paper';
+  status: string;
+  displayDate: string;
+  authors: readonly string[];
+  topics?: readonly string[];
+  pdfUrl?: string;
+}
+
+const {
+  title,
+  summary,
+  href,
+  kind,
+  status,
+  displayDate,
+  authors,
+  topics = [],
+  pdfUrl,
+} = Astro.props as Props;
+
+const kindLabel = {
+  whitepaper: 'Whitepaper',
+  'academic-report': 'Academic report',
+  'working-paper': 'Working paper',
+}[kind] ?? kind;
+---
+
+<article class="research-card surface-panel">
+  <div class="research-card__meta">
+    <span>{kindLabel}</span>
+    <span>{status}</span>
+    <time>{displayDate}</time>
+  </div>
+
+  <div class="research-card__body">
+    <h3><a href={href}>{title}</a></h3>
+    <p class="research-card__authors">{authors.join(', ')}</p>
+    <p>{summary}</p>
+  </div>
+
+  {topics.length > 0 && (
+    <ul class="pill-list" aria-label="Research topics">
+      {topics.map((topic) => <li>{topic}</li>)}
+    </ul>
+  )}
+
+  <div class="research-card__actions">
+    <a class="button-link" href={href}>Read overview</a>
+    {pdfUrl && <a class="button-link button-link--ghost" href={pdfUrl}>Download PDF</a>}
+  </div>
+</article>
+
+<style>
+  .research-card {
+    display: grid;
+    gap: 1rem;
+    padding: 1.2rem;
+    align-content: start;
+  }
+
+  .research-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.85rem;
+    color: var(--color-text-subtle);
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .research-card__meta span:not(:last-child)::after {
+    content: '/';
+    margin-left: 0.85rem;
+    color: var(--color-border-strong);
+  }
+
+  .research-card__body {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .research-card h3 {
+    font-family: var(--font-family-sans);
+    font-size: clamp(1.3rem, 0.8vw + 1rem, 1.75rem);
+  }
+
+  .research-card h3 a:hover,
+  .research-card h3 a:focus-visible {
+    color: var(--color-accent-500);
+  }
+
+  .research-card__authors {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .research-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

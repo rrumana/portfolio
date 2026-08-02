@@ -1,0 +1,59 @@
+---
+import Callout from '../callouts/Callout.astro';
+import MathBlock from '../patterns/MathBlock.astro';
+---
+<section id="solver-notes" class="section-grid">
+  <div>
+    <p class="eyebrow">Technical notes</p>
+    <h2>Why reversal is interesting</h2>
+    <p>
+      Forward simulation is cheap. Reversal is not. The constraint system has to explain every cell
+      in generation <code>t + 1</code> in terms of its neighbors in generation <code>t</code>,
+      which turns a simple local rule into a global search problem.
+    </p>
+  </div>
+
+  <MathBlock
+    expression="\mathrm{alive}_{t+1}(x, y) \iff \left(\mathrm{alive}_{t}(x, y) \land n_t(x, y) \in \{2,3\}\right) \lor \left(\neg \mathrm{alive}_{t}(x, y) \land n_t(x, y)=3\right)"
+    caption="The forward rule is compact. The search space for valid predecessors is not."
+  />
+
+  <Callout title="What the browser demo proves" variant="info">
+    <p>
+      The playground is intentionally scoped to forward evolution, state editing, and pattern import/export.
+      The reverse solver stays outside the browser because the interesting work is in SAT encoding and solver strategy,
+      not in pretending every expensive operation belongs client-side.
+    </p>
+  </Callout>
+
+  <div class="notes-grid">
+    <article class="surface-panel notes-card">
+      <h3>Engine track</h3>
+      <p>
+        The performance work lives in grid layout, bit packing, SIMD-aware operations, and keeping the hot path tight
+        enough that WASM remains responsive even with richer browser controls.
+      </p>
+    </article>
+    <article class="surface-panel notes-card">
+      <h3>Solver track</h3>
+      <p>
+        The reverse side benefits more from clean encodings than from forcing clever heuristics too early. Clause shape,
+        pruning, and validation were more important than exotic frontend gimmicks.
+      </p>
+    </article>
+  </div>
+</section>
+
+<style>
+.notes-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.notes-card {
+  padding: 1.2rem;
+  display: grid;
+  gap: 0.75rem;
+}
+</style>

@@ -1,128 +1,263 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PageSection from '../components/shell/PageSection.astro';
-import Text from '../components/ui/Text.astro';
-import Button from '../components/ui/Button.astro';
 import ProjectCard from '../components/cards/ProjectCard.astro';
-import CallToAction from '../components/callouts/CallToAction.astro';
-import SplitSection from '../components/layouts/SplitSection.astro';
-import Hero from '../components/sections/Hero.astro';
+import ResearchCard from '../components/cards/ResearchCard.astro';
+import MetricStrip from '../components/patterns/MetricStrip.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteConfig } from '../site.config';
+import { featuredProjects } from '../utils/projects';
 
-const navLinks = siteConfig.navigation.home;
-const resumeUrl = siteConfig.contact.resumeUrl;
-const emailLink = `mailto:${siteConfig.contact.email}`;
-const githubLink =
-  siteConfig.social.find((link) => link.label === 'GitHub')?.href ?? 'https://github.com/rrumana';
-
-const projects = await getCollection('projects');
-projects.sort((a, b) => a.data.order - b.data.order);
+const projects = featuredProjects(await getCollection('projects')).slice(0, 3);
+const research = (await getCollection('research'))
+  .sort((left, right) => left.data.featuredRank - right.data.featuredRank)
+  .slice(0, 2);
 ---
-<BaseLayout
-  title="Ryan Rumana | Portfolio"
-  description="Software engineer and platform builder focused on Rust, Kubernetes, and resilient homelab infrastructure."
-  navLinks={navLinks}
->
-  <main>
-    <Hero
-      eyebrow="Machine Learning Engineer"
-      title="Hi, I'm Ryan Rumana"
-      description="I build resilient systems that blend Rust, Kubernetes, and automation—powering production-ready homelabs, WASM experiences, and AI workloads at the edge."
-      primaryCta={{ label: 'Get in touch', href: '#contact' }}
-      secondaryCta={{ label: 'Download résumé', href: resumeUrl }}
-    />
-
-    <PageSection
-      id="about"
-      title="About"
-      description="Engineer, adventurer, and perpetual learner—rooted in Rust and inspired by the outdoors."
-      variant="alt"
-    >
-      <SplitSection>
-        <picture slot="media" class="about__image">
-          <source srcset="/images/profile.webp" type="image/webp" />
-          <img
-            src="/images/profile.png"
-            alt="Ryan Rumana portrait"
-            width="450"
-            height="350"
-            loading="lazy"
-          />
-        </picture>
-        <div class="about__copy">
-          <Text>
-            I'm a software engineer with roots in Tallahassee and degrees in Computer Science and Machine Learning from
-            the Colorado School of Mines. I thrive on building—from Rust tooling and Kubernetes platforms to custom PCs
-            and interactive experiments.
-          </Text>
-          <Text>
-            When I'm not experimenting with infrastructure, you'll likely find me outside: hiking, snowboarding, or training
-            for triathlons. That curiosity drives this site, where I share projects that combine performance, automation,
-            and thoughtful design.
-          </Text>
-          <div class="about__actions">
-            <Button href={resumeUrl}>View résumé</Button>
-            <Button href={emailLink} variant="secondary">Contact</Button>
+<BaseLayout>
+  <main id="main-content">
+    <section class="section-shell home-hero">
+      <div class="container home-hero__grid">
+        <div class="home-hero__copy">
+          <p class="eyebrow">{siteConfig.hero.eyebrow}</p>
+          <h1>{siteConfig.hero.title}</h1>
+          <p class="home-hero__lede">{siteConfig.hero.description}</p>
+          <div class="home-hero__actions">
+            <a class="button-link" href={siteConfig.hero.primaryCta.href}>{siteConfig.hero.primaryCta.label}</a>
+            <a class="button-link button-link--ghost" href={siteConfig.hero.secondaryCta.href}>
+              {siteConfig.hero.secondaryCta.label}
+            </a>
           </div>
         </div>
-      </SplitSection>
-    </PageSection>
 
-    <PageSection
-      id="projects"
-      title="Projects"
-      description="Every build I'm actively maintaining, from homelab platforms to tooling experiments."
-    >
-      <div class="project-stack">
-        {projects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            summary={project.data.summary}
-            techStack={project.data.techStack}
-            media={project.data.heroImage}
-            mediaAlt={project.data.heroAlt}
-            cta={project.data.primaryAction}
-            secondaryCta={project.data.secondaryAction}
-          />
-        ))}
+        <aside class="home-hero__rail surface-panel">
+          <div class="home-hero__rail-block">
+            <p class="eyebrow">Current direction</p>
+            <ul class="home-hero__focus">
+              {siteConfig.focusAreas.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+        </div>
+        <div class="home-hero__rail-block">
+          <p class="eyebrow">How to explore</p>
+          <p class="home-hero__note">
+            Start with the selected projects below, then open a case study for architecture notes, implementation
+            choices, interactive demos, and supporting references.
+          </p>
+        </div>
+      </aside>
       </div>
-    </PageSection>
+    </section>
 
-    <CallToAction
-      id="contact"
-      eyebrow="Let’s talk"
-      title="Interested in collaborating or trading homelab war stories?"
-      description="I’m always open to comparing setups, chatting about Rust, or teaming up on platform engineering projects."
-      actions={[
-        { label: 'Email me', href: emailLink },
-        { label: 'View GitHub', href: githubLink, variant: 'secondary' },
-      ]}
-    />
+    <section class="section-shell">
+      <div class="container section-grid">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Selected work</p>
+            <h2>Selected projects</h2>
+          </div>
+          <a class="button-link button-link--ghost" href="/projects/">View all projects</a>
+        </div>
 
-    <div aria-hidden="true"></div>
+        <div class="project-list project-list--home">
+          {projects.map((project) => (
+            <ProjectCard
+              title={project.data.title}
+              summary={project.data.summaryShort}
+              href={`/projects/${project.id}/`}
+              year={project.data.year}
+              status={project.data.status}
+              role={project.data.role}
+              impact={project.data.impact}
+              techStack={project.data.techStack}
+              media={project.data.heroImage}
+              mediaDark={project.data.heroImageDark}
+              mediaAlt={project.data.heroAlt}
+              repoUrl={project.data.repoUrl}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell home-research">
+      <div class="container section-grid">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Research</p>
+            <h2>Whitepapers and technical reports</h2>
+          </div>
+          <a class="button-link button-link--ghost" href="/research/">View all research</a>
+        </div>
+
+        <div class="research-list research-list--home">
+          {research.map((paper) => (
+            <ResearchCard
+              title={paper.data.shortTitle}
+              summary={paper.data.summary}
+              href={`/research/${paper.id}/`}
+              kind={paper.data.kind}
+              status={paper.data.status}
+              displayDate={paper.data.displayDate}
+              authors={paper.data.authors.map((author) => author.name)}
+              topics={paper.data.topics}
+              pdfUrl={paper.data.pdfUrl}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell home-notes">
+      <div class="container home-notes__section">
+        <div class="home-notes__copy">
+          <p class="eyebrow">Engineering approach</p>
+          <h2>Systems thinking, operational discipline, and clear communication.</h2>
+          <p>
+            I care about the full path from an idea to a dependable system: explicit tradeoffs, reproducible builds,
+            observable operation, and documentation that makes the result easier to maintain.
+          </p>
+        </div>
+        <div class="home-notes__row">
+          <MetricStrip items={siteConfig.homeMetrics} />
+          <div class="surface-panel writing-card">
+            <p class="eyebrow">Technical communication</p>
+            <p>
+              Technical writing is part of the engineering work. Research entries preserve authorship, citations,
+              source artifacts, and limitations; case studies connect those results back to working software.
+            </p>
+            <p>
+              The Reverse Game of Life work demonstrates that approach through a formal complexity result, a
+              reproducible proof artifact, and a working WebAssembly sandbox.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 </BaseLayout>
 
 <style>
-.about__copy {
+.home-hero__grid {
   display: grid;
-  gap: var(--space-md);
+  gap: 2rem;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  align-items: start;
 }
 
-.about__actions {
+.home-hero__copy {
+  display: grid;
+  gap: 1.35rem;
+  max-width: 44rem;
+}
+
+.home-hero__lede {
+  font-size: clamp(1.08rem, 0.45vw + 1rem, 1.28rem);
+  max-width: 40rem;
+  color: var(--color-text-muted);
+}
+
+.home-hero__actions {
   display: flex;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-top: var(--space-md);
 }
 
-.project-stack {
+.home-hero__rail {
+  padding: 1.25rem;
   display: grid;
-  gap: var(--space-2xl);
+  gap: 1.1rem;
 }
 
-.project-stack > * {
-  width: 100%;
+.home-hero__rail-block {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.home-hero__focus {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.home-hero__focus li {
+  max-width: none;
+  padding: 0.8rem 0.9rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-surface-strong) 94%, transparent);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.home-hero__note {
+  color: var(--color-text-muted);
+}
+
+.section-header {
+  display: grid;
+  gap: 1rem;
+}
+
+.section-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+.project-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.research-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-list--home {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.research-list--home {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.home-notes__section,
+.home-notes__copy {
+  display: grid;
+  gap: 1rem;
+}
+
+.home-notes__row {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  align-items: start;
+}
+
+.writing-card {
+  padding: 1.2rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+@media (max-width: 980px) {
+  .home-hero__grid,
+  .home-notes__row,
+  .section-header {
+    grid-template-columns: 1fr;
+  }
+
+  .project-list--home {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .research-list--home {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .project-list--home {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

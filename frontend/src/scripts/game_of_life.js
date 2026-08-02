@@ -196,6 +196,7 @@ let fileInput, fileUploadBtn, downloadBtn;
 let gameInstance = null;
 let gridHistory = [];
 let multiStepActive = false;
+let themeObserverInstalled = false;
 
 // GIF recording state
 let gifRecorder = null;
@@ -263,6 +264,12 @@ function setupEnhancedEventListeners() {
     if (dragDropArea) {
         dragDropArea.addEventListener("dragover", handleDragOver);
         dragDropArea.addEventListener("drop", handleFileDrop);
+        dragDropArea.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                fileInput.click();
+            }
+        });
     }
 
     // Download
@@ -270,6 +277,7 @@ function setupEnhancedEventListeners() {
 
     // Canvas mouse events for cell toggling
     canvas.addEventListener("mousedown", handleMouseDown);
+    canvas.addEventListener("keydown", handleCanvasKeyDown);
 }
 
 // Generate ASCII art from text input
@@ -314,6 +322,36 @@ async function handleFileDrop(event) {
     const files = event.dataTransfer.files;
     if (files.length > 0) {
         await processFile(files[0]);
+    }
+}
+
+let keyboardCell = { row: 0, col: 0 };
+
+function handleCanvasKeyDown(event) {
+    const directions = {
+        ArrowUp: [-1, 0],
+        ArrowDown: [1, 0],
+        ArrowLeft: [0, -1],
+        ArrowRight: [0, 1],
+    };
+
+    if (directions[event.key]) {
+        event.preventDefault();
+        const [rowDelta, colDelta] = directions[event.key];
+        keyboardCell.row = Math.max(0, Math.min(GRID_HEIGHT - 1, keyboardCell.row + rowDelta));
+        keyboardCell.col = Math.max(0, Math.min(GRID_WIDTH - 1, keyboardCell.col + colDelta));
+        canvas.setAttribute(
+            "aria-label",
+            `Game of Life grid. Selected cell row ${keyboardCell.row + 1}, column ${keyboardCell.col + 1}.`,
+        );
+        return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        gameInstance.toggle_cell(keyboardCell.row, keyboardCell.col);
+        drawGrid();
+        updateInfo();
     }
 }
 
@@ -421,8 +459,12 @@ function drawGrid() {
     
     // Get current state
     const state = gameInstance.get_state();
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const strokeColor = isDark ? "#30363d" : "#d0d7de";
+    const liveColor = isDark ? "#3fb950" : "#1f2328";
+    const deadColor = isDark ? "#0d1117" : "#ffffff";
     
-    ctx.strokeStyle = "#ccc";
+    ctx.strokeStyle = strokeColor;
     ctx.lineWidth = 1;
 
     for (let row = 0; row < GRID_HEIGHT; row++) {
@@ -431,11 +473,34 @@ function drawGrid() {
             const x = col * CELL_SIZE;
             const y = row * CELL_SIZE;
             
-            ctx.fillStyle = cell === 1 ? "#000" : "#fff";
+            ctx.fillStyle = cell === 1 ? liveColor : deadColor;
             ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
             ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
         }
     }
+}
+
+function installThemeObserver() {
+    if (themeObserverInstalled) return;
+    themeObserverInstalled = true;
+
+    const root = document.documentElement;
+    const redraw = () => {
+        if (gameInstance) {
+            drawGrid();
+        }
+    };
+
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
+                redraw();
+                break;
+            }
+        }
+    });
+
+    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
 }
 
 // Update info displays
@@ -564,11 +629,12 @@ async function startRecording() {
         
         // Start recording with canvas dimensions and frame delay
         await gifRecorder.start_recording(canvas.width, canvas.height, frameDelay);
-        
+
+        isRecording = true;
+
         // Capture the initial frame from canvas
         await captureCanvasFrame();
-        
-        isRecording = true;
+
         recordBtn.textContent = "Stop Recording";
         recordBtn.style.backgroundColor = "#dc3545"; // Red color
         
@@ -970,5 +1036,6 @@ window.toggleResultsAnalysis = toggleResultsAnalysis;
 
 // Initialize simulation on page load
 export async function initGameOfLife() {
+    installThemeObserver();
     await initializeSimulation();
 }

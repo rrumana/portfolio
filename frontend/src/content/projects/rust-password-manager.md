@@ -1,35 +1,40 @@
 ---
 title: "Rust Password Manager"
-summary: "Self-hosted credential vault that follows NIST SP 800-63 guidance, leans on Rust safety, and experiments with WebAuthn flows."
-featured: true
+summary: "An experimental Rust CLI for encrypted credential storage, master-password key derivation, and local vault management."
+summaryShort: "Rust credential manager prototype focused on encrypted local storage and key derivation."
+kind: "project"
+status: "archive"
+year: 2024
+featured: false
+featuredRank: 9
 order: 7
+role: "Rust learning-project author"
+impact: "Explored local key derivation and encrypted persistence while exposing why security-sensitive prototypes require careful review."
+audience: "technical"
 techStack:
   - Rust
-  - Axum
-  - PostgreSQL
+  - CLI
   - Argon2
-  - WebAuthn
+  - HKDF
+  - AES-256-GCM-SIV
+  - SQLite
+  - rusqlite
+  - Serde
+  - rpassword
 heroImage: "/images/password.png"
 heroAlt: "Password manager interface concept"
+repoUrl: "https://github.com/rrumana/password-manager"
 primaryAction:
-  label: "Project page"
-  href: "/projects/rust-password-manager"
-secondaryAction:
   label: "View repository"
   href: "https://github.com/rrumana/password-manager"
 ---
-## Project goals
-I wanted to explore what it would take to build a trustworthy password manager from the ground up. That meant leaning on Rust's safety guarantees while following the guidance from NIST SP 800-63 for credential storage, MFA flows, and recovery paths.
+## Overview
+This project is a Rust CLI for storing credentials in an encrypted local vault. The current implementation covers account creation,
+master-password login, per-user key derivation, and save/load flows around a SQLite-backed password store.
 
-## Architecture sketch
-- Axum API layers enforce rate limits, session handling, and structured auditing.
-- Credentials are wrapped in envelope encryption, using Argon2id for key derivation and per-record nonces for defense in depth.
-- PostgreSQL stores encrypted blobs alongside metadata so revocation, rotation, and device sync stay manageable.
+## Approach
+Authentication starts with a master password. The application derives keys with Argon2 and HKDF, generates a symmetric vault key,
+and encrypts the database payload with AES-256-GCM-SIV. The data model is intentionally small so the security boundaries remain visible.
 
-## Current status
-The project is still in motion: I'm integrating WebAuthn support and threat-modeling the recovery voice. Even unfinished, the repo documents the cryptographic decisions and lays the groundwork for a fully self-hosted deployment.
-
-## Inspiration
-This effort draws heavily from the [Bitwarden security whitepaper](https://bitwarden.com/help/bitwarden-security-white-paper/),
-which outlines threat models, encryption design, and operational processes for a mature credential
-platform.
+## Status
+This is an archived learning prototype, not a production password manager. The repository contains unresolved security and persistence issues and should not be used to store real credentials. It remains public because the implementation is useful context for discussing key management mistakes and the review standard security-sensitive software requires.

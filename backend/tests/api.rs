@@ -4,10 +4,22 @@ use axum::{
     http::{Request, StatusCode},
 };
 use backend::game_of_life::{GameOfLife, HEIGHT, WIDTH};
+use backend::middleware::RequestContext;
 use backend::routes::game_api;
 use serde_json::Value;
 use std::sync::{Arc, Mutex};
 use tower::util::ServiceExt; // Bring oneshot into scope
+
+fn test_context() -> RequestContext {
+    RequestContext {
+        request_id: "test-request".to_string(),
+        client_id: "test-client".to_string(),
+        path: "/api/game-of-life".to_string(),
+        user_agent: "test-agent".to_string(),
+        referer: "-".to_string(),
+        ip: "127.0.0.1".to_string(),
+    }
+}
 
 #[tokio::test]
 async fn test_get_state_endpoint() {
@@ -18,6 +30,7 @@ async fn test_get_state_endpoint() {
     // Build the router with the GET endpoint.
     let app = game_api()
         .route("/dummy", axum::routing::get(|| async { "dummy" })) // dummy route if needed
+        .layer(axum::extract::Extension(test_context()))
         .layer(axum::extract::Extension(game_state));
 
     // Create a request to the /state endpoint.
@@ -46,6 +59,7 @@ async fn test_step_endpoint() {
 
     let app = game_api()
         .route("/dummy", axum::routing::get(|| async { "dummy" }))
+        .layer(axum::extract::Extension(test_context()))
         .layer(axum::extract::Extension(game_state));
 
     let response = app
@@ -69,6 +83,7 @@ async fn test_toggle_endpoint() {
 
     let app = game_api()
         .route("/dummy", axum::routing::get(|| async { "dummy" }))
+        .layer(axum::extract::Extension(test_context()))
         .layer(axum::extract::Extension(game_state));
 
     let uri = "/toggle?row=5&col=5";

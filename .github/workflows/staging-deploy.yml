@@ -1,59 +1,168 @@
-name: Build and Deploy Staging
+name: Validate and Publish Staging
 
 on:
+  pull_request:
+    branches:
+      - v2
   push:
     branches:
       - v2
   workflow_dispatch:
 
+concurrency:
+  group: portfolio-staging-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
-  packages: write
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/portfolio:staging
-  HAS_KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_STAGING != '' }}
-  GHCR_USERNAME: ${{ secrets.GHCR_USERNAME || github.actor }}
-  GHCR_TOKEN: ${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}
-  USE_LOCAL_KUBECONFIG: true
+  IMAGE_REPOSITORY: harbor.rcrumana.xyz/apps-private/portfolio
   BUILDKIT_PROGRESS: plain
 
 jobs:
-  build-and-push:
+  validate-frontend:
+    name: Validate frontend
     runs-on: [self-hosted, portfolio-dev]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Audit frontend dependencies
+        working-directory: frontend
+        run: npm audit --audit-level=high
+
+      - name: Run Astro checks
+        working-directory: frontend
+        run: npm run check
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+  validate-rust:
+    name: Validate ${{ matrix.component }}
+    runs-on: [self-hosted, portfolio-dev]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - component: backend
+            target: backend-validator
+          - component: WebAssembly
+            target: wasm-validator
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
-      - name: Log in to GHCR
-        uses: docker/login-action@v3
+      - name: Run ${{ matrix.component }} validation
+        uses: docker/build-push-action@v7
         with:
-          registry: ghcr.io
-          username: ${{ env.GHCR_USERNAME }}
-          password: ${{ env.GHCR_TOKEN }}
+          context: .
+          file: Dockerfile.staging
+          target: ${{ matrix.target }}
+          push: false
+          cache-from: type=gha,scope=portfolio-${{ matrix.target }}
+          cache-to: type=gha,mode=max,scope=portfolio-${{ matrix.target }}
 
-      - name: Build and push staging image
-        uses: docker/build-push-action@v5
+  publish:
+    name: Publish immutable staging image
+    if: github.event_name != 'pull_request'
+    needs:
+      - validate-frontend
+      - validate-rust
+    runs-on: [self-hosted, portfolio-dev]
+    outputs:
+      image_tag: ${{ steps.release.outputs.image_tag }}
+      image_digest: ${{ steps.release.outputs.image_digest }}
+      image_ref: ${{ steps.release.outputs.image_ref }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to Harbor
+        uses: docker/login-action@v4
+        with:
+          registry: harbor.rcrumana.xyz
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
+
+      - name: Build and push immutable image
+        id: image
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: Dockerfile.staging
           push: true
-          tags: ${{ env.IMAGE_NAME }}
-          no-cache: true
-          network: host
+          tags: >-
+            ${{ env.IMAGE_REPOSITORY }}:sha-${{ github.sha }}-run-${{ github.run_id }}-${{ github.run_attempt }}
+          labels: |
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          provenance: mode=max
+          sbom: true
+          cache-from: type=gha,scope=portfolio-staging-image
+          cache-to: type=gha,mode=max,scope=portfolio-staging-image
 
-      # Optional: configure kubeconfig from secret if you don't want to rely on the runner's local kubeconfig
-      - name: Configure kubeconfig (optional)
-        if: ${{ env.HAS_KUBE_CONFIG == 'true' }}
-        run: |
-          mkdir -p "$HOME/.kube"
-          echo "${KUBE_CONFIG_STAGING}" | base64 --decode > "$HOME/.kube/config"
+      - name: Record GitOps handoff
+        id: release
         env:
-          KUBE_CONFIG_STAGING: ${{ secrets.KUBE_CONFIG_STAGING }}
+          IMAGE_DIGEST: ${{ steps.image.outputs.digest }}
+          IMAGE_TAG: >-
+            ${{ env.IMAGE_REPOSITORY }}:sha-${{ github.sha }}-run-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          IMAGE_REF="${IMAGE_REPOSITORY}@${IMAGE_DIGEST}"
 
-      - name: Restart staging deployment (optional)
-        if: ${{ env.HAS_KUBE_CONFIG == 'true' || env.USE_LOCAL_KUBECONFIG == 'true' }}
-        run: kubectl rollout restart -n dev deployment/portfolio-dev
+          {
+            echo "image_tag=${IMAGE_TAG}"
+            echo "image_digest=${IMAGE_DIGEST}"
+            echo "image_ref=${IMAGE_REF}"
+          } >> "${GITHUB_OUTPUT}"
+
+          mkdir -p release-metadata
+          {
+            echo "source_repository=${GITHUB_REPOSITORY}"
+            echo "source_revision=${GITHUB_SHA}"
+            echo "image_tag=${IMAGE_TAG}"
+            echo "image_digest=${IMAGE_DIGEST}"
+            echo "image_ref=${IMAGE_REF}"
+            echo "gitops_repository=rrumana/k8s-homelab-2"
+            echo "gitops_manifest=cluster/apps/web/portfolio/staging/deployment.yaml"
+          } > release-metadata/staging-image.env
+
+          {
+            echo "### Staging image published"
+            echo
+            echo "- Immutable tag: \`${IMAGE_TAG}\`"
+            echo "- Digest reference: \`${IMAGE_REF}\`"
+            echo
+            echo "No cluster mutation was performed. Update"
+            echo "\`cluster/apps/web/portfolio/staging/deployment.yaml\` in"
+            echo "\`rrumana/k8s-homelab-2\` to the digest reference above; Argo CD"
+            echo "will reconcile the \`web/portfolio-staging\` Deployment."
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Upload release metadata
+        uses: actions/upload-artifact@v7
+        with:
+          name: staging-image-${{ github.sha }}-${{ github.run_id }}
+          path: release-metadata/staging-image.env
+          if-no-files-found: error
+          retention-days: 30

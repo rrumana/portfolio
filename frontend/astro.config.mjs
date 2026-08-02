@@ -5,6 +5,6 @@ export default defineConfig({
   publicDir: './public',
   output: 'static',
   outDir: '../static/dist',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
   integrations: [],
 });

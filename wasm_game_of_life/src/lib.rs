@@ -1,6 +1,6 @@
-use game_of_life::engines::{GameOfLifeEngine, UltimateEngine};
-use game_of_life::grid::{Grid, StandardGrid};
 use gif::{Encoder, Frame, Repeat};
+use gol::engines::{GameOfLifeEngine, UltimateEngine};
+use gol::grid::{Grid, StandardGrid};
 use js_sys::{Array, Function};
 use log::Level;
 use serde::Serialize;
@@ -354,7 +354,11 @@ impl GifRecorder {
     }
 }
 
-/// Backward compatibility functions that maintain the original interface
+impl Default for GifRecorder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 /// Legacy tick function for backward compatibility
 #[wasm_bindgen]

@@ -1,76 +1,74 @@
 ---
-import Button from '../ui/Button.astro';
-import Heading from '../ui/Heading.astro';
-import Text from '../ui/Text.astro';
-import { Image } from 'astro:assets';
-
-export interface Link {
-  label: string;
-  href: string;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
-}
-
 export interface Props {
   title: string;
   summary: string;
+  href: string;
+  year: number;
+  status: string;
+  role: string;
+  impact: string;
   techStack?: string[];
-  cta?: Link;
-  secondaryCta?: Link;
   media?: string;
+  mediaDark?: string;
   mediaAlt?: string;
+  repoUrl?: string;
 }
 
 const props = Astro.props as Props;
-
 const {
   title,
   summary,
+  href,
+  year,
+  status,
+  role,
+  impact,
   techStack = [],
-  cta,
-  secondaryCta,
   media,
+  mediaDark,
   mediaAlt,
+  repoUrl,
 } = props;
-
-const mediaIsGif = typeof media === 'string' && media.toLowerCase().endsWith('.gif');
 ---
-<article class="project-card">
+<article class="project-card surface-panel">
   {media && (
-    <div class="project-card__media">
-      {mediaIsGif ? (
-        <img src={media} alt={mediaAlt ?? ''} loading="lazy" />
+    <a class="project-card__media" href={href} aria-label={`Open ${title}`}>
+      {mediaDark ? (
+        <>
+          <img src={media} alt={mediaAlt ?? ''} loading="lazy" class="project-card__image project-card__image--light" />
+          <img src={mediaDark} alt={mediaAlt ?? ''} loading="lazy" class="project-card__image project-card__image--dark" />
+        </>
       ) : (
-        <Image
-          src={media}
-          alt={mediaAlt ?? ''}
-          class="project-card__image"
-          loading="lazy"
-          width={1366}
-          height={767}
-          fit="cover"
-        />
+        <img src={media} alt={mediaAlt ?? ''} loading="lazy" class="project-card__image" />
       )}
-    </div>
+    </a>
   )}
+
+  <div class="project-card__header">
+    <p class="project-card__meta">{status} / {year}</p>
+    <p class="project-card__role">{role}</p>
+  </div>
+
   <div class="project-card__body">
-    <Heading level={3} size="lg">{title}</Heading>
-    <Text tone="muted">{summary}</Text>
-    {techStack.length > 0 && (
-      <ul class="project-card__tags" aria-label="Tech stack">
-        {techStack.map((item) => (
-          <li>{item}</li>
-        ))}
-      </ul>
-    )}
-    {(cta || secondaryCta) && (
-      <div class="project-card__actions">
-        {cta && <Button href={cta.href} variant={cta.variant ?? 'primary'}>{cta.label}</Button>}
-        {secondaryCta && (
-          <Button href={secondaryCta.href} variant={secondaryCta.variant ?? 'secondary'}>
-            {secondaryCta.label}
-          </Button>
-        )}
-      </div>
+    <h3><a href={href}>{title}</a></h3>
+    <p class="project-card__summary">{summary}</p>
+    <p class="project-card__impact">{impact}</p>
+  </div>
+
+  {techStack.length > 0 && (
+    <ul class="pill-list" aria-label="Technology stack">
+      {techStack.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+  )}
+
+  <div class="project-card__actions">
+    <a class="button-link" href={href}>Read case study</a>
+    {repoUrl && (
+      <a class="button-link button-link--ghost" href={repoUrl} target="_blank" rel="noreferrer">
+        Repository
+      </a>
     )}
   </div>
 </article>
@@ -78,79 +76,83 @@ const mediaIsGif = typeof media === 'string' && media.toLowerCase().endsWith('.g
 <style>
 .project-card {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: var(--space-xl);
-  padding: var(--space-xl);
-  background: var(--color-surface-100);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--color-border-subtle);
-  align-items: stretch;
-  width: 100%;
+  gap: 1rem;
+  padding: 1.1rem;
+  align-content: start;
 }
 
 .project-card__media {
-  position: relative;
-  border-radius: var(--radius-md);
+  border-radius: calc(var(--radius-md) - 0.2rem);
   overflow: hidden;
-  box-shadow: var(--shadow-xs);
-  min-height: clamp(260px, 28vw, 360px);
+  border: 1px solid var(--color-border-subtle);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-accent-500) 7%, var(--color-surface-strong)), var(--color-surface));
+  aspect-ratio: 16 / 10;
 }
 
-.project-card__media :global(img),
-.project-card__media img {
+.project-card__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
+}
+
+.project-card__image--dark {
+  display: none;
+}
+
+html[data-theme='dark'] .project-card__image--light {
+  display: none;
+}
+
+html[data-theme='dark'] .project-card__image--dark {
   display: block;
+}
+
+.project-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.project-card__meta,
+.project-card__role {
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
 }
 
 .project-card__body {
   display: grid;
-  gap: var(--space-md);
-  align-content: start;
+  gap: 0.6rem;
 }
 
-.project-card__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
-  list-style: none;
+.project-card h3 {
+  font-size: clamp(1.25rem, 0.7vw + 1rem, 1.6rem);
+  font-family: var(--font-family-sans);
+  font-weight: 700;
 }
 
-.project-card__tags li {
-  padding: var(--space-2xs) var(--space-sm);
-  background: var(--color-fill-primary-soft);
-  color: var(--color-primary-500);
-  border-radius: var(--radius-xs);
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  letter-spacing: 0.02em;
+.project-card h3 a:hover,
+.project-card h3 a:focus-visible {
+  color: var(--color-accent-500);
+}
+
+.project-card__summary {
+  font-size: 1rem;
+  color: var(--color-text-default);
+}
+
+.project-card__impact {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
 
 .project-card__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-@media (max-width: 1100px) {
-  .project-card {
-    grid-template-columns: 1fr;
-  }
-
-  .project-card__media {
-    min-height: clamp(220px, 50vw, 320px);
-  }
-}
-
-html[data-theme='dark'] .project-card {
-  background: var(--color-surface-300);
-  border: 1px solid var(--color-border-muted);
-}
-
-html[data-theme='dark'] .project-card__tags li {
-  background: var(--color-fill-primary-strong);
-  color: var(--color-text-inverse);
+  gap: 0.75rem;
 }
 </style>

@@ -1,40 +1,35 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Container from '../components/shell/Container.astro';
-import ContentGrid from '../components/layout/ContentGrid.astro';
-import Button from '../components/ui/Button.astro';
-import Heading from '../components/ui/Heading.astro';
-import Text from '../components/ui/Text.astro';
-import StickyNav from '../components/navigation/StickyNav.astro';
-import MediaFrame from '../components/patterns/MediaFrame.astro';
+import TechStackList from '../components/patterns/TechStackList.astro';
 import type { ProjectSection } from '../components/projects';
 
 export interface Action {
   label: string;
   href: string;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'link';
 }
 
 export interface Props {
   title: string;
-  description?: string;
-  eyebrow?: string;
+  description: string;
+  year: number;
+  status: string;
   heroImage?: string;
   heroImageDark?: string;
   heroAlt?: string;
   techStack?: string[];
   actions?: Action[];
-  navLinks?: { href: string; label: string }[];
+  navLinks?: readonly { href: string; label: string }[];
   sections?: ProjectSection[];
   toc?: { id: string; label: string }[];
 }
 
 const props = Astro.props as Props;
-
 const {
   title,
   description,
-  eyebrow,
+  year,
+  status,
   heroImage,
   heroImageDark,
   heroAlt,
@@ -42,271 +37,254 @@ const {
   actions = [],
   navLinks = [],
   sections = [],
-  toc,
+  toc = [],
 } = props;
 
-const heroIsGif = typeof heroImage === 'string' && heroImage.toLowerCase().endsWith('.gif');
-const heroDarkIsGif = typeof heroImageDark === 'string' && heroImageDark.toLowerCase().endsWith('.gif');
-const heroAltText = heroAlt ?? '';
-const sectionAnchors = sections.flatMap((section) => [
-  { id: section.id, label: section.label },
-  ...(section.anchors ?? []),
-]);
-
-const defaultToc = [{ id: 'details', label: 'Details' }, ...sectionAnchors];
-
-const tocMap = new Map<string, string>();
-for (const item of (toc ?? defaultToc)) {
-  if (!tocMap.has(item.id)) {
-    tocMap.set(item.id, item.label);
+const sectionMap = new Map<string, string>();
+if (toc.length === 0) {
+  sectionMap.set('case-study', 'Overview');
+}
+for (const item of toc) {
+  sectionMap.set(item.id, item.label);
+}
+for (const section of sections) {
+  sectionMap.set(section.id, section.label);
+  for (const anchor of section.anchors ?? []) {
+    sectionMap.set(anchor.id, anchor.label);
   }
 }
 
-const stickyNavItems = Array.from(tocMap.entries()).map(([id, label]) => ({
-  href: `#${id}`,
-  label,
-}));
-
-const hasStickyNav = stickyNavItems.length > 1;
+const sidebarItems = Array.from(sectionMap.entries()).map(([id, label]) => ({ href: `#${id}`, label }));
 ---
 <BaseLayout title={`${title} | Ryan Rumana`} description={description} navLinks={navLinks}>
-  <main class="project">
-    <section class="project__hero">
-      <Container class="project__hero-inner">
-        <div class="project__heading">
-          {eyebrow && <p class="project__eyebrow">{eyebrow}</p>}
-          <Heading level={1} size="3xl">{title}</Heading>
-          {description && <Text size="lg" tone="muted">{description}</Text>}
-          {actions.length > 0 && (
-            <div class="project__actions">
-              {actions.map((action) => (
-                <Button href={action.href} variant={action.variant ?? 'primary'}>
-                  {action.label}
-                </Button>
-              ))}
+  <main id="main-content" class="project-page">
+    <section class="project-shell section-shell">
+      <Container class="project-layout">
+        <header class="project-intro">
+          <div class="project-intro__copy">
+            <p class="eyebrow">Case study / {status} / {year}</p>
+            <h1>{title}</h1>
+            <p class="project-intro__description">{description}</p>
+          </div>
+        </header>
+
+        {(actions.length > 0 || techStack.length > 0 || sidebarItems.length > 1) && (
+          <aside class="project-sidebar">
+            <div class="project-sidebar__panel surface-panel">
+              {heroImage && (
+                <section class="project-sidebar__block">
+                  <div class="project-sidebar__media">
+                    {heroImageDark ? (
+                      <>
+                        <img src={heroImage} alt={heroAlt ?? ''} class="project-sidebar__image project-sidebar__image--light" />
+                        <img src={heroImageDark} alt={heroAlt ?? ''} class="project-sidebar__image project-sidebar__image--dark" />
+                      </>
+                    ) : (
+                      <img src={heroImage} alt={heroAlt ?? ''} class="project-sidebar__image" />
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {sidebarItems.length > 1 && (
+                <nav class="project-sidebar__block" aria-label="On this page">
+                  <p class="project-sidebar__label">Contents</p>
+                  <ul class="project-sidebar__toc">
+                    {sidebarItems.map((item) => (
+                      <li>
+                        <a href={item.href}>{item.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
+
+              {techStack.length > 0 && (
+                <section class="project-sidebar__block">
+                  <p class="project-sidebar__label">Tech stack</p>
+                  <TechStackList items={techStack} />
+                </section>
+              )}
+
+              {actions.length > 0 && (
+                <section class="project-sidebar__block">
+                  <div class="project-sidebar__actions">
+                    {actions.map((action, index) => (
+                      <a
+                        class={`button-link ${index > 0 ? 'button-link--ghost' : ''}`.trim()}
+                        href={action.href}
+                        target={action.href.startsWith('http') ? '_blank' : undefined}
+                        rel={action.href.startsWith('http') ? 'noreferrer' : undefined}
+                      >
+                        {action.label}
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
-          )}
-        </div>
-        {heroImage && (
-          <MediaFrame class="project__media" bleed>
-            {heroImageDark ? (
-              <>
-                <img
-                  src={heroImage}
-                  alt={heroAltText}
-                  loading="lazy"
-                  class="project__hero-img project__hero-img--light"
-                />
-                <img
-                  src={heroImageDark}
-                  alt={heroAltText}
-                  loading="lazy"
-                  class="project__hero-img project__hero-img--dark"
-                />
-              </>
-            ) : (
-              <img src={heroImage} alt={heroAltText} loading="lazy" class="project__hero-img" />
-            )}
-          </MediaFrame>
+          </aside>
         )}
+
+        <article class="project-content prose">
+          <section id={toc.length === 0 ? 'case-study' : undefined} class="section-grid">
+            <slot />
+          </section>
+          {sections.map((section) => {
+            const SectionComponent = section.component;
+            return <SectionComponent {...(section.props ?? {})} />;
+          })}
+        </article>
       </Container>
     </section>
-
-    {techStack.length > 0 && (
-      <Container id="tech" class="project__meta">
-        <h2>Tech Stack</h2>
-        <ul>
-          {techStack.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
-      </Container>
-    )}
-
-    <article class="project__content">
-      <Container>
-        <ContentGrid nav={hasStickyNav}>
-          {hasStickyNav && <StickyNav slot="nav" items={stickyNavItems} />}
-          <div class="project__content-inner">
-            <slot />
-            {sections.length > 0 && (
-              <div class="project__sections">
-                {sections.map((section, index) => {
-                  const SectionComponent = section.component;
-                  const sectionProps = section.props ?? {};
-                  return <SectionComponent data-section-index={index} {...sectionProps} />;
-                })}
-              </div>
-            )}
-          </div>
-        </ContentGrid>
-      </Container>
-    </article>
   </main>
 </BaseLayout>
 
 <style>
-.project__hero {
-  padding-block: var(--space-3xl);
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-primary-500) 66%, transparent),
-    color-mix(in srgb, var(--color-accent-500) 62%, transparent)
-  );
-  overflow: hidden;
+.project-shell {
+  padding-top: 0;
 }
 
-.project__hero-inner {
+.project-layout {
   display: grid;
-  gap: var(--space-2xl);
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  align-items: center;
+  gap: 1.5rem 1.35rem;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 272px);
+  grid-template-areas:
+    'intro sidebar'
+    'content sidebar';
+  align-items: start;
 }
 
-@media (max-width: 720px) {
-  .project__hero-inner {
-    grid-template-columns: minmax(0, 1fr);
+.project-intro {
+  grid-area: intro;
+}
+
+.project-intro__copy {
+  display: grid;
+  gap: 1rem;
+  max-width: 44rem;
+}
+
+.project-intro__description {
+  font-size: clamp(1.08rem, 0.45vw + 1rem, 1.24rem);
+  color: var(--color-text-muted);
+  max-width: 38rem;
+}
+
+.project-sidebar {
+  grid-area: sidebar;
+  min-width: 0;
+  position: sticky;
+  top: var(--page-top-gap);
+  align-self: start;
+}
+
+.project-sidebar__panel {
+  position: static;
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.project-sidebar__block {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.project-sidebar__block + .project-sidebar__block {
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.project-sidebar__label {
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.project-sidebar__media {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-strong) 82%, transparent), var(--color-surface));
+}
+
+.project-sidebar__image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+}
+
+.project-sidebar__image--dark {
+  display: none;
+}
+
+html[data-theme='dark'] .project-sidebar__image--light {
+  display: none;
+}
+
+html[data-theme='dark'] .project-sidebar__image--dark {
+  display: block;
+}
+
+.project-sidebar__actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.project-sidebar__actions .button-link {
+  width: 100%;
+}
+
+.project-sidebar__toc {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.project-sidebar__toc a {
+  display: block;
+  padding: 0.45rem 0;
+  color: var(--color-text-muted);
+}
+
+.project-sidebar__toc a:hover,
+.project-sidebar__toc a:focus-visible {
+  color: var(--color-link);
+}
+
+.project-content {
+  grid-area: content;
+  min-width: 0;
+  max-width: 50rem;
+}
+
+.project-content section {
+  scroll-margin-top: 1.5rem;
+}
+
+@media (max-width: 1180px) {
+  .project-intro__copy,
+  .project-intro__description,
+  .project-content {
+    max-width: none;
   }
 }
 
-.project__heading {
-  display: grid;
-  gap: var(--space-md);
-}
+@media (max-width: 980px) {
+  .project-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'intro'
+      'sidebar'
+      'content';
+  }
 
-.project__eyebrow {
-  font-size: var(--font-size-sm);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: var(--color-text-muted);
-}
-
-.project__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-.project__meta {
-  margin-block: var(--space-2xl);
-  display: grid;
-  gap: var(--space-sm);
-  scroll-margin-top: clamp(4rem, 8vw, 6.5rem);
-}
-
-.project__meta ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-  list-style: none;
-}
-
-.project__meta li {
-  padding: var(--space-2xs) var(--space-sm);
-  border-radius: var(--radius-xs);
-  background: transparent;
-  color: var(--color-text-muted);
-  font-weight: 500;
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.02em;
-}
-
-.project__content {
-  padding-block: var(--space-3xl);
-  width: 100%;
-}
-
-.project__content-inner {
-  display: grid;
-  gap: var(--space-xl);
-  width: 100%;
-  min-width: 0;
-}
-
-.project__content-inner > * {
-  scroll-margin-top: clamp(4rem, 8vw, 6.5rem);
-}
-
-.project__sections {
-  display: grid;
-  gap: var(--space-2xl);
-  width: 100%;
-  min-width: 0;
-}
-
-.project__sections > * {
-  scroll-margin-top: clamp(4rem, 8vw, 6.5rem);
-}
-
-.project__content-inner :global(h2) {
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  color: var(--color-text-default);
-}
-
-.project__content-inner :global(p) {
-  font-size: var(--font-size-md);
-  line-height: var(--line-height-normal);
-  color: var(--color-text-muted);
-  max-width: 70ch;
-}
-
-.project__hero-img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: contain;
-}
-
-:global(.project__media .media-frame__media img.project__hero-img),
-:global(.project__media .media-frame__media picture img.project__hero-img) {
-  object-fit: contain;
-  height: auto;
-}
-
-:global(.media-frame__media img.project__hero-img--dark) {
-  display: none !important;
-}
-
-:global(html:not([data-theme='dark']) .media-frame__media img.project__hero-img--light) {
-  display: block !important;
-}
-
-:global(html[data-theme='dark'] .media-frame__media img.project__hero-img--light) {
-  display: none !important;
-}
-
-:global(html[data-theme='dark'] .media-frame__media img.project__hero-img--dark) {
-  display: block !important;
-}
-
-.project__hero-img--dark {
-  display: none;
-}
-
-html[data-theme='dark'] .project__hero-img--light {
-  display: none;
-}
-
-html[data-theme='dark'] .project__hero-img--dark {
-  display: block;
-}
-
-html[data-theme='dark'] .project__hero {
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-primary-500) 72%, transparent),
-    color-mix(in srgb, var(--color-accent-500) 68%, transparent)
-  );
-}
-
-html[data-theme='dark'] .project__media {
-  border: 1px solid var(--color-border-muted);
-}
-
-html[data-theme='dark'] .project__meta li {
-  background: transparent;
-  color: var(--color-text-muted);
+  .project-sidebar {
+    position: static;
+  }
 }
 </style>

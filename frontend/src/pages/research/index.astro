@@ -1,0 +1,108 @@
+---
+import { getCollection } from 'astro:content';
+import ResearchCard from '../../components/cards/ResearchCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const papers = (await getCollection('research')).sort((left, right) => {
+  if (left.data.featuredRank !== right.data.featuredRank) {
+    return left.data.featuredRank - right.data.featuredRank;
+  }
+
+  return right.data.publicationDate.getTime() - left.data.publicationDate.getTime();
+});
+---
+
+<BaseLayout
+  title="Research and Whitepapers | Ryan Rumana"
+  description="Research papers, technical reports, and reproducible artifacts by Senior AI/ML Engineer Ryan Rumana."
+>
+  <main id="main-content">
+    <section class="section-shell">
+      <div class="container research-intro">
+        <div class="research-intro__copy">
+          <p class="eyebrow">Research</p>
+          <h1>Whitepapers and technical reports.</h1>
+          <p>
+            Formal results and applied research belong beside the software that supports them. This collection holds
+            finished papers, academic reports, primary artifacts, and concise explanations of what each contribution
+            establishes.
+          </p>
+        </div>
+
+        <aside class="surface-panel research-intro__note">
+          <p class="eyebrow">Living collection</p>
+          <p>
+            The publication model is content-driven, so new work can be added without rebuilding the page structure.
+            Each entry can link a paper, repository, related case study, collaborators, and reproducibility notes.
+          </p>
+          <p class="research-intro__count">{papers.length} published {papers.length === 1 ? 'report' : 'reports'}</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section-shell research-listing">
+      <div class="container research-list">
+        {papers.map((paper) => (
+          <ResearchCard
+            title={paper.data.shortTitle}
+            summary={paper.data.summary}
+            href={`/research/${paper.id}/`}
+            kind={paper.data.kind}
+            status={paper.data.status}
+            displayDate={paper.data.displayDate}
+            authors={paper.data.authors.map((author) => author.name)}
+            topics={paper.data.topics}
+            pdfUrl={paper.data.pdfUrl}
+          />
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .research-intro {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1.15fr) minmax(290px, 0.85fr);
+    align-items: end;
+  }
+
+  .research-intro__copy,
+  .research-intro__note {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .research-intro__copy {
+    max-width: 48rem;
+  }
+
+  .research-intro__note {
+    padding: 1.25rem;
+  }
+
+  .research-intro__count {
+    color: var(--color-text-subtle);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .research-listing {
+    padding-top: 0;
+  }
+
+  .research-list {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 860px) {
+    .research-intro,
+    .research-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

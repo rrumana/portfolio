@@ -272,7 +272,7 @@ const crateSections = [
         description: 'Analyze target state solvability before attempting to solve'
       }
     ],
-    repository: 'https://github.com/rrumana/game_of_life_reverse'
+    repository: 'https://github.com/rrumana/Reverse_Game_Of_Life'
   },
   {
     id: 'parkissat-crate',
@@ -345,7 +345,7 @@ const chaosSteps = [
     ],
     commands: [
       {
-        command: 'git clone https://github.com/rrumana/game_of_life_reverse',
+        command: 'git clone https://github.com/rrumana/Reverse_Game_Of_Life',
         description: 'Clone the reverse Game of Life repository'
       },
       {
@@ -501,7 +501,7 @@ const resultsSections = [
     const toggleAccordions = (rootId: string, action: 'open' | 'close') => {
       const root = document.getElementById(rootId);
       if (!root) return;
-      const details = root.querySelectorAll('details.accordion');
+      const details = root.querySelectorAll<HTMLDetailsElement>('details.accordion');
       details.forEach((el) => {
         el.open = action === 'open';
       });

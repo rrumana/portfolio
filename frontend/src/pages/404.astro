@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Page not found | Ryan Rumana"
+  description="The requested page could not be found."
+>
+  <main id="main-content">
+    <section class="section-shell">
+      <div class="container not-found surface-panel">
+        <p class="eyebrow">404</p>
+        <h1>That page does not exist.</h1>
+        <p>The address may be outdated, or the page may have moved during the portfolio rebuild.</p>
+        <div class="not-found__actions">
+          <a class="button-link" href="/">Return home</a>
+          <a class="button-link button-link--ghost" href="/projects/">Browse projects</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+.not-found {
+  display: grid;
+  gap: 1rem;
+  max-width: 48rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+</style>

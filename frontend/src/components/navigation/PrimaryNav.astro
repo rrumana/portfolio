@@ -5,17 +5,25 @@ export interface LinkItem {
 }
 
 export interface Props {
-  links?: LinkItem[];
+  links?: readonly LinkItem[];
 }
 
 const props = Astro.props as Props;
 
 const { links = [] } = props;
+const currentPath = Astro.url.pathname;
 ---
 <nav class="primary-nav" aria-label="Main navigation">
   <ul>
     {links.map((link) => (
-      <li><a href={link.href}>{link.label}</a></li>
+      <li>
+        <a
+          href={link.href}
+          aria-current={currentPath === link.href ? 'page' : undefined}
+        >
+          {link.label}
+        </a>
+      </li>
     ))}
   </ul>
 </nav>
@@ -24,40 +32,39 @@ const { links = [] } = props;
 .primary-nav ul {
   list-style: none;
   display: flex;
-  gap: var(--space-lg);
+  gap: 1.25rem;
   align-items: center;
   flex-wrap: wrap;
 }
 
 .primary-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0;
+  border-radius: 0;
+  border-bottom: 1px solid transparent;
   font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text-muted);
-  transition: color 150ms ease;
+  transition: color 150ms ease, border-color 150ms ease;
 }
 
 .primary-nav a:hover,
 .primary-nav a:focus-visible {
-  color: var(--color-text-default);
+  color: var(--color-text-strong);
+  border-color: color-mix(in srgb, var(--color-accent-500) 35%, transparent);
 }
 
-html[data-theme='dark'] .primary-nav a {
-  color: var(--color-text-muted);
-}
-
-html[data-theme='dark'] .primary-nav a:hover,
-html[data-theme='dark'] .primary-nav a:focus-visible {
-  color: var(--color-text-default);
+.primary-nav a[aria-current='page'] {
+  color: var(--color-text-strong);
+  border-color: color-mix(in srgb, var(--color-accent-500) 48%, transparent);
 }
 
 @media (max-width: 720px) {
   .primary-nav ul {
     justify-content: center;
-    gap: var(--space-sm);
-  }
-
-  .primary-nav a {
-    font-size: var(--font-size-sm);
+    gap: 1rem;
   }
 }
 </style>

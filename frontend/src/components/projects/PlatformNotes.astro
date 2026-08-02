@@ -1,0 +1,40 @@
+<section id="delivery-notes" class="section-grid">
+  <div>
+    <p class="eyebrow">Architecture</p>
+    <h2>Why this site is still Rust-backed</h2>
+    <p>
+      The point of the rebuild is not to turn the site into a frontend-only design exercise. Astro now owns content
+      and presentation, while Axum remains responsible for the runtime concerns that actually benefit from a typed backend:
+      asset delivery, APIs, observability, and interactive demos.
+    </p>
+  </div>
+
+  <div class="notes-grid">
+    <article class="surface-panel notes-card">
+      <h3>Static-first pages</h3>
+      <p>Astro handles route generation, content collections, and long-form page composition.</p>
+    </article>
+    <article class="surface-panel notes-card">
+      <h3>Rust runtime</h3>
+      <p>Axum serves the built site, the WASM bundle, the Game of Life API, and structured frontend logs.</p>
+    </article>
+    <article class="surface-panel notes-card">
+      <h3>Operational shape</h3>
+      <p>Docker still packages the Rust binary with generated frontend assets so the deployment path stays simple.</p>
+    </article>
+  </div>
+</section>
+
+<style>
+.notes-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.notes-card {
+  padding: 1.2rem;
+  display: grid;
+  gap: 0.75rem;
+}
+</style>

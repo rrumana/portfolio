@@ -7,15 +7,18 @@ const footerLinks = [
   { label: 'Email', href: `mailto:${siteConfig.contact.email}` },
   ...siteConfig.social,
 ];
-const ownerName = siteConfig.name;
 ---
 <footer class="site-footer">
   <Container class="site-footer__inner">
-    <div class="site-footer__meta">
-      <span>&copy; {currentYear} {ownerName}</span>
-      <span>Built with Rust &amp; Astro</span>
+    <div class="site-footer__brand">
+      <p class="site-footer__eyebrow">Built in public, hosted at home</p>
+      <h2>{siteConfig.name}</h2>
+      <p>
+        Rust stays in the runtime path. Astro handles content and presentation. Projects, research,
+        and professional context share one publishing system backed by infrastructure I operate.
+      </p>
     </div>
-    <div class="site-footer__links">
+    <nav class="site-footer__links" aria-label="Footer links">
       {footerLinks.map((link) => (
         <a
           href={link.href}
@@ -25,60 +28,81 @@ const ownerName = siteConfig.name;
           {link.label}
         </a>
       ))}
+    </nav>
+    <div class="site-footer__meta">
+      <span>&copy; {currentYear} {siteConfig.name}</span>
+      <span>{siteConfig.role}</span>
+      <span>AI/ML, Rust, Kubernetes</span>
     </div>
   </Container>
 </footer>
 
 <style>
 .site-footer {
-  padding-block: var(--space-2xl);
-  background: var(--color-surface-100);
+  padding-block: clamp(2.8rem, 4vw, 4.2rem);
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
   border-top: 1px solid var(--color-border-subtle);
 }
 
 .site-footer__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-lg);
-  flex-wrap: wrap;
+  display: grid;
+  gap: 1rem;
+}
+
+.site-footer__brand {
+  max-width: 48rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.site-footer__eyebrow {
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.site-footer__brand h2 {
+  font-family: var(--font-family-display);
+  font-size: clamp(1.9rem, 1.2vw + 1.2rem, 2.8rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--color-text-strong);
+}
+
+.site-footer__brand p:last-child {
+  color: var(--color-text-muted);
+  max-width: 42rem;
 }
 
 .site-footer__meta {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  color: var(--color-text-subtle);
   font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
 }
 
 .site-footer__links {
   display: flex;
-  gap: var(--space-md);
-  font-size: var(--font-size-sm);
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .site-footer__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.3rem;
+  padding-inline: 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-subtle);
+  background: color-mix(in srgb, var(--color-surface-strong) 92%, transparent);
   color: var(--color-text-muted);
 }
 
 .site-footer__links a:hover,
 .site-footer__links a:focus-visible {
-  color: var(--color-text-default);
-}
-
-html[data-theme='dark'] .site-footer {
-  background: var(--color-surface-300);
-  border-top: 1px solid var(--color-border-muted);
-}
-
-html[data-theme='dark'] .site-footer__meta,
-html[data-theme='dark'] .site-footer__links a {
-  color: var(--color-text-muted);
-}
-
-html[data-theme='dark'] .site-footer__links a:hover,
-html[data-theme='dark'] .site-footer__links a:focus-visible {
-  color: var(--color-primary-500);
+  color: var(--color-text-strong);
+  border-color: color-mix(in srgb, var(--color-accent-500) 40%, var(--color-border-subtle));
 }
 </style>

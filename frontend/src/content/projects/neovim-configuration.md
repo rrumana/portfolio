@@ -1,30 +1,37 @@
 ---
 title: "Neovim Configuration"
-summary: "A lean Neovim setup tuned for fast startup, sane defaults, and observability so I can live in the terminal without friction."
-featured: true
+summary: "A maintained Neovim configuration focused on fast startup, predictable editing, and a toolchain that supports Rust, infrastructure, and daily terminal work."
+summaryShort: "A maintained Neovim setup centered on speed, predictable editing, and terminal-first work."
+kind: "project"
+status: "active"
+year: 2024
+featured: false
+featuredRank: 8
 order: 6
+role: "Editor maintainer and workflow owner"
+impact: "Consolidated my day-to-day editing workflow into a configuration that stays fast, reproducible, and easier to evolve."
+audience: "technical"
 techStack:
+  - Lazy.nvim
   - Neovim
   - Lua
-  - Treesitter
   - LSP
+  - blink.cmp
+  - Treesitter
   - Telescope
+  - Harpoon
+  - Gitsigns
+  - Fugitive
+  - Trouble
 heroImage: "/images/Neovim.png"
 heroAlt: "Screenshot of the Neovim configuration"
+repoUrl: "https://github.com/rrumana/Neovim"
 primaryAction:
-  label: "Project page"
-  href: "/projects/neovim-configuration"
-secondaryAction:
   label: "Browse config"
   href: "https://github.com/rrumana/Neovim"
 ---
-## Philosophy
-I rewrote my Neovim setup from scratch to internalize how each plugin, keymap, and autocmd fits together. The config favors composable Lua modules, predictable startup time, and sensible defaults that make pairing and maintenance painless.
+## Purpose
+This configuration exists to keep the editor fast, predictable, and easy to maintain. The goal is not to maximize plugin count; it is to preserve a workflow that stays usable across Rust, infrastructure, and shell-heavy repositories.
 
-## Highlights
-- Treesitter-powered syntax highlighting and incremental selection tuned for Rust, Go, and Python.
-- LSP client wrappers that manage diagnostics, code actions, and formatting with consistent visuals.
-- A curated command palette, Telescope pickers, and statusline telemetry so I can jump between projects without breaking flow.
-
-## Lessons learned
-Building a personal editor is an ongoing experiment. Iterating in Lua keeps changes testable, and the repo documents decisions so future tweaks stay intentional instead of accidental.
+## Current setup
+Lazy.nvim handles plugin loading, while Treesitter, LSP, and completion provide language-aware editing. Telescope and Harpoon cover search and navigation. Gitsigns, Fugitive, Trouble, and Undotree round out the version-control and diagnostics layer so the editor remains practical for daily work.

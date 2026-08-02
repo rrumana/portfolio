@@ -5,9 +5,8 @@
   aria-label="Toggle theme"
   aria-pressed="false"
 >
-  <span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">🌞</span>
-  <span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">🌙</span>
-  <span class="theme-toggle__label">Toggle theme</span>
+  <span class="theme-toggle__indicator" aria-hidden="true"></span>
+  <span class="theme-toggle__label">Theme</span>
 </button>
 
 <script is:inline>
@@ -56,44 +55,34 @@ media.addEventListener('change', (event) => {
 .theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2xs);
-  padding: var(--space-2xs) var(--space-sm);
-  border-radius: var(--radius-sm);
-  background: var(--color-fill-neutral-soft);
+  gap: 0.6rem;
+  min-height: 2.4rem;
+  padding-inline: 0.85rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-surface-strong) 88%, transparent);
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
-  transition: background 150ms ease, transform 150ms ease;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
 }
 
 .theme-toggle:hover,
 .theme-toggle:focus-visible {
-  background: var(--color-fill-primary-soft);
-  color: var(--color-primary-500);
+  color: var(--color-text-strong);
+  border-color: color-mix(in srgb, var(--color-accent-500) 40%, var(--color-border-subtle));
 }
 
 .theme-toggle.is-dark {
-  background: var(--color-fill-primary-strong);
-  color: var(--color-text-inverse);
+  color: var(--color-text-strong);
 }
 
-.theme-toggle__icon {
-  font-size: 1.2rem;
-}
-
-.theme-toggle__icon--sun {
-  display: inline;
-}
-
-.theme-toggle__icon--moon {
-  display: none;
-}
-
-.theme-toggle.is-dark .theme-toggle__icon--sun {
-  display: none;
-}
-
-.theme-toggle.is-dark .theme-toggle__icon--moon {
-  display: inline;
+.theme-toggle__indicator {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 30% 30%, var(--color-gold-300), var(--color-accent-500));
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-accent-500) 15%, transparent);
 }
 
 .theme-toggle__label {
@@ -101,9 +90,9 @@ media.addEventListener('change', (event) => {
   letter-spacing: 0.01em;
 }
 
-@media (max-width: 720px) {
-  .theme-toggle__label {
-    display: none;
-  }
+.theme-toggle.is-dark .theme-toggle__indicator {
+  background:
+    radial-gradient(circle at 30% 30%, var(--color-gold-200), var(--color-ink-500));
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-gold-300) 16%, transparent);
 }
 </style>

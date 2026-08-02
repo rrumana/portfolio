@@ -16,12 +16,8 @@ Thumbs.db
 .git/
 .gitignore
 
-# Documentation
-README.md
-*.md
-
-# Test files
-**/tests/
+# Repository-only documentation (content Markdown remains part of the image build)
+/README.md
 
 # Development files
 .env

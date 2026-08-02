@@ -3,7 +3,7 @@ use axum::{
     extract::ConnectInfo,
     http::{
         HeaderMap, Request,
-        header::{COOKIE, HeaderName, HeaderValue, SET_COOKIE},
+        header::{CACHE_CONTROL, COOKIE, HeaderName, HeaderValue, SET_COOKIE},
     },
     middleware::Next,
     response::IntoResponse,
@@ -16,6 +16,10 @@ use uuid::Uuid;
 const CLIENT_COOKIE: &str = "portfolio_client_id";
 const CLIENT_HEADER: &str = "x-client-id";
 const REQUEST_HEADER: &str = "x-request-id";
+const IMMUTABLE_CACHE: &str = "public, max-age=31536000, immutable";
+const REVALIDATE_CACHE: &str = "no-cache";
+const NO_STORE_CACHE: &str = "no-store";
+const ROBOTS_HEADER: &str = "x-robots-tag";
 
 /// Context captured for each request so downstream handlers can enrich logs.
 #[derive(Clone, Debug)]
@@ -26,6 +30,36 @@ pub struct RequestContext {
     pub user_agent: String,
     pub referer: String,
     pub ip: String,
+}
+
+/// Applies cache policy based on the kind of resource being requested.
+///
+/// Astro's `_astro` output uses content-hashed filenames and can be cached
+/// indefinitely. HTML and stable WASM filenames must be revalidated so a new
+/// deployment cannot leave clients pinned to an older build. Dynamic endpoints
+/// are never stored.
+pub async fn set_cache_policy(request: Request<Body>, next: Next) -> impl IntoResponse {
+    let path = request.uri().path().to_owned();
+    let mut response = next.run(request).await;
+
+    let policy = if path == "/healthz" || path == "/readyz" || path.starts_with("/api/") {
+        NO_STORE_CACHE
+    } else if path.starts_with("/_astro/") && response.status().is_success() {
+        IMMUTABLE_CACHE
+    } else {
+        REVALIDATE_CACHE
+    };
+
+    response
+        .headers_mut()
+        .insert(CACHE_CONTROL, HeaderValue::from_static(policy));
+    if path.starts_with("/legacy/") {
+        response.headers_mut().insert(
+            HeaderName::from_static(ROBOTS_HEADER),
+            HeaderValue::from_static("noindex, nofollow"),
+        );
+    }
+    response
 }
 
 /// HTTP request logging middleware that captures comprehensive request/response data
@@ -75,10 +109,9 @@ pub async fn log_requests(
 
     log::info!(target: "access", "{}", access_log);
 
-    if set_client_cookie {
-        if let Ok(header) = HeaderValue::from_str(&build_client_cookie(&client_id)) {
-            response.headers_mut().insert(SET_COOKIE, header);
-        }
+    if set_client_cookie && let Ok(header) = HeaderValue::from_str(&build_client_cookie(&client_id))
+    {
+        response.headers_mut().insert(SET_COOKIE, header);
     }
 
     if let Ok(request_header) = HeaderValue::from_str(&request_id) {
@@ -106,13 +139,13 @@ fn extract_header_value(headers: &HeaderMap, header_name: &str) -> String {
 }
 
 fn extract_or_create_client_id(headers: &HeaderMap) -> (String, bool) {
-    if let Some(cookie_header) = headers.get(COOKIE) {
-        if let Ok(cookies) = cookie_header.to_str() {
-            for cookie in cookies.split(';') {
-                let trimmed = cookie.trim();
-                if let Some(value) = trimmed.strip_prefix(&format!("{CLIENT_COOKIE}=")) {
-                    return (value.to_string(), false);
-                }
+    if let Some(cookie_header) = headers.get(COOKIE)
+        && let Ok(cookies) = cookie_header.to_str()
+    {
+        for cookie in cookies.split(';') {
+            let trimmed = cookie.trim();
+            if let Some(value) = trimmed.strip_prefix(&format!("{CLIENT_COOKIE}=")) {
+                return (value.to_string(), false);
             }
         }
     }

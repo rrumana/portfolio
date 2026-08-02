@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /legacy/
 
-Sitemap: https://ryanrumana.com/sitemap.xml
+Sitemap: https://rcrumana.xyz/sitemap.xml

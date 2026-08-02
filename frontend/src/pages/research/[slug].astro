@@ -1,0 +1,270 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../site.config';
+
+export async function getStaticPaths() {
+  const papers = await getCollection('research');
+
+  return papers.map((paper) => ({
+    params: { slug: paper.id },
+    props: { paper },
+  }));
+}
+
+interface Props {
+  paper: CollectionEntry<'research'>;
+}
+
+const { paper } = Astro.props as Props;
+const { Content } = await render(paper);
+const data = paper.data;
+const kindLabel = {
+  whitepaper: 'Whitepaper',
+  'academic-report': 'Academic project report',
+  'working-paper': 'Working paper',
+}[data.kind];
+const pageUrl = new URL(`/research/${paper.id}/`, siteConfig.domain).toString();
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ScholarlyArticle',
+  headline: data.title,
+  description: data.abstract,
+  datePublished: data.publicationDate.toISOString(),
+  author: data.authors.map((author) => ({
+    '@type': 'Person',
+    name: author.name,
+    ...(author.url ? { url: author.url } : {}),
+  })),
+  url: pageUrl,
+  mainEntityOfPage: pageUrl,
+  ...(data.pdfUrl ? { encoding: new URL(data.pdfUrl, siteConfig.domain).toString() } : {}),
+  ...(data.repoUrl ? { codeRepository: data.repoUrl } : {}),
+  ...(data.venue ? { isPartOf: data.venue } : {}),
+};
+---
+
+<BaseLayout title={`${data.shortTitle} | Ryan Rumana`} description={data.summary} structuredData={structuredData}>
+  <main id="main-content">
+    <article>
+      <header class="section-shell research-hero">
+        <div class="container research-hero__grid">
+          <div class="research-hero__copy">
+            <p class="eyebrow">{kindLabel} / {data.displayDate}</p>
+            <h1>{data.title}</h1>
+            <p class="research-hero__summary">{data.summary}</p>
+
+            <div class="research-hero__actions">
+              {data.pdfUrl && <a class="button-link" href={data.pdfUrl}>Download PDF</a>}
+              {data.repoUrl && (
+                <a class="button-link button-link--ghost" href={data.repoUrl} target="_blank" rel="noreferrer">
+                  Repository
+                </a>
+              )}
+              {data.artifactUrl && data.artifactUrl !== data.repoUrl && (
+                <a class="button-link button-link--ghost" href={data.artifactUrl} target="_blank" rel="noreferrer">
+                  Verification artifact
+                </a>
+              )}
+              {data.relatedProjectUrl && (
+                <a class="button-link button-link--ghost" href={data.relatedProjectUrl}>Related project</a>
+              )}
+            </div>
+          </div>
+
+          <aside class="surface-panel research-facts" aria-label="Publication details">
+            <dl>
+              <div>
+                <dt>Authors</dt>
+                <dd>
+                  {data.authors.map((author, index) => (
+                    <>
+                      {index > 0 && ', '}
+                      {author.url ? <a href={author.url}>{author.name}</a> : author.name}
+                    </>
+                  ))}
+                </dd>
+              </div>
+              <div>
+                <dt>Status</dt>
+                <dd>{data.status}</dd>
+              </div>
+              {data.venue && (
+                <div>
+                  <dt>Context</dt>
+                  <dd>{data.venue}</dd>
+                </div>
+              )}
+              {(data.version || data.pageCount) && (
+                <div>
+                  <dt>Document</dt>
+                  <dd>{[data.version, data.pageCount ? `${data.pageCount} pages` : undefined].filter(Boolean).join(' · ')}</dd>
+                </div>
+              )}
+            </dl>
+          </aside>
+        </div>
+      </header>
+
+      <section class="section-shell research-body-section">
+        <div class="container research-body-grid">
+          <div class="research-body">
+            <section class="surface-panel research-abstract">
+              <p class="eyebrow">Abstract</p>
+              <p>{data.abstract}</p>
+            </section>
+            <div class="research-content">
+              <Content />
+            </div>
+          </div>
+
+          <aside class="research-rail">
+            <div class="surface-panel research-rail__panel">
+              <p class="eyebrow">Topics</p>
+              <ul class="pill-list">
+                {data.topics.map((topic) => <li>{topic}</li>)}
+              </ul>
+            </div>
+            <div class="surface-panel research-rail__panel">
+              <p class="eyebrow">Citation</p>
+              <p class="research-citation">{data.citation}</p>
+            </div>
+            {data.sha256 && (
+              <details class="surface-panel research-checksum">
+                <summary>Document checksum</summary>
+                <code>{data.sha256}</code>
+              </details>
+            )}
+            <a class="research-back" href="/research/">Back to all research</a>
+          </aside>
+        </div>
+      </section>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .research-hero__grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+    align-items: end;
+  }
+
+  .research-hero__copy {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  .research-hero__summary {
+    color: var(--color-text-muted);
+    font-size: clamp(1.05rem, 0.4vw + 1rem, 1.25rem);
+  }
+
+  .research-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .research-facts,
+  .research-rail__panel,
+  .research-abstract {
+    padding: 1.2rem;
+  }
+
+  .research-facts dl {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .research-facts dt {
+    color: var(--color-text-subtle);
+    font-size: var(--font-size-xs);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .research-facts dd {
+    margin-top: 0.3rem;
+    color: var(--color-text-strong);
+  }
+
+  .research-facts a {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .research-body-section {
+    padding-top: 0;
+  }
+
+  .research-body-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.32fr);
+    align-items: start;
+  }
+
+  .research-body,
+  .research-content,
+  .research-rail,
+  .research-rail__panel {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .research-abstract {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .research-content :global(h2) {
+    margin-top: 1.6rem;
+    font-size: clamp(1.65rem, 1vw + 1.1rem, 2.35rem);
+  }
+
+  .research-content :global(h3) {
+    margin-top: 1rem;
+  }
+
+  .research-content :global(p),
+  .research-content :global(ul) {
+    margin-top: 0.85rem;
+  }
+
+  .research-citation {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    overflow-wrap: anywhere;
+  }
+
+  .research-checksum {
+    padding: 1rem 1.2rem;
+  }
+
+  .research-checksum summary {
+    cursor: pointer;
+    color: var(--color-text-muted);
+  }
+
+  .research-checksum code {
+    display: block;
+    margin-top: 0.8rem;
+    overflow-wrap: anywhere;
+    font-size: 0.72rem;
+  }
+
+  .research-back {
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  @media (max-width: 900px) {
+    .research-hero__grid,
+    .research-body-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

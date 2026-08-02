@@ -11,17 +11,17 @@ const { id = 'lecture' } = props;
 ---
 <SectionShell
   id={id}
-  title="Rust Programming Lecture"
-  description="Three-hour live session for engineers who need a fast, opinionated on-ramp to Rust."
+  title="Rust Programming Lecture Materials"
+  description="A focused introduction to Rust built from source examples and interactive demonstrations."
   accent
 >
   <div class="grid">
     <SurfaceCard padding="lg" class="panel" id="format">
       <h3>Format</h3>
       <ul>
-        <li>Live-coding with Cargo workspaces and unit tests to show feedback loops.</li>
-        <li>Slides contrast Rust idioms with C++/Python to highlight when to use enums, pattern matching, or zero-cost abstractions.</li>
-        <li>Demos of borrow checker invariants and async/await without the footguns.</li>
+        <li>Source examples introduce the Cargo workflow and compiler feedback loop.</li>
+        <li>Comparisons with familiar languages make Rust's ownership model concrete.</li>
+        <li>Interactive demonstrations connect syntax to observable behavior.</li>
       </ul>
     </SurfaceCard>
     <SurfaceCard padding="lg" class="panel" id="curriculum">
@@ -33,9 +33,9 @@ const { id = 'lecture' } = props;
       </ul>
     </SurfaceCard>
     <SurfaceCard padding="lg" class="panel" id="status">
-      <h3>What’s Next</h3>
+      <h3>Repository status</h3>
       <p>
-        Recording the session with companion labs so teams can self-pace. The repo already contains slides, code samples, and facilitator notes.
+        The repository contains one substantial foundational lecture and its example system. It is presented as completed material rather than an ongoing multi-part series.
       </p>
       <a class="panel-link" href="https://github.com/rrumana/rust_lecture" target="_blank" rel="noopener noreferrer">
         View materials

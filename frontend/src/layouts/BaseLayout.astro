@@ -8,7 +8,9 @@ export interface Props {
   title?: string;
   description?: string;
   lang?: string;
-  navLinks?: { href: string; label: string }[];
+  navLinks?: readonly { href: string; label: string }[];
+  image?: string;
+  structuredData?: Record<string, unknown>;
 }
 
 const props = Astro.props as Props;
@@ -18,7 +20,24 @@ const {
   description = siteConfig.meta.description,
   lang = 'en',
   navLinks = defaultNavLinks,
+  image = siteConfig.meta.image,
+  structuredData,
 } = props;
+
+const canonical = new URL(Astro.url.pathname, siteConfig.domain).toString();
+const socialImage = new URL(image, siteConfig.domain).toString();
+const personStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: siteConfig.name,
+  url: siteConfig.domain,
+  jobTitle: siteConfig.jobTitle,
+  worksFor: {
+    '@type': 'Organization',
+    name: siteConfig.employer,
+  },
+  sameAs: siteConfig.social.map((link) => link.href),
+};
 ---
 <!DOCTYPE html>
 <html lang={lang}>
@@ -27,29 +46,33 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+    <meta name="author" content={siteConfig.name} />
+    <meta name="theme-color" content="#0d1117" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="preload"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
-      as="style"
-      onload="this.rel='stylesheet'"
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
     />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
-      />
-    </noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content="Ryan Rumana's engineering portfolio" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(personStructuredData)}></script>
+    {structuredData && <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>}
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <SiteHeader navLinks={navLinks} />
     <slot />
     <SiteFooter />

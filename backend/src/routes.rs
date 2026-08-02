@@ -4,8 +4,7 @@ use crate::middleware::RequestContext;
 use axum::{
     Router,
     extract::{Extension, Query},
-    http::{HeaderMap, StatusCode, header},
-    response::{IntoResponse, Json, Response},
+    response::Json,
     routing::{get, post},
 };
 use log::info;
@@ -186,63 +185,6 @@ pub async fn reset(
         })
     );
     Json(response)
-}
-
-/// Generates XML sitemap for the portfolio website
-pub async fn sitemap() -> Response {
-    info!(
-        target: "app",
-        "{}",
-        json!({
-            "event": "sitemap",
-            "message": "Received sitemap request"
-        })
-    );
-
-    let sitemap_xml = r#"<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://ryanrumana.com/</loc>
-        <lastmod>2025-01-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>1.0</priority>
-    </url>
-    <url>
-        <loc>https://ryanrumana.com/about/</loc>
-        <lastmod>2025-01-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://ryanrumana.com/projects/</loc>
-        <lastmod>2025-01-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://ryanrumana.com/projects/game-of-life/</loc>
-        <lastmod>2025-01-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://ryanrumana.com/projects/kubernetes-homelab/</loc>
-        <lastmod>2025-01-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://ryanrumana.com/projects/rust-portfolio-website/</loc>
-        <lastmod>2025-01-01</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-</urlset>"#;
-
-    let mut headers = HeaderMap::new();
-    headers.insert(header::CONTENT_TYPE, "application/xml".parse().unwrap());
-
-    (StatusCode::OK, headers, sitemap_xml).into_response()
 }
 
 /// Assembles the Game of Life API router.

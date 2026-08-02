@@ -1,30 +1,34 @@
 ---
 title: "Random Projects"
-summary: "A grab bag of experiments—Advent of Code sprints, homelab tools, dotfiles, and quick utilities that solve my day-to-day itches."
-featured: true
+summary: "A grouped archive of smaller repositories, scripts, and experiments that solve specific problems without needing a full case study."
+summaryShort: "Smaller repositories and experiments that still carry useful signal."
+kind: "project"
+status: "archive"
+year: 2024
+featured: false
+featuredRank: 10
 order: 8
+role: "Independent builder and maintainer"
+impact: "Surfaces the smaller work that sharpens day-to-day tooling, algorithm practice, and exploratory problem solving."
+audience: "mixed"
 techStack:
   - Rust
-  - Go
-  - Advent of Code
-  - Kubernetes
-  - Automation
+  - Python
+  - C++
+  - Bash
+  - TypeScript
+  - CMake
+  - Docker
+  - SAT Solvers
+  - Linux
 heroImage: "/images/github.png"
 heroAlt: "GitHub activity illustration"
+repoUrl: "https://github.com/rrumana"
 primaryAction:
-  label: "Project page"
-  href: "/projects/random-projects"
-secondaryAction:
   label: "GitHub profile"
   href: "https://github.com/rrumana"
 ---
 ## What lives here
-Not every idea graduates into a full project page. Some are Advent of Code marathons, others are homelab experiments, editor tweaks, or quick utilities built to solve a one-off problem. This bucket collects the repos I iterate on when curiosity strikes.
+This page collects the work that is useful but too small or too heterogeneous to stand on its own. It includes algorithm practice, shell automation, dotfile and desktop setup, SAT and systems experiments, and one-off utilities that solved a specific problem.
 
-## Highlights
-- Seasonal Advent of Code solutions, mostly in Rust, with benchmarks for alternative approaches.
-- Hyprland + Arch dotfiles, shell scripts, and observability glue that make my daily workstation hum.
-- Proto-homelab services and Neovim experiments that may grow into standalone write-ups later.
-
-## Follow along
-My GitHub profile is the best place to see what's brewing. I try to document the interesting bits and ship code that others can fork, run, and riff on. The latest Advent of Code sprint lives in [this repository](https://github.com/rrumana/Advent_Of_Code_2024) if you're curious about the solutions.
+The common thread is practical problem solving. These repos are intentionally narrower in scope than the flagship case studies, but they still show the tools, habits, and implementation patterns that carry into the larger projects.

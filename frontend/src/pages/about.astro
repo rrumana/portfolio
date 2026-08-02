@@ -1,148 +1,138 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageSection from '../components/shell/PageSection.astro';
-import SplitSection from '../components/layouts/SplitSection.astro';
-import Text from '../components/ui/Text.astro';
-import Button from '../components/ui/Button.astro';
-import Badge from '../components/callouts/Badge.astro';
-import CallToAction from '../components/callouts/CallToAction.astro';
 import { siteConfig } from '../site.config';
-
-const navLinks = siteConfig.navigation.about;
-const resumeUrl = siteConfig.contact.resumeUrl;
-const emailLink = `mailto:${siteConfig.contact.email}`;
-const linkedInLink =
-  siteConfig.social.find((link) => link.label === 'LinkedIn')?.href ??
-  'https://linkedin.com/in/ryanrumana';
 ---
 <BaseLayout
   title="About | Ryan Rumana"
-  description="A closer look at the engineer behind the projects, the tooling I lean on, and how this site is evolving."
-  navLinks={navLinks}
+  description="Background, engineering principles, and current technical focus for Ryan Rumana."
 >
-  <main>
-    <PageSection
-      id="journey"
-      eyebrow="Engineer & Adventurer"
-      title="Curiosity drives everything I build"
-      description="From Florida to the Colorado mountains, I’ve chased problems that mix systems thinking, performance, and hands-on experimentation."
-    >
-      <SplitSection>
-        <picture slot="media" class="about__image">
-          <source srcset="/images/profile.webp" type="image/webp" />
-          <img
-            src="/images/profile.png"
-            alt="Ryan Rumana portrait"
-            width="450"
-            height="350"
-            loading="lazy"
-          />
-        </picture>
-        <div class="about__story">
-          <Text>
-            I’m Ryan Rumana—an engineer with a computer science background and a master’s in machine learning from the Colorado School of Mines. I love the intersection of distributed systems and human-centered tooling, whether that’s Rust services, Kubernetes clusters, or WASM demos.
-          </Text>
-          <Text>
-            Outside of tech you’ll usually find me outdoors: snowboarding, running, or training for triathlons. That combination of endurance and iteration shows up in my work too—I prefer shipping small experiments, measuring them, then leveling up the platform.
-          </Text>
-          <div class="about__cta">
-            <Button href={resumeUrl}>View résumé</Button>
-            <Button href={emailLink} variant="secondary">Say hello</Button>
-          </div>
+  <main id="main-content">
+    <section class="section-shell">
+      <div class="container about-grid">
+        <div class="about-copy">
+          <p class="eyebrow">About</p>
+          <h1>I build AI systems, software platforms, and infrastructure with a bias for clarity.</h1>
+          <p>
+            I am a Senior AI/ML Engineer at Dais, where I lead machine-learning research and development across
+            Rust-based context systems and durable agent platforms. My broader background spans applied ML, systems
+            software, medical-data tooling, and Kubernetes infrastructure.
+          </p>
+          <p>
+            This site is the public version of that work. It is organized around case studies, technical writing, and
+            smaller experiments that show how I approach platform design, distributed systems, WebAssembly, applied ML,
+            and reproducible research.
+          </p>
         </div>
-      </SplitSection>
-    </PageSection>
 
-    <PageSection
-      id="stack"
-      title="Daily tooling"
-      description="These are the languages, platforms, and workflows I reach for when shipping resilient systems."
-      variant="alt"
-    >
-      <div class="stack-grid">
-        <article class="stack-card">
-          <Badge tone="accent">Languages</Badge>
-          <Text>Rust, Python, and TypeScript for most builds. C++ when performance demands it.</Text>
-        </article>
-        <article class="stack-card">
-          <Badge tone="neutral">Platform</Badge>
-          <Text>k3s + GitOps for homelab infrastructure, Argo CD app-of-apps, Longhorn for storage.</Text>
-        </article>
-        <article class="stack-card">
-          <Badge tone="accent">Tooling</Badge>
-          <Text>Neovim, tmux, and a heavily customized terminal workflow, all running on self-hosted services.</Text>
-        </article>
-        <article class="stack-card">
-          <Badge tone="neutral">Observability</Badge>
-          <Text>Grafana, Prometheus, and log pipelines on deck as HA improvements land.</Text>
-        </article>
+        <div class="surface-panel about-sidebar">
+          <p class="eyebrow">Current snapshot</p>
+          <dl>
+            <div>
+              <dt>Role</dt>
+              <dd>{siteConfig.role}</dd>
+            </div>
+            <div>
+              <dt>Core tools</dt>
+              <dd>AI/ML systems, Rust, Kubernetes, self-hosted infrastructure</dd>
+            </div>
+            <div>
+              <dt>Outside work</dt>
+              <dd>Homelab maintenance, technical writing, endurance training</dd>
+            </div>
+          </dl>
+        </div>
       </div>
-    </PageSection>
+    </section>
 
-    <PageSection
-      id="site"
-      title="About this site"
-      description="The portfolio is being rebuilt to share a consistent design language while staying Rust-first at runtime."
-    >
-      <div class="site-overview">
-        <Text>
-          The redesign uses Astro for component-driven pages and markdown-backed content collections, while my Rust backend keeps serving requests and WebAssembly demos. Legacy pages remain available during the migration for reference.
-        </Text>
-        <Text>
-          Tokens, layout primitives, and reusable cards keep each page consistent. When a new project ships, I only need to update the content collection—the UI adapts automatically.
-        </Text>
+    <section class="section-shell">
+      <div class="container section-grid">
+        <div>
+          <p class="eyebrow">How I work</p>
+          <h2>I aim for systems that remain understandable after they are deployed.</h2>
+        </div>
+        <div class="principles-grid">
+          <article class="surface-panel principle">
+            <h3>Operational discipline</h3>
+            <p>Typed interfaces, observability, and failure modes matter as much as raw throughput.</p>
+          </article>
+          <article class="surface-panel principle">
+            <h3>Platform thinking</h3>
+            <p>I prefer systems that make change safer: GitOps, automation, reproducible builds, and clear ownership boundaries.</p>
+          </article>
+          <article class="surface-panel principle">
+            <h3>Writing as engineering</h3>
+            <p>Documentation and technical explanation are part of the product, especially when the work includes proofs, benchmarks, or tradeoffs.</p>
+          </article>
+        </div>
       </div>
-    </PageSection>
+    </section>
 
-    <CallToAction
-      id="contact"
-      eyebrow="Let’s chat"
-      title="Interested in joining forces?"
-      description="If you want to talk Rust, Kubernetes, homelabs, or triathlon routes, I’m just a message away."
-      actions={[
-        { label: 'Email me', href: emailLink },
-        { label: 'LinkedIn', href: linkedInLink, variant: 'secondary' },
-      ]}
-    />
+    <section class="section-shell">
+      <div class="container about-site surface-panel">
+        <div>
+          <p class="eyebrow">Why rebuild the site</p>
+          <h2>The previous site worked, but it was harder to extend than it needed to be.</h2>
+        </div>
+        <p>
+          This version is built as a more deliberate editorial system: clearer navigation, stronger project framing,
+          better case-study layouts, and enough structure to support code, formulas, and interactive demos without
+          breaking the page flow.
+        </p>
+      </div>
+    </section>
   </main>
 </BaseLayout>
 
 <style>
-.about__story {
+.about-grid {
   display: grid;
-  gap: var(--space-md);
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  align-items: start;
 }
 
-.about__cta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-.stack-grid {
+.about-copy {
   display: grid;
-  gap: var(--space-xl);
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
 }
 
-.stack-card {
-  background: var(--color-surface-100);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--color-border-subtle);
+.about-sidebar {
+  padding: 1.25rem;
+}
+
+.about-sidebar dl {
   display: grid;
-  gap: var(--space-sm);
+  gap: 1rem;
 }
 
-.site-overview {
+.about-sidebar dt {
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.about-sidebar dd {
+  margin: 0.3rem 0 0;
+  color: var(--color-text-strong);
+}
+
+.principles-grid {
   display: grid;
-  gap: var(--space-md);
-  max-width: 70ch;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-html[data-theme='dark'] .stack-card {
-  background: color-mix(in srgb, var(--color-surface-200) 92%, transparent);
-  border: 1px solid var(--color-border-muted);
+.principle,
+.about-site {
+  padding: 1.25rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+@media (max-width: 900px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

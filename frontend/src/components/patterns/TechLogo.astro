@@ -1,0 +1,293 @@
+---
+export interface Props {
+  name: string;
+}
+
+const props = Astro.props as Props;
+const { name } = props;
+
+const key = name.trim().toLowerCase();
+
+const fallback = (label: string, fill = '#7d8590', text = '#ffffff') => `
+  <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="${fill}" />
+    <text x="12" y="14.2" text-anchor="middle" font-size="7" font-family="Arial, sans-serif" font-weight="700" fill="${text}">
+      ${label}
+    </text>
+  </svg>
+`;
+
+const logos: Record<string, string> = {
+  rust: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2.6L13.4 4.1L15.5 3.9L16.5 5.8L18.5 6.3L18.4 8.4L19.9 9.8L19.1 11.8L19.9 13.8L18.4 15.2L18.5 17.3L16.5 17.8L15.5 19.7L13.4 19.5L12 21L10.6 19.5L8.5 19.7L7.5 17.8L5.5 17.3L5.6 15.2L4.1 13.8L4.9 11.8L4.1 9.8L5.6 8.4L5.5 6.3L7.5 5.8L8.5 3.9L10.6 4.1L12 2.6Z" fill="#dea584" />
+      <circle cx="12" cy="11.8" r="4.3" fill="#0d1117" />
+      <path d="M9.5 15.2V8.3H12.6C14.3 8.3 15.2 9.1 15.2 10.3C15.2 11.2 14.7 11.9 13.8 12.2L15.4 15.2H13.4L12 12.6H11V15.2H9.5ZM11 11.3H12.4C13.1 11.3 13.6 10.9 13.6 10.3C13.6 9.7 13.1 9.4 12.4 9.4H11V11.3Z" fill="#ffffff" />
+    </svg>
+  `,
+  webassembly: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="18" height="18" rx="4" fill="#654ff0" />
+      <path d="M6.5 7.5L8.5 16.5L11 11.2L13 16.5L15.5 7.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `,
+  wasm: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="18" height="18" rx="4" fill="#654ff0" />
+      <path d="M6.5 7.5L8.5 16.5L11 11.2L13 16.5L15.5 7.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `,
+  astro: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3.4L18.5 19.2L14.6 16.6L12 19.8L9.4 16.6L5.5 19.2L12 3.4Z" fill="#bc8cff" />
+      <path d="M12 9.2C13.9 9.2 15.4 10.5 15.4 12.1C15.4 13.8 13.9 15 12 15C10.1 15 8.6 13.8 8.6 12.1C8.6 10.5 10.1 9.2 12 9.2Z" fill="#0d1117" />
+    </svg>
+  `,
+  javascript: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2.5" y="2.5" width="19" height="19" rx="3.5" fill="#f7df1e" />
+      <text x="12" y="15" text-anchor="middle" font-size="8" font-family="Arial, sans-serif" font-weight="700" fill="#1f2328">JS</text>
+    </svg>
+  `,
+  typescript: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2.5" y="2.5" width="19" height="19" rx="3.5" fill="#3178c6" />
+      <text x="12" y="14.9" text-anchor="middle" font-size="7" font-family="Arial, sans-serif" font-weight="700" fill="#ffffff">TS</text>
+    </svg>
+  `,
+  kubernetes: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="12,2.2 19.8,6.7 19.8,17.3 12,21.8 4.2,17.3 4.2,6.7" fill="#326ce5" />
+      <circle cx="12" cy="12" r="4.3" fill="none" stroke="#ffffff" stroke-width="1.8" />
+      <path d="M12 6.2V17.8M6.9 9.1L17.1 14.9M17.1 9.1L6.9 14.9" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" />
+      <circle cx="12" cy="12" r="1.5" fill="#ffffff" />
+    </svg>
+  `,
+  'argo cd': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="8.5" fill="#ef7b4d" />
+      <circle cx="12" cy="12" r="5.5" fill="#ffffff" />
+      <path d="M12 6.9L8.3 12L12 17.1L15.7 12L12 6.9Z" fill="#ef7b4d" />
+      <circle cx="12" cy="12" r="1.6" fill="#ffffff" />
+    </svg>
+  `,
+  cilium: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3.2L18.2 6.7V13.9L12 20.8L5.8 13.9V6.7L12 3.2Z" fill="#f8c146" />
+      <path d="M12 7.1L14.6 9.6L12 12.2L9.4 9.6L12 7.1Z" fill="#ffffff" />
+      <path d="M12 12.3L14.8 15.1L12 17.8L9.2 15.1L12 12.3Z" fill="#2d3047" />
+      <path d="M7.7 10.6L10 12.8L7.7 15L5.5 12.8L7.7 10.6ZM16.3 10.6L18.5 12.8L16.3 15L14 12.8L16.3 10.6Z" fill="#2d3047" />
+    </svg>
+  `,
+  haproxy: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="6" width="16" height="12" rx="3" fill="#0f4b6e" />
+      <path d="M8 9.5V14.5M16 9.5V14.5M10.6 12H13.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+      <circle cx="8" cy="8.1" r="1" fill="#58a6ff" />
+      <circle cx="16" cy="8.1" r="1" fill="#58a6ff" />
+    </svg>
+  `,
+  linkerd: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3.4L17.8 6.7V13.3L12 20.6L6.2 13.3V6.7L12 3.4Z" fill="#2d8cff" />
+      <path d="M9.3 9.4L12 6.6L14.7 9.4L12 12.2L9.3 9.4ZM9.3 14.6L12 11.8L14.7 14.6L12 17.4L9.3 14.6Z" fill="#ffffff" />
+    </svg>
+  `,
+  'rook/ceph': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3.8L18.5 7.6V16.4L12 20.2L5.5 16.4V7.6L12 3.8Z" fill="#ef5b2a" />
+      <path d="M12 6.8L15.6 8.9V13.1L12 15.2L8.4 13.1V8.9L12 6.8Z" fill="#ffffff" />
+      <path d="M12 9.2L13.7 10.2V11.8L12 12.8L10.3 11.8V10.2L12 9.2Z" fill="#ef5b2a" />
+    </svg>
+  `,
+  cloudnativepg: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3.5C8.5 3.5 6.4 5.6 6.4 9.1V14.6C6.4 17.8 8.6 20.5 12 20.5C15.5 20.5 17.6 17.8 17.6 14.6V9.1C17.6 5.6 15.5 3.5 12 3.5Z" fill="#2453ff" />
+      <path d="M8.7 12.6C9.7 11 11.1 10.1 12.9 10.1C14.4 10.1 15.4 10.7 16.3 11.7C15.9 8.8 14.4 6.7 12 6.7C9.5 6.7 8 9 7.7 11.9C8 12.1 8.4 12.3 8.7 12.6Z" fill="#ffffff" />
+      <circle cx="14.6" cy="8.5" r="0.8" fill="#2453ff" />
+      <path d="M9.3 15.1C10.1 16 11 16.4 12 16.4C13.1 16.4 13.9 16 14.7 15.1" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+  `,
+  valkey: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3.8L17.8 7.1L12 10.4L6.2 7.1L12 3.8Z" fill="#8b5cf6" />
+      <path d="M6.2 7.1L12 10.4V16.2L6.2 12.9V7.1Z" fill="#6d28d9" />
+      <path d="M17.8 7.1L12 10.4V16.2L17.8 12.9V7.1Z" fill="#a78bfa" />
+      <path d="M12 13.6L17.8 10.3V13.6L12 16.9L6.2 13.6V10.3L12 13.6Z" fill="#7c3aed" opacity="0.92" />
+    </svg>
+  `,
+  harbor: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3.6L18.6 7.5V16.5L12 20.4L5.4 16.5V7.5L12 3.6Z" fill="#60b932" />
+      <path d="M12 6.9L15.8 9.1V14.9L12 17.1L8.2 14.9V9.1L12 6.9Z" fill="#ffffff" />
+      <path d="M9.8 9.2H14.2V14.8H9.8V9.2ZM11 10.4V13.6H13V10.4H11Z" fill="#60b932" />
+    </svg>
+  `,
+  python: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 4.2C8.4 4.2 8.5 6 8.5 8.2V10.1H15.2V11.4H5.4C3.4 11.4 2.2 13.1 2.2 15.2C2.2 17.4 3.5 19.1 5.4 19.1H7.4V16.3C7.4 13.9 8.9 12.5 11.4 12.5H15.6C17.7 12.5 19.5 10.8 19.5 8.7V7.3C19.5 5.2 17.8 4.2 15.8 4.2H12Z" fill="#3572a5" />
+      <circle cx="13.9" cy="6.6" r="0.9" fill="#ffffff" />
+      <path d="M12 19.8C15.6 19.8 15.5 18 15.5 15.8V13.9H8.8V12.6H18.6C20.6 12.6 21.8 10.9 21.8 8.8C21.8 6.6 20.5 4.9 18.6 4.9H16.6V7.7C16.6 10.1 15.1 11.5 12.6 11.5H8.4C6.3 11.5 4.5 13.2 4.5 15.3V16.7C4.5 18.8 6.2 19.8 8.2 19.8H12Z" fill="#ffd43b" />
+      <circle cx="10.1" cy="17.4" r="0.9" fill="#1f2328" />
+    </svg>
+  `,
+  pytorch: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 4.2V12L17.6 17.6" fill="none" stroke="#ee4c2c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="12" cy="12" r="5.6" fill="none" stroke="#ee4c2c" stroke-width="2.2" stroke-dasharray="28 8" transform="rotate(-34 12 12)" />
+    </svg>
+  `,
+  docker: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <g fill="#2496ed">
+        <rect x="5" y="9" width="3" height="3" rx="0.6" />
+        <rect x="8.3" y="9" width="3" height="3" rx="0.6" />
+        <rect x="11.6" y="9" width="3" height="3" rx="0.6" />
+        <rect x="8.3" y="5.7" width="3" height="3" rx="0.6" />
+        <rect x="11.6" y="5.7" width="3" height="3" rx="0.6" />
+        <path d="M4.3 13.6H17.2C16.7 16.4 14.4 18.4 11.5 18.4H8.8C6.7 18.4 5 16.8 4.3 14.7V13.6Z" />
+        <path d="M18 11.1C19.1 11.1 19.9 11.7 20.3 12.6C19.8 12.9 19.2 13.1 18.4 13.1H17.6V11.1H18Z" />
+      </g>
+    </svg>
+  `,
+  go: fallback('Go', '#00add8', '#ffffff'),
+  axum: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="7.8" fill="none" stroke="#58a6ff" stroke-width="2.2" />
+      <path d="M7.5 15.8L10.7 8.2L12 11.2L13.3 8.2L16.5 15.8" fill="none" stroke="#58a6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `,
+  postgresql: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="12" cy="6.1" rx="5.7" ry="2.4" fill="#336791" />
+      <path d="M6.3 6.1V15.4C6.3 16.8 8.9 18 12 18C15.1 18 17.7 16.8 17.7 15.4V6.1" fill="#336791" />
+      <ellipse cx="12" cy="15.4" rx="5.7" ry="2.4" fill="#274f70" />
+    </svg>
+  `,
+  webauthn: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3.2L18.4 6V11.6C18.4 15.7 15.7 19.3 12 20.8C8.3 19.3 5.6 15.7 5.6 11.6V6L12 3.2Z" fill="#2da44e" />
+      <path d="M9.8 12.2V10.8C9.8 9.5 10.8 8.5 12 8.5C13.2 8.5 14.2 9.5 14.2 10.8V12.2" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+      <rect x="8.8" y="11.8" width="6.4" height="5" rx="1.2" fill="#ffffff" />
+    </svg>
+  `,
+  argon2: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2.8L18.5 6.4V13.6L12 21.2L5.5 13.6V6.4L12 2.8Z" fill="#ff7b72" />
+      <path d="M9.2 14.8L12 8.2L14.8 14.8M10.3 12.2H13.7" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `,
+  cloudflare: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8.6 16.8H18.4C19.6 16.8 20.6 15.8 20.6 14.6C20.6 13.7 20 12.9 19.2 12.6C18.9 10.4 17 8.8 14.7 8.8C12.8 8.8 11.1 9.9 10.3 11.5C8.4 11.6 6.9 13.1 6.9 15C6.9 16 7.7 16.8 8.6 16.8Z" fill="#f38020" />
+      <path d="M6 17.1H14.7C15.4 17.1 15.9 16.6 15.9 15.9C15.9 15.3 15.4 14.8 14.8 14.8H7.3C6.6 14.8 6 15.4 6 16.1V17.1Z" fill="#fab005" />
+    </svg>
+  `,
+  neovim: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4.5 5.1L9.7 2.5V21.5L4.5 18.9V5.1Z" fill="#57a143" />
+      <path d="M19.5 5.1L14.3 2.5L9.7 9.3V21.5L14.3 18.9L19.5 5.1Z" fill="#7bc96f" />
+      <path d="M9.7 9.3L14.3 18.9L19.5 18.9L14.9 9.3H9.7Z" fill="#2d7d46" />
+    </svg>
+  `,
+  lua: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10.5" cy="11.5" r="7" fill="#2c2d72" />
+      <circle cx="13.5" cy="10" r="6" fill="#ffffff" />
+      <circle cx="16.8" cy="7.2" r="1.7" fill="#2c2d72" />
+    </svg>
+  `,
+  treesitter: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 4V20M12 8L7 12M12 8L17 12M7 12L4 16M17 12L20 16" fill="none" stroke="#2da44e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="12" cy="4" r="1.6" fill="#2da44e" />
+      <circle cx="7" cy="12" r="1.6" fill="#2da44e" />
+      <circle cx="17" cy="12" r="1.6" fill="#2da44e" />
+      <circle cx="4" cy="16" r="1.6" fill="#2da44e" />
+      <circle cx="20" cy="16" r="1.6" fill="#2da44e" />
+    </svg>
+  `,
+  lsp: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="6.5" cy="12" r="2.3" fill="#79c0ff" />
+      <circle cx="17.5" cy="7" r="2.3" fill="#79c0ff" />
+      <circle cx="17.5" cy="17" r="2.3" fill="#79c0ff" />
+      <path d="M8.6 11.1L15.2 7.9M8.6 12.9L15.2 16.1" fill="none" stroke="#79c0ff" stroke-width="1.8" stroke-linecap="round" />
+    </svg>
+  `,
+  telescope: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10.2" cy="10.2" r="5.3" fill="none" stroke="#8250df" stroke-width="2.2" />
+      <path d="M14.3 14.3L19.2 19.2" stroke="#8250df" stroke-width="2.2" stroke-linecap="round" />
+    </svg>
+  `,
+  gitops: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 6H18L15.5 3.5M17 18H6L8.5 20.5" fill="none" stroke="#f78166" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `,
+  longhorn: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 15.8L9.4 6.5L12 11.8L14.6 6.5L18 15.8" fill="none" stroke="#00c7b7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `,
+  metallb: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="5" width="16" height="4" rx="1" fill="#58a6ff" />
+      <rect x="4" y="10" width="16" height="4" rx="1" fill="#79c0ff" />
+      <rect x="4" y="15" width="16" height="4" rx="1" fill="#1f6feb" />
+    </svg>
+  `,
+  tensorrt: fallback('TR', '#76b900', '#0d1117'),
+  jetson: fallback('J', '#76b900', '#0d1117'),
+  cargo: fallback('C', '#dea584', '#0d1117'),
+  async: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3.5 12C5.5 8.5 7.5 8.5 9.5 12C11.5 15.5 13.5 15.5 15.5 12C17.5 8.5 19.5 8.5 20.5 12" fill="none" stroke="#58a6ff" stroke-width="2.1" stroke-linecap="round" />
+    </svg>
+  `,
+  'ownership model': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="5" r="2" fill="#7d8590" />
+      <circle cx="6" cy="18" r="2" fill="#7d8590" />
+      <circle cx="18" cy="18" r="2" fill="#7d8590" />
+      <path d="M12 7.2V14M10.8 6.8L7.2 16.2M13.2 6.8L16.8 16.2" stroke="#7d8590" stroke-width="1.7" stroke-linecap="round" />
+    </svg>
+  `,
+  'live coding': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8.2 7.2L4.5 12L8.2 16.8M15.8 7.2L19.5 12L15.8 16.8M13.5 5L10.5 19" fill="none" stroke="#a371f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `,
+  'advent of code': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3.5L14 9.5L20.3 9.7L15.2 13.5L17.1 19.7L12 16L6.9 19.7L8.8 13.5L3.7 9.7L10 9.5L12 3.5Z" fill="#d29922" />
+    </svg>
+  `,
+  automation: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="3.2" fill="#8b949e" />
+      <path d="M12 4.2V6.3M12 17.7V19.8M4.2 12H6.3M17.7 12H19.8M6.5 6.5L8 8M16 16L17.5 17.5M16 8L17.5 6.5M6.5 17.5L8 16" fill="none" stroke="#8b949e" stroke-width="1.8" stroke-linecap="round" />
+    </svg>
+  `,
+};
+
+const svg = logos[key] ?? fallback(name.slice(0, 2).toUpperCase());
+---
+<span class="tech-logo" set:html={svg}></span>
+
+<style>
+.tech-logo {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tech-logo :global(svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+</style>

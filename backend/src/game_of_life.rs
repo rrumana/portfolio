@@ -30,10 +30,10 @@ pub fn update(current: &[u8], next: &mut [u8]) {
         .into_par_iter()
         .enumerate()
         .for_each(|(row, row_slice)| {
-            for col in 0..WIDTH {
+            for (col, cell) in row_slice.iter_mut().enumerate().take(WIDTH) {
                 let idx = index(row, col);
                 let neighbors = count_neighbors(current, row, col);
-                row_slice[col] = match (current[idx], neighbors) {
+                *cell = match (current[idx], neighbors) {
                     (1, 2) | (1, 3) | (0, 3) => 1,
                     _ => 0,
                 };

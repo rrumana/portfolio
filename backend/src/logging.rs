@@ -71,13 +71,12 @@ pub async fn ingest_frontend_log(
         return StatusCode::PAYLOAD_TOO_LARGE;
     }
 
-    if let Some(context) = &payload.context {
-        if serde_json::to_string(context)
+    if let Some(context) = &payload.context
+        && serde_json::to_string(context)
             .map(|body| body.len() > MAX_CONTEXT_LEN)
             .unwrap_or(false)
-        {
-            return StatusCode::PAYLOAD_TOO_LARGE;
-        }
+    {
+        return StatusCode::PAYLOAD_TOO_LARGE;
     }
 
     let level = payload.level.unwrap_or(FrontendLevel::Info);

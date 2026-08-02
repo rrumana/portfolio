@@ -6,6 +6,10 @@ members = [
     "wasm_game_of_life",
 ]
 
+default-members = [
+    "backend",
+]
+
 [profile.release]
 opt-level = "s"
 lto = true
