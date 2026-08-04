@@ -1,108 +1,62 @@
 ---
 import Container from './Container.astro';
+import Icon from '../ui/Icon.astro';
 import { siteConfig } from '../../site.config';
 
 const currentYear = new Date().getFullYear();
 const footerLinks = [
-  { label: 'Email', href: `mailto:${siteConfig.contact.email}` },
-  ...siteConfig.social,
+  { label: 'Email', href: `mailto:${siteConfig.contact.email}`, icon: 'mail' as const },
+  { label: 'GitHub', href: siteConfig.social[0].href, icon: 'github' as const },
+  { label: 'LinkedIn', href: siteConfig.social[1].href, icon: 'linkedin' as const },
 ];
 ---
+
 <footer class="site-footer">
   <Container class="site-footer__inner">
-    <div class="site-footer__brand">
-      <p class="site-footer__eyebrow">Built in public, hosted at home</p>
-      <h2>{siteConfig.name}</h2>
-      <p>
-        Rust stays in the runtime path. Astro handles content and presentation. Projects, research,
-        and professional context share one publishing system backed by infrastructure I operate.
-      </p>
+    <div class="site-footer__message">
+      <p class="eyebrow">Keep in touch</p>
+      <h2>Good systems start with good questions.</h2>
+      <p>If you want to compare notes on applied ML, Rust, Kubernetes, or strange cellular-automata problems, say hello.</p>
     </div>
     <nav class="site-footer__links" aria-label="Footer links">
       {footerLinks.map((link) => (
-        <a
-          href={link.href}
-          target={link.href.startsWith('http') ? '_blank' : undefined}
-          rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-        >
-          {link.label}
+        <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+          <Icon name={link.icon} size={18} /> {link.label}
         </a>
       ))}
     </nav>
     <div class="site-footer__meta">
       <span>&copy; {currentYear} {siteConfig.name}</span>
       <span>{siteConfig.role}</span>
-      <span>AI/ML, Rust, Kubernetes</span>
+      <a href="/resume/">Résumé</a>
     </div>
   </Container>
 </footer>
 
 <style>
-.site-footer {
-  padding-block: clamp(2.8rem, 4vw, 4.2rem);
-  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
-  border-top: 1px solid var(--color-border-subtle);
-}
+  .site-footer {
+    padding-block: clamp(3.5rem, 6vw, 5.5rem);
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--color-surface);
+  }
 
-.site-footer__inner {
-  display: grid;
-  gap: 1rem;
-}
+  .site-footer__inner { display: grid; gap: 1.5rem; }
+  .site-footer__message { display: grid; gap: 0.75rem; max-width: 48rem; }
+  .site-footer__message h2 { max-width: 16ch; font-size: clamp(2rem, 3vw, 3.3rem); }
+  .site-footer__message > p:last-child { color: var(--color-text-muted); }
 
-.site-footer__brand {
-  max-width: 48rem;
-  display: grid;
-  gap: 0.65rem;
-}
-
-.site-footer__eyebrow {
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text-subtle);
-}
-
-.site-footer__brand h2 {
-  font-family: var(--font-family-display);
-  font-size: clamp(1.9rem, 1.2vw + 1.2rem, 2.8rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  color: var(--color-text-strong);
-}
-
-.site-footer__brand p:last-child {
-  color: var(--color-text-muted);
-  max-width: 42rem;
-}
-
-.site-footer__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem 1rem;
-  color: var(--color-text-subtle);
-  font-size: var(--font-size-sm);
-}
-
-.site-footer__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.site-footer__links a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.3rem;
-  padding-inline: 0.9rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-border-subtle);
-  background: color-mix(in srgb, var(--color-surface-strong) 92%, transparent);
-  color: var(--color-text-muted);
-}
-
-.site-footer__links a:hover,
-.site-footer__links a:focus-visible {
-  color: var(--color-text-strong);
-  border-color: color-mix(in srgb, var(--color-accent-500) 40%, var(--color-border-subtle));
-}
+  .site-footer__links, .site-footer__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 1rem; }
+  .site-footer__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    padding-inline: 0.9rem;
+    border: 1px solid var(--color-border-muted);
+    border-radius: 999px;
+    color: var(--color-text-default);
+  }
+  .site-footer__links a:hover, .site-footer__links a:focus-visible { border-color: var(--color-primary-500); color: var(--color-text-strong); }
+  .site-footer__meta { padding-top: 1rem; border-top: 1px solid var(--color-border-subtle); color: var(--color-text-subtle); font-size: var(--font-size-sm); }
+  .site-footer__meta a { text-decoration: underline; text-underline-offset: 0.2em; }
 </style>

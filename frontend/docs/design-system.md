@@ -1,64 +1,55 @@
-# Game of Life Page Styling Plan
+# Alpine editorial design system
 
-## Goals
-- Present the long-form Game of Life content in a cohesive, modern layout while preserving literal copy.
-- Establish reusable UI patterns (accordions, TOC, formulas, code snippets) for future deep dives.
-- Maintain strong light/dark theme contrast and accessibility.
+The site combines the restraint of an alpine field guide with the clarity of a technical journal. “Alpine” describes atmosphere—air, stone, snow, timber, distance—not decorative mountain graphics. “Editorial” means content hierarchy and reading quality take precedence over interface chrome.
 
-## Layout Primitives
-- **ContentGrid**: Responsive two-column layout with sticky navigation on desktop and stacked layout on mobile. Suitable for any extensive article or project case study.
-- **SectionShell**: Wrapper for major sections (Optimizations, Proof, Implementation) providing consistent spacing, anchor ids, and optional accent borders.
-- **SurfaceCard**: Token-driven card component with variants (`default`, `elevated`, `outline`) for optimization panels, feature lists, and CLI cards across the site.
+## Principles
 
-## Typography & Tokens
-- Extend `Heading` sizes (`xs`–`4xl`) and `Text` tones (`muted`, `accent`, `warning`).
-- Introduce inline emphasis helpers (`.math-term`, `.code-term`, `.highlight`) mapped to token colors.
-- Finalize light/dark surface and border tokens (`surface-100/200/300`, `border-100/200/300`) so stacked cards feel consistent.
+1. **Lead with the work.** Titles, summaries, diagrams, and results are the visual anchors.
+2. **Keep the terrain quiet.** Use cool neutrals, subtle borders, and one restrained accent. Avoid neon, glass effects, ornamental gradients, and stacked dashboard cards.
+3. **Make long reading comfortable.** Keep prose measures near 65–72 characters, use generous vertical rhythm, and distinguish captions, metadata, code, and body copy.
+4. **Show technical precision.** Monospace is for commands, identifiers, measurements, and proof notation—not general decoration.
+5. **Earn interaction.** Prefer static HTML. Add disclosure, theme, or WASM behavior only when it helps readers understand or navigate the work.
 
-## Disclosure Patterns
-- **Accordion**: Accessible disclosure component with customizable headers and nested support—ideal for optimization subsections and proof steps.
-- **AccordionGroup**: Groups related accordions with shared heading and optional navigation. Useful for FAQs, runbooks, or feature breakdowns.
+## Typography
 
-## Navigation Helpers
-- **StickyNav**: Vertical anchor list with scroll-spy highlighting; collapses to dropdown on mobile.
-- Include “Back to top” and optional breadcrumbs for project detail pages.
+- Source Serif 4 is the editorial voice for long-form display or reading roles.
+- Source Sans 3 carries navigation, summaries, labels, and UI copy.
+- IBM Plex Mono carries code, formulas, artifact identifiers, and compact metadata.
+- Preserve semantic heading order. Do not choose a heading level for its visual size.
+- Avoid full paragraphs in uppercase, italic, or muted low-contrast text.
 
-## Code & CLI Presentation
-- **CodeBlock**: Syntax-highlighted block (Prism/Shiki) with copy button and filename/language badge (Rust, Bash, YAML, JSON).
-- **CommandCard**: Compact card for CLI command + description (formalize from legacy page for reuse).
-- **CodeChip**: Inline styling for short commands/functions.
+## Color and surfaces
 
-## Math & Formula Styling
-- `.formula-card`: Padded container for MathJax blocks with theme-aware background and optional captions.
-- `.formula-inline`: Inline math chip styling.
-- Ensure MathJax output inherits tokenized fonts/colors.
+Use the tokens in `src/styles/tokens.css`; do not embed new palette values in content components. Light and dark themes must preserve meaning and hierarchy, not merely invert colors.
 
-## Feature & Data Grids
-- **FeatureGrid**: Responsive icon/title/description grid for SAT solver features or platform highlights.
-- **StatsStrip**: Horizontal key-value list for quick metrics (grid size, live cell counts) reusable on homelab metrics sections.
+- Page backgrounds should read as snow, cloud, slate, or ink rather than pure branded color.
+- Accent color should identify links, focus, or a small number of key actions.
+- Borders should separate regions without turning every paragraph into a card.
+- Status must be communicated with text as well as color.
 
-## Callouts & Highlights
-- **Callout** component with variants (`info`, `tip`, `warning`, `success`) for emphasis paragraphs.
-- **QuoteBlock** for notable statements or testimonials.
+## Layout and components
 
-## Media Frames
-- **MediaFrame**: Stylized wrapper for images/GIFs with captions.
-- **SimulationPanel**: Specialized wrapper for interactive canvases (Game of Life demo) incorporating stats and controls.
+- Use the shared shell, container, section, card, callout, media, code, and navigation components.
+- A page should have one clear introduction, a predictable reading column, and a limited action hierarchy.
+- Research pages should foreground title, authors, stage, availability, abstract, and artifact links before secondary metadata.
+- Project pages should foreground role, outcome, architecture, and supporting evidence.
+- Use a table only for genuine comparison or repeated fields. Use diagrams only when relationships are harder to understand in prose.
 
-## Theming & Accessibility
-- Apply final light/dark token palette across components for distinct surfaces, borders, and gradients.
-- Provide visible focus states for accordions, navigation links, and copy buttons.
-- Validate color contrast and keyboard navigation.
+## Media and motion
 
-## Migration Steps
-1. Implement shared components: `ContentGrid`, `SectionShell`, `SurfaceCard`, `Accordion`, `AccordionGroup`, `StickyNav`, `Callout`, `CodeBlock`, `CommandCard`, `FeatureGrid`, `MediaFrame`, `SimulationPanel`.
-2. Refactor Game of Life page to use these components while keeping content intact.
-3. Update global tokens/typography.
-4. Style MathJax output within `.formula-card` wrappers.
-5. Apply components to homelab and ReID pages for cohesive design.
-6. Test responsiveness, accessibility, and theme toggles.
+- Write alternative text for the information conveyed, not the filename or visual style.
+- Pair complex diagrams with captions or nearby explanations.
+- Do not autoplay video or animation with sound.
+- Honor `prefers-reduced-motion`; essential information cannot depend on animation.
+- Keep images free of internal hostnames, addresses, credentials, dashboards containing private data, or identifying network topology.
 
-## Reuse Examples
-- **Homelab**: `AccordionGroup` for runbooks, `FeatureGrid` for services, `CodeBlock` for deployments, `Callout` for HA notes.
-- **ReID**: `MediaFrame` for pipeline diagrams, `Callout` for key results, `CommandCard` for inference commands.
-- **Future tutorials**: `ContentGrid` + `StickyNav` for structure, `CodeBlock` + `Callout` for instructional segments.
+## Accessibility acceptance
+
+- All functionality is keyboard reachable, with visible focus.
+- A skip link reaches the primary content.
+- Landmarks and heading order describe the page correctly.
+- Text and meaningful non-text controls meet WCAG AA contrast.
+- At 200% zoom and narrow mobile widths, reading order and actions remain usable.
+- Playwright journeys and axe checks pass before production promotion.
+
+See [content authoring](content-authoring.md) for editorial conventions and [validation](../../docs/validation.md) for release checks.

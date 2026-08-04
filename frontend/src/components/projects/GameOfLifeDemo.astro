@@ -104,15 +104,7 @@ const { id = 'playground' } = props;
   </div>
 </section>
 
-<script
-  is:inline
-  type="module"
-  set:html={`import(${JSON.stringify(gameOfLifeScriptUrl)})
-    .then(({ initGameOfLife }) => initGameOfLife())
-    .catch((error) => {
-      console.error('Failed to initialize Game of Life demo:', error);
-    });`}
-></script>
+<script is:inline type="module" src={gameOfLifeScriptUrl}></script>
 
 <style>
 .gol-demo__layout {

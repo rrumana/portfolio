@@ -6,5 +6,13 @@ export default defineConfig({
   output: 'static',
   outDir: '../static/dist',
   trailingSlash: 'always',
+  build: {
+    inlineStylesheets: 'never',
+  },
+  vite: {
+    build: {
+      assetsInlineLimit: 0,
+    },
+  },
   integrations: [],
 });

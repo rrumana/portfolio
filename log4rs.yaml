@@ -5,38 +5,14 @@ appenders:
     kind: console
     encoder:
       kind: json
-  app_file:
-    kind: file
-    path: "logs/app.log"
-    encoder:
-      kind: json
-  access_file:
-    kind: file
-    path: "logs/access.log"
-    encoder:
-      kind: json
-  frontend_file:
-    kind: file
-    path: "logs/frontend.log"
-    encoder:
-      kind: json
-
 loggers:
   access:
     level: info
     appenders:
       - stdout_json
-      - access_file
-    additive: false
-  frontend:
-    level: debug
-    appenders:
-      - stdout_json
-      - frontend_file
     additive: false
 
 root:
   level: info
   appenders:
     - stdout_json
-    - app_file

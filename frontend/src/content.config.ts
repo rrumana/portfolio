@@ -18,6 +18,8 @@ const projects = defineCollection({
     impact: z.string(),
     audience: z.enum(['hiring', 'technical', 'mixed']).default('mixed'),
     techStack: z.array(z.string()).default([]),
+    cardTags: z.array(z.string()).max(3).default([]),
+    accent: z.enum(['sky', 'ochre', 'pine', 'clay']).default('sky'),
     heroImage: z.string().optional(),
     heroImageDark: z.string().optional(),
     heroAlt: z.string().optional(),
@@ -49,16 +51,23 @@ const projects = defineCollection({
   }),
 });
 
-const research = defineCollection({
-  loader: glob({ base: './src/content/research', pattern: '**/*.{md,mdx}' }),
-  schema: z.object({
+const artifactSchema = z.object({
+  kind: z.enum(['pdf', 'repository', 'slides', 'video', 'artifact']),
+  label: z.string(),
+  url: z.string(),
+});
+
+const researchSchema = z
+  .object({
     title: z.string(),
     shortTitle: z.string(),
     summary: z.string(),
-    abstract: z.string(),
-    kind: z.enum(['whitepaper', 'academic-report', 'working-paper']),
-    status: z.enum(['published', 'in-progress']).default('published'),
-    publicationDate: z.coerce.date(),
+    abstract: z.string().optional(),
+    format: z.enum(['independent-paper', 'course-report', 'working-paper']),
+    stage: z.enum(['in-progress', 'complete']),
+    availability: z.enum(['public', 'forthcoming']),
+    lastUpdated: z.coerce.date(),
+    completedDate: z.coerce.date().optional(),
     displayDate: z.string(),
     authors: z.array(
       z.object({
@@ -68,17 +77,44 @@ const research = defineCollection({
     ),
     topics: z.array(z.string()).default([]),
     venue: z.string().optional(),
-    citation: z.string(),
+    presentation: z
+      .object({
+        event: z.string(),
+        date: z.coerce.date().optional(),
+        url: z.url().optional(),
+      })
+      .optional(),
+    citation: z.string().optional(),
     version: z.string().optional(),
     pageCount: z.number().int().positive().optional(),
     sha256: z.string().regex(/^[a-f0-9]{64}$/).optional(),
     license: z.string().optional(),
-    pdfUrl: z.string().optional(),
-    repoUrl: z.url().optional(),
-    artifactUrl: z.url().optional(),
+    artifacts: z.array(artifactSchema).default([]),
     relatedProjectUrl: z.string().optional(),
     featuredRank: z.number().default(99),
-  }),
+    progress: z
+      .object({
+        question: z.string(),
+        currentState: z.string(),
+        nextMilestone: z.string(),
+      })
+      .optional(),
+  })
+  .superRefine((value, context) => {
+    if (value.stage === 'complete' && !value.completedDate) {
+      context.addIssue({ code: 'custom', path: ['completedDate'], message: 'Completed work requires a completion date.' });
+    }
+    if (value.stage === 'in-progress' && !value.progress) {
+      context.addIssue({ code: 'custom', path: ['progress'], message: 'In-progress work requires progress details.' });
+    }
+    if (value.availability === 'public' && value.artifacts.length === 0) {
+      context.addIssue({ code: 'custom', path: ['artifacts'], message: 'Public work requires at least one artifact.' });
+    }
+  });
+
+const research = defineCollection({
+  loader: glob({ base: './src/content/research', pattern: '**/*.{md,mdx}' }),
+  schema: researchSchema,
 });
 
 export const collections = {

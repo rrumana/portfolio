@@ -10,6 +10,8 @@ featuredRank: 8
 order: 6
 role: "Editor maintainer and workflow owner"
 impact: "Consolidated my day-to-day editing workflow into a configuration that stays fast, reproducible, and easier to evolve."
+cardTags: ["Neovim", "Lua", "LSP"]
+accent: "pine"
 audience: "technical"
 techStack:
   - Lazy.nvim

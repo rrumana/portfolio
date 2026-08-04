@@ -1,0 +1,64 @@
+---
+import Icon from '../components/ui/Icon.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../site.config';
+
+const experience = [
+  { company: 'Dais', title: 'Senior AI/ML Engineer', dates: 'November 2025 — present', summary: 'Leads AI/ML implementation.' },
+  { company: 'Axial3D', title: 'Software Engineer', dates: 'June 2024 — November 2025', summary: 'Supported medical-imaging software and contributed to application, authentication, and deployment improvements.' },
+  { company: 'Entegrion', title: 'Software Engineer', dates: 'June 2022 — March 2024', summary: 'Built Python and C++ data-processing, visualization, and database tooling for coagulation-monitor workflows.' },
+  { company: 'Amergint Technologies', title: 'Software Engineer Intern', dates: 'May 2022 — August 2022', summary: 'Maintained C++ and Python server software and troubleshot Linux systems.' },
+];
+---
+<BaseLayout title="Resume | Ryan Rumana" description="Experience, education, and selected technical work from Ryan Rumana, Senior AI/ML Engineer.">
+  <main id="main-content">
+    <section class="section-shell resume-hero">
+      <div class="container resume-hero__grid">
+        <div><p class="eyebrow">Résumé</p><h1>Ryan Rumana</h1><p>Senior AI/ML Engineer working across applied machine learning, systems software, and infrastructure.</p></div>
+        <div class="resume-actions"><a class="button-link" href={siteConfig.contact.resumeDownloadUrl}><Icon name="pdf" size={18} /> Download PDF</a><a class="button-link button-link--ghost" href={`mailto:${siteConfig.contact.email}`}><Icon name="mail" size={18} /> Email me</a></div>
+      </div>
+    </section>
+
+    <section class="section-shell resume-body-section">
+      <div class="container resume-layout">
+        <div class="resume-main">
+          <section class="resume-section"><p class="eyebrow">Experience</p><div class="timeline">{experience.map((item) => <article><div><h2>{item.company}</h2><p>{item.title}</p></div><time>{item.dates}</time><p>{item.summary}</p></article>)}</div></section>
+          <section class="resume-section"><p class="eyebrow">Selected work</p><div class="compact-grid">
+            <article><h2>Kubernetes Cluster</h2><p>Architect and operator of a six-node, GitOps-managed Kubernetes platform with Rook/Ceph storage and shared services.</p></article>
+            <article><h2>Reverse Game of Life</h2><p>Proved finite-board predecessor existence NP-complete and built supporting Rust, SAT, and WebAssembly tooling.</p></article>
+            <article><h2>Multi-Camera ReID</h2><p>Co-developed an edge person re-identification prototype and report, presented at Stanford’s ACT4AERO workshop.</p></article>
+          </div></section>
+        </div>
+        <aside class="resume-rail">
+          <section class="surface-panel"><p class="eyebrow">Education</p><h2>Colorado School of Mines</h2><p>M.S. Computer Science — Machine Learning, 2023</p><p>B.S. Computer Science — Computer Engineering, 2022</p></section>
+          <section class="surface-panel"><p class="eyebrow">Core tools</p><ul class="pill-list"><li>Rust</li><li>Python</li><li>PyTorch</li><li>TypeScript</li><li>PostgreSQL</li><li>Docker</li><li>Kubernetes</li><li>AWS</li></ul></section>
+        </aside>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .resume-hero { border-bottom: 1px solid var(--color-border-subtle); }
+  .resume-hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; align-items: end; }
+  .resume-hero__grid > div:first-child { display: grid; gap: 1rem; }
+  .resume-hero__grid p:last-child { color: var(--color-text-muted); font-size: var(--font-size-lg); }
+  .resume-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .resume-body-section { padding-top: clamp(2.5rem, 5vw, 4.5rem); }
+  .resume-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 0.33fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+  .resume-main, .resume-section, .timeline, .compact-grid, .resume-rail { display: grid; gap: 1.25rem; }
+  .resume-main { gap: 4rem; }
+  .timeline article { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.3rem 1.5rem; padding-block: 1.25rem; border-top: 1px solid var(--color-border-muted); }
+  .timeline article > p:last-child { grid-column: 1 / -1; color: var(--color-text-muted); }
+  .timeline h2, .compact-grid h2, .resume-rail h2 { font-family: var(--font-family-display); font-size: 1.55rem; }
+  .timeline time { color: var(--color-text-subtle); font-family: var(--font-family-mono); font-size: var(--font-size-xs); white-space: nowrap; }
+  .compact-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .compact-grid article { padding-top: 1.1rem; border-top: 3px solid var(--color-accent-pine); }
+  .compact-grid p { margin-top: 0.65rem; color: var(--color-text-muted); }
+  .resume-rail { position: sticky; top: 7rem; }
+  .resume-rail section { display: grid; gap: 0.8rem; padding: 1.2rem; }
+  .resume-rail section:first-child { border-top: 3px solid var(--color-accent-warm); }
+  .resume-rail p { color: var(--color-text-muted); }
+  @media (max-width: 900px) { .resume-hero__grid, .resume-layout { grid-template-columns: 1fr; } .resume-rail { position: static; } }
+  @media (max-width: 720px) { .compact-grid { grid-template-columns: 1fr; } .timeline article { grid-template-columns: 1fr; } .timeline article > p:last-child { grid-column: auto; } }
+</style>

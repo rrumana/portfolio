@@ -1,5 +1,10 @@
 ---
 import '../styles/globals.css';
+import '@fontsource-variable/source-sans-3/wght.css';
+import '@fontsource-variable/source-serif-4/wght.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import 'katex/dist/katex.min.css';
 import SiteHeader from '../components/shell/SiteHeader.astro';
 import SiteFooter from '../components/shell/SiteFooter.astro';
 import { siteConfig, defaultNavLinks } from '../site.config';
@@ -10,7 +15,6 @@ export interface Props {
   lang?: string;
   navLinks?: readonly { href: string; label: string }[];
   image?: string;
-  structuredData?: Record<string, unknown>;
 }
 
 const props = Astro.props as Props;
@@ -21,23 +25,10 @@ const {
   lang = 'en',
   navLinks = defaultNavLinks,
   image = siteConfig.meta.image,
-  structuredData,
 } = props;
 
 const canonical = new URL(Astro.url.pathname, siteConfig.domain).toString();
 const socialImage = new URL(image, siteConfig.domain).toString();
-const personStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: siteConfig.name,
-  url: siteConfig.domain,
-  jobTitle: siteConfig.jobTitle,
-  worksFor: {
-    '@type': 'Organization',
-    name: siteConfig.employer,
-  },
-  sameAs: siteConfig.social.map((link) => link.href),
-};
 ---
 <!DOCTYPE html>
 <html lang={lang}>
@@ -47,16 +38,11 @@ const personStructuredData = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content={siteConfig.name} />
-    <meta name="theme-color" content="#0d1117" />
+    <meta name="theme-color" content="#f4f1ea" />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
-    />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" />
+    <script is:inline src="/scripts/theme.js"></script>
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -68,8 +54,6 @@ const personStructuredData = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(personStructuredData)}></script>
-    {structuredData && <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>}
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>

@@ -10,6 +10,8 @@ featuredRank: 4
 order: 3
 role: "Research coauthor and ML deployment collaborator"
 impact: "Demonstrated a distributed edge pipeline that retained 79% ReID mAP after INT8 quantization while reducing measured runtime."
+cardTags: ["PyTorch", "Edge ML", "Quantization"]
+accent: "sky"
 audience: "mixed"
 techStack:
   - Python

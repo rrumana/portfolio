@@ -1,12 +1,9 @@
 use backend::app;
-use backend::game_of_life::{GameOfLife, parse_initial_state};
-use backend::routes::game_api;
 use log::info;
 use serde_json::json;
 use std::env;
 use std::net::SocketAddr;
 use std::path::{Path, PathBuf};
-use std::sync::{Arc, Mutex};
 use tokio::net::TcpListener;
 
 fn resolve_wasm_dir(static_root: &str) -> String {
@@ -45,36 +42,9 @@ async fn main() {
         })
     );
 
-    let initial_state = [
-        "00100000000000000000",
-        "10100000000000000111",
-        "01100000000000000000",
-        "00000000001100000000",
-        "00000000001100000010",
-        "00100000000000000010",
-        "10100000000000000010",
-        "01100000000000000000",
-        "00000000000000000000",
-        "00000000000000000111",
-        "00100000000000000000",
-        "10100000000000000000",
-        "01100000000000000000",
-        "00000000000000000000",
-        "00000000000000000000",
-        "00000000000000000000",
-        "00000000000000000000",
-        "00000000000000000010",
-        "00000000000000000010",
-        "00000000000000000010",
-    ];
-    let initial_grid = parse_initial_state(&initial_state);
-    let game_state = Arc::new(Mutex::new(GameOfLife::new(initial_grid)));
-
-    let api = game_api().layer(axum::extract::Extension(game_state));
-
     let static_root = env::var("STATIC_ROOT").unwrap_or_else(|_| "static/dist".to_string());
     let wasm_dir = resolve_wasm_dir(&static_root);
-    let app = app(&static_root, &wasm_dir, api);
+    let app = app(&static_root, &wasm_dir);
 
     let port = env::var("PORT")
         .or_else(|_| env::var("APP_PORT"))
@@ -93,10 +63,7 @@ async fn main() {
     );
 
     let listener = TcpListener::bind(&addr).await.unwrap();
-    axum::serve(
-        listener,
-        app.into_make_service_with_connect_info::<SocketAddr>(),
-    )
-    .await
-    .unwrap();
+    axum::serve(listener, app.into_make_service())
+        .await
+        .unwrap();
 }

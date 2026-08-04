@@ -2,15 +2,19 @@
 import { getCollection } from 'astro:content';
 import ProjectCard from '../components/cards/ProjectCard.astro';
 import ResearchCard from '../components/cards/ResearchCard.astro';
-import MetricStrip from '../components/patterns/MetricStrip.astro';
+import Icon from '../components/ui/Icon.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteConfig } from '../site.config';
-import { featuredProjects } from '../utils/projects';
 
-const projects = featuredProjects(await getCollection('projects')).slice(0, 3);
+const allProjects = await getCollection('projects');
+const projects = siteConfig.homeFeatured
+  .map((id) => allProjects.find((project) => project.id === id))
+  .filter((project): project is NonNullable<typeof project> => Boolean(project));
 const research = (await getCollection('research'))
-  .sort((left, right) => left.data.featuredRank - right.data.featuredRank)
-  .slice(0, 2);
+  .sort((left, right) => left.data.stage === right.data.stage
+    ? left.data.featuredRank - right.data.featuredRank
+    : left.data.stage === 'in-progress' ? -1 : 1)
+  .slice(0, 3);
 ---
 <BaseLayout>
   <main id="main-content">
@@ -22,114 +26,83 @@ const research = (await getCollection('research'))
           <p class="home-hero__lede">{siteConfig.hero.description}</p>
           <div class="home-hero__actions">
             <a class="button-link" href={siteConfig.hero.primaryCta.href}>{siteConfig.hero.primaryCta.label}</a>
-            <a class="button-link button-link--ghost" href={siteConfig.hero.secondaryCta.href}>
-              {siteConfig.hero.secondaryCta.label}
-            </a>
+            <a class="button-link button-link--ghost" href={siteConfig.hero.secondaryCta.href}>{siteConfig.hero.secondaryCta.label}</a>
           </div>
+          <p class="home-hero__note">AI/ML implementation · systems software · self-hosted infrastructure</p>
         </div>
 
-        <aside class="home-hero__rail surface-panel">
-          <div class="home-hero__rail-block">
-            <p class="eyebrow">Current direction</p>
-            <ul class="home-hero__focus">
-              {siteConfig.focusAreas.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-        </div>
-        <div class="home-hero__rail-block">
-          <p class="eyebrow">How to explore</p>
-          <p class="home-hero__note">
-            Start with the selected projects below, then open a case study for architecture notes, implementation
-            choices, interactive demos, and supporting references.
-          </p>
-        </div>
-      </aside>
+        <figure class="home-portrait">
+          <div class="home-portrait__frame">
+            <img src="/images/profile.webp" alt="Ryan Rumana outdoors in the mountains" width="906" height="1085" fetchpriority="high" />
+          </div>
+          <figcaption>Usually happier outside, especially when a mountain is involved</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section class="section-shell">
+    <section class="section-shell home-projects">
       <div class="container section-grid">
-        <div class="section-header">
-          <div>
-            <p class="eyebrow">Selected work</p>
-            <h2>Selected projects</h2>
-          </div>
-          <a class="button-link button-link--ghost" href="/projects/">View all projects</a>
+        <div class="section-heading">
+          <div><p class="eyebrow">Selected work</p><h2>Things I’ve built and investigated.</h2></div>
+          <p>Working software, infrastructure, and research—shown with enough context to understand what mattered and what I learned.</p>
         </div>
-
-        <div class="project-list project-list--home">
-          {projects.map((project) => (
+        <div class="project-list">
+          {projects.map((project, index) => (
             <ProjectCard
               title={project.data.title}
               summary={project.data.summaryShort}
               href={`/projects/${project.id}/`}
               year={project.data.year}
               status={project.data.status}
-              role={project.data.role}
               impact={project.data.impact}
-              techStack={project.data.techStack}
+              cardTags={project.data.cardTags}
               media={project.data.heroImage}
               mediaDark={project.data.heroImageDark}
               mediaAlt={project.data.heroAlt}
               repoUrl={project.data.repoUrl}
+              accent={project.data.accent}
+              lead={index === 0}
             />
           ))}
         </div>
+        <a class="text-link" href="/projects/">See every project <Icon name="arrow" size={17} /></a>
       </div>
     </section>
 
     <section class="section-shell home-research">
-      <div class="container section-grid">
-        <div class="section-header">
-          <div>
-            <p class="eyebrow">Research</p>
-            <h2>Whitepapers and technical reports</h2>
-          </div>
-          <a class="button-link button-link--ghost" href="/research/">View all research</a>
+      <div class="container research-block">
+        <div class="research-block__intro">
+          <p class="eyebrow">Research & writing</p>
+          <h2>Ideas should be inspectable.</h2>
+          <p>I use papers and technical reports to make the problem, evidence, limits, and supporting artifacts easier to examine.</p>
+          <a class="text-link" href="/research/">Papers, reports, and talks <Icon name="arrow" size={17} /></a>
         </div>
-
-        <div class="research-list research-list--home">
+        <div class="research-list">
           {research.map((paper) => (
             <ResearchCard
               title={paper.data.shortTitle}
               summary={paper.data.summary}
               href={`/research/${paper.id}/`}
-              kind={paper.data.kind}
-              status={paper.data.status}
+              format={paper.data.format}
+              stage={paper.data.stage}
+              availability={paper.data.availability}
               displayDate={paper.data.displayDate}
               authors={paper.data.authors.map((author) => author.name)}
               topics={paper.data.topics}
-              pdfUrl={paper.data.pdfUrl}
+              artifacts={paper.data.artifacts}
+              presentation={paper.data.presentation ? { event: paper.data.presentation.event } : undefined}
             />
           ))}
         </div>
       </div>
     </section>
 
-    <section class="section-shell home-notes">
-      <div class="container home-notes__section">
-        <div class="home-notes__copy">
-          <p class="eyebrow">Engineering approach</p>
-          <h2>Systems thinking, operational discipline, and clear communication.</h2>
-          <p>
-            I care about the full path from an idea to a dependable system: explicit tradeoffs, reproducible builds,
-            observable operation, and documentation that makes the result easier to maintain.
-          </p>
-        </div>
-        <div class="home-notes__row">
-          <MetricStrip items={siteConfig.homeMetrics} />
-          <div class="surface-panel writing-card">
-            <p class="eyebrow">Technical communication</p>
-            <p>
-              Technical writing is part of the engineering work. Research entries preserve authorship, citations,
-              source artifacts, and limitations; case studies connect those results back to working software.
-            </p>
-            <p>
-              The Reverse Game of Life work demonstrates that approach through a formal complexity result, a
-              reproducible proof artifact, and a working WebAssembly sandbox.
-            </p>
-          </div>
+    <section class="section-shell home-personal">
+      <div class="container personal-band surface-panel">
+        <div><p class="eyebrow">Beyond the terminal</p><h2>Engineer, tinkerer, endurance athlete.</h2></div>
+        <div class="personal-band__copy">
+          <p>I studied at the Colorado School of Mines and now live in Tallahassee. I like difficult systems, long training sessions, mountain air, and following questions far past the point where they stop being convenient.</p>
+          <a class="text-link" href="/about/">More about me <Icon name="arrow" size={17} /></a>
         </div>
       </div>
     </section>
@@ -137,127 +110,37 @@ const research = (await getCollection('research'))
 </BaseLayout>
 
 <style>
-.home-hero__grid {
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-  align-items: start;
-}
+  .home-hero { overflow: hidden; }
+  .home-hero__grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.7fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .home-hero__copy { display: grid; gap: 1.35rem; max-width: 50rem; }
+  .home-hero__lede { max-width: 43rem; color: var(--color-text-muted); font-size: clamp(1.13rem, 0.6vw + 1rem, 1.38rem); }
+  .home-hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .home-hero__note { font-family: var(--font-family-mono); font-size: var(--font-size-xs); color: var(--color-text-subtle); }
+  .home-portrait { display: grid; gap: 0.75rem; position: relative; }
+  .home-portrait::before { content: ''; position: absolute; inset: -2rem -4rem 2rem 3rem; z-index: -1; border: 1px solid var(--color-border-muted); border-radius: 48% 52% 42% 58%; transform: rotate(-6deg); }
+  .home-portrait__frame { overflow: hidden; border-radius: 48% 48% 1.1rem 1.1rem; border: 1px solid var(--color-border-muted); box-shadow: var(--shadow-soft); background: var(--color-surface-strong); }
+  .home-portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 34% center; }
+  .home-portrait figcaption { color: var(--color-text-subtle); font-family: var(--font-family-mono); font-size: var(--font-size-2xs); text-align: center; }
+  .section-heading { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.65fr); gap: 2rem; align-items: end; }
+  .section-heading > div { display: grid; gap: 0.85rem; }
+  .section-heading > p { color: var(--color-text-muted); }
+  .project-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem; }
+  .project-list :global(.project-card--lead) { grid-column: 1 / -1; }
+  .text-link { display: inline-flex; width: fit-content; align-items: center; gap: 0.4rem; color: var(--color-link); font-weight: 700; }
+  .text-link:hover, .text-link:focus-visible { color: var(--color-text-strong); }
+  .home-research { background: color-mix(in srgb, var(--color-surface-strong) 72%, transparent); border-block: 1px solid var(--color-border-subtle); }
+  .research-block { display: grid; grid-template-columns: minmax(260px, 0.65fr) minmax(0, 1.35fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .research-block__intro { display: grid; gap: 1rem; position: sticky; top: 7rem; }
+  .research-block__intro p { color: var(--color-text-muted); }
+  .research-list { display: grid; gap: 1rem; }
+  .personal-band { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr); gap: 2rem; padding: clamp(1.5rem, 4vw, 3.5rem); border-top: 3px solid var(--color-accent-pine); }
+  .personal-band > div { display: grid; gap: 0.85rem; }
+  .personal-band__copy { align-content: center; color: var(--color-text-muted); }
 
-.home-hero__copy {
-  display: grid;
-  gap: 1.35rem;
-  max-width: 44rem;
-}
-
-.home-hero__lede {
-  font-size: clamp(1.08rem, 0.45vw + 1rem, 1.28rem);
-  max-width: 40rem;
-  color: var(--color-text-muted);
-}
-
-.home-hero__actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.home-hero__rail {
-  padding: 1.25rem;
-  display: grid;
-  gap: 1.1rem;
-}
-
-.home-hero__rail-block {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.home-hero__focus {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 0.55rem;
-}
-
-.home-hero__focus li {
-  max-width: none;
-  padding: 0.8rem 0.9rem;
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--color-surface-strong) 94%, transparent);
-  border: 1px solid var(--color-border-subtle);
-}
-
-.home-hero__note {
-  color: var(--color-text-muted);
-}
-
-.section-header {
-  display: grid;
-  gap: 1rem;
-}
-
-.section-header {
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-}
-
-.project-list {
-  display: grid;
-  gap: 1rem;
-}
-
-.research-list {
-  display: grid;
-  gap: 1rem;
-}
-
-.project-list--home {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.research-list--home {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.home-notes__section,
-.home-notes__copy {
-  display: grid;
-  gap: 1rem;
-}
-
-.home-notes__row {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-  align-items: start;
-}
-
-.writing-card {
-  padding: 1.2rem;
-  display: grid;
-  gap: 0.8rem;
-}
-
-@media (max-width: 980px) {
-  .home-hero__grid,
-  .home-notes__row,
-  .section-header {
-    grid-template-columns: 1fr;
+  @media (max-width: 900px) {
+    .home-hero__grid, .section-heading, .research-block, .personal-band { grid-template-columns: 1fr; }
+    .home-portrait { width: min(25rem, 85%); margin-inline: auto; }
+    .research-block__intro { position: static; }
   }
-
-  .project-list--home {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .research-list--home {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 720px) {
-  .project-list--home {
-    grid-template-columns: 1fr;
-  }
-}
+  @media (max-width: 680px) { .project-list { grid-template-columns: 1fr; } }
 </style>

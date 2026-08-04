@@ -10,6 +10,8 @@ featuredRank: 2
 order: 2
 role: "Platform engineer and operator"
 impact: "Evolved the cluster into a maintainable platform spanning networking, storage, delivery, observability, and shared data services."
+cardTags: ["Kubernetes", "Argo CD", "Rook/Ceph"]
+accent: "pine"
 audience: "mixed"
 techStack:
   - Kubernetes

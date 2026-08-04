@@ -1,7 +1,7 @@
 ---
 title: "Reverse Game of Life"
-summary: "An ongoing exploration of reverse Conway's Game of Life, pairing a Rust workspace with a browser-facing WebAssembly demo and SAT-based search."
-summaryShort: "An ongoing Rust and WebAssembly project for reverse Game of Life search."
+summary: "A Rust and WebAssembly exploration of reverse Conway's Game of Life, pairing an interactive browser demo with SAT-based search and a completed complexity paper."
+summaryShort: "Reverse Game of Life explored through Rust, WebAssembly, SAT solving, and a completed paper."
 kind: "project"
 status: "active"
 year: 2025
@@ -10,6 +10,8 @@ featuredRank: 1
 order: 1
 role: "Systems engineer and reverse-search implementer"
 impact: "Turned a technical research problem into an accessible browser case study backed by a working solver workspace."
+cardTags: ["Rust", "WebAssembly", "SAT solving"]
+accent: "ochre"
 audience: "mixed"
 techStack:
   - Rust
@@ -34,7 +36,7 @@ primaryAction:
   label: "Open repository"
   href: "https://github.com/rrumana/Reverse_Game_Of_Life"
 secondaryAction:
-  label: "Read whitepaper"
+  label: "Read paper"
   href: "/research/predecessor-existence-finite-game-of-life/"
 ---
 ## Overview
@@ -48,4 +50,4 @@ The workspace is split along the same boundary that the problem itself suggests.
 That structure keeps the project practical. The public demo stays easy to understand, and the underlying workspace can continue to evolve as the reverse solver and proof tooling mature.
 
 ## Status
-This remains an active project that started in 2025 and is still being extended. The solver and proof tooling now support a July 2026 whitepaper proving NP-completeness for predecessor existence on explicitly encoded finite boards with a permanently dead boundary.
+This remains an active project that started in 2025 and is still being extended. The solver and proof tooling now support a July 2026 paper proving NP-completeness for predecessor existence on explicitly encoded finite boards with a permanently dead boundary.

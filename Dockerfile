@@ -5,6 +5,7 @@
 ########################################
 FROM node:24-bookworm-slim AS frontend-builder
 WORKDIR /workspace
+ENV ASTRO_TELEMETRY_DISABLED=1
 
 # Install frontend dependencies and build the Astro site
 COPY frontend/package.json frontend/package-lock.json ./frontend/
@@ -90,9 +91,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
-RUN mkdir -p /app/logs \
-    && chown 10001:10001 /app/logs
 
 COPY --from=backend-builder /workspace/target/x86_64-unknown-linux-musl/release/portfolio ./portfolio
 COPY --from=backend-builder /workspace/log4rs.yaml ./log4rs.yaml

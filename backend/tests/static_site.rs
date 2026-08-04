@@ -1,14 +1,15 @@
 use axum::{
-    Router,
     body::{Body, to_bytes},
-    extract::ConnectInfo,
     http::{
-        Request, StatusCode,
-        header::{CACHE_CONTROL, CONTENT_TYPE, LOCATION},
+        Method, Request, StatusCode,
+        header::{
+            CACHE_CONTROL, CONTENT_SECURITY_POLICY, CONTENT_TYPE, LOCATION, REFERRER_POLICY,
+            SET_COOKIE, X_CONTENT_TYPE_OPTIONS, X_FRAME_OPTIONS,
+        },
     },
 };
 use backend::app;
-use std::{fs, net::SocketAddr, path::PathBuf};
+use std::{fs, path::PathBuf};
 use tower::ServiceExt;
 use uuid::Uuid;
 
@@ -58,11 +59,10 @@ impl TestSite {
         }
     }
 
-    fn router(&self) -> Router {
+    fn router(&self) -> axum::Router {
         app(
             self.static_dir.to_str().unwrap(),
             self.wasm_dir.to_str().unwrap(),
-            Router::new(),
         )
     }
 }
@@ -74,11 +74,25 @@ impl Drop for TestSite {
 }
 
 fn request(uri: &str) -> Request<Body> {
-    Request::builder()
-        .uri(uri)
-        .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 4000))))
-        .body(Body::empty())
-        .unwrap()
+    Request::builder().uri(uri).body(Body::empty()).unwrap()
+}
+
+fn assert_security_headers(response: &axum::response::Response) {
+    assert_eq!(
+        response.headers()[CONTENT_SECURITY_POLICY],
+        "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'"
+    );
+    assert_eq!(response.headers()[X_CONTENT_TYPE_OPTIONS], "nosniff");
+    assert_eq!(response.headers()[REFERRER_POLICY], "no-referrer");
+    assert_eq!(
+        response.headers()["permissions-policy"],
+        "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), usb=()"
+    );
+    assert_eq!(
+        response.headers()["cross-origin-opener-policy"],
+        "same-origin"
+    );
+    assert_eq!(response.headers()[X_FRAME_OPTIONS], "DENY");
 }
 
 async fn body_text(response: axum::response::Response) -> String {
@@ -108,7 +122,6 @@ async fn readiness_fails_when_the_static_site_is_missing() {
     let app = app(
         missing_static_dir.to_str().unwrap(),
         site.wasm_dir.to_str().unwrap(),
-        Router::new(),
     );
 
     let response = app.oneshot(request("/readyz")).await.unwrap();
@@ -163,7 +176,6 @@ async fn falls_back_to_a_plain_404_page_when_no_generated_page_exists() {
     let app = app(
         static_dir.to_str().unwrap(),
         site.wasm_dir.to_str().unwrap(),
-        Router::new(),
     );
 
     let response = app.oneshot(request("/missing")).await.unwrap();
@@ -209,4 +221,76 @@ async fn cache_headers_match_asset_versioning() {
     let legacy = site.router().oneshot(request("/legacy/")).await.unwrap();
     assert_eq!(legacy.status(), StatusCode::OK);
     assert_eq!(legacy.headers()["x-robots-tag"], "noindex, nofollow");
+}
+
+#[tokio::test]
+async fn security_headers_cover_static_health_redirect_wasm_and_404_responses() {
+    let site = TestSite::new();
+
+    for uri in [
+        "/",
+        "/healthz",
+        "/projects/example",
+        "/wasm/wasm_game_of_life_bg.wasm",
+        "/not-a-real-page",
+    ] {
+        let response = site.router().oneshot(request(uri)).await.unwrap();
+        assert_security_headers(&response);
+    }
+}
+
+#[tokio::test]
+async fn request_ids_are_ephemeral_and_client_identifiers_are_not_returned() {
+    let site = TestSite::new();
+    let response = site
+        .router()
+        .oneshot(
+            Request::builder()
+                .uri("/?email=private@example.com")
+                .header("cookie", "portfolio_client_id=persistent-client")
+                .header("x-client-id", "persistent-client")
+                .header("x-request-id", "caller-controlled")
+                .header("user-agent", "private-agent")
+                .header("referer", "https://private.example/")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+
+    assert!(response.headers().get(SET_COOKIE).is_none());
+    assert!(response.headers().get("x-client-id").is_none());
+    let request_id = response.headers()["x-request-id"].to_str().unwrap();
+    assert_ne!(request_id, "caller-controlled");
+    assert!(Uuid::parse_str(request_id).is_ok());
+}
+
+#[tokio::test]
+async fn removed_public_apis_are_unavailable_and_never_cached() {
+    let site = TestSite::new();
+
+    for (method, uri, expected_status) in [
+        (Method::GET, "/api/logs", StatusCode::NOT_FOUND),
+        (Method::POST, "/api/logs", StatusCode::METHOD_NOT_ALLOWED),
+        (
+            Method::GET,
+            "/api/game-of-life/state",
+            StatusCode::NOT_FOUND,
+        ),
+        (
+            Method::POST,
+            "/api/game-of-life/step",
+            StatusCode::METHOD_NOT_ALLOWED,
+        ),
+    ] {
+        let api_request = Request::builder()
+            .method(method)
+            .uri(uri)
+            .body(Body::empty())
+            .unwrap();
+        let response = site.router().oneshot(api_request).await.unwrap();
+        assert_eq!(response.status(), expected_status);
+        assert_eq!(response.headers()[CACHE_CONTROL], "no-store");
+        assert_security_headers(&response);
+    }
 }

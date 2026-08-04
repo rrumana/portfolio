@@ -1,98 +1,40 @@
-<button
-  class="theme-toggle"
-  type="button"
-  data-theme-toggle
-  aria-label="Toggle theme"
-  aria-pressed="false"
->
-  <span class="theme-toggle__indicator" aria-hidden="true"></span>
-  <span class="theme-toggle__label">Theme</span>
+---
+import Icon from './Icon.astro';
+---
+
+<button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" aria-pressed="false">
+  <span data-theme-sun><Icon name="sun" size={17} /></span>
+  <span data-theme-moon hidden><Icon name="moon" size={17} /></span>
+  <span data-theme-label>Light</span>
 </button>
 
-<script is:inline>
-const storageKey = 'rr-theme';
-const root = document.documentElement;
-const toggleBtn = document.querySelector('[data-theme-toggle]');
-
-const normaliseTheme = (theme) => (theme === 'dark' ? 'dark' : 'light');
-
-const applyTheme = (theme) => {
-  const normalised = normaliseTheme(theme);
-  root.setAttribute('data-theme', normalised);
-  if (toggleBtn) {
-    const isDark = normalised === 'dark';
-    toggleBtn.setAttribute('aria-pressed', String(isDark));
-    toggleBtn.classList.toggle('is-dark', isDark);
-  }
-};
-
-const storedTheme = localStorage.getItem(storageKey);
-if (storedTheme === 'dark' || storedTheme === 'light') {
-  applyTheme(storedTheme);
-} else {
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(prefersDark ? 'dark' : 'light');
-}
-
-if (toggleBtn) {
-  toggleBtn.addEventListener('click', () => {
-    const current = normaliseTheme(root.getAttribute('data-theme'));
-    const nextTheme = current === 'dark' ? 'light' : 'dark';
-    applyTheme(nextTheme);
-    localStorage.setItem(storageKey, nextTheme);
-  });
-}
-
-const media = window.matchMedia('(prefers-color-scheme: dark)');
-media.addEventListener('change', (event) => {
-  if (!localStorage.getItem(storageKey)) {
-    applyTheme(event.matches ? 'dark' : 'light');
-  }
-});
-</script>
-
 <style>
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-height: 2.4rem;
-  padding-inline: 0.85rem;
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-surface-strong) 88%, transparent);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
-}
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    padding-inline: 0.85rem;
+    border: 1px solid var(--color-border-muted);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text-default);
+    font-size: var(--font-size-sm);
+    font-weight: 650;
+  }
 
-.theme-toggle:hover,
-.theme-toggle:focus-visible {
-  color: var(--color-text-strong);
-  border-color: color-mix(in srgb, var(--color-accent-500) 40%, var(--color-border-subtle));
-}
+  .theme-toggle:hover,
+  .theme-toggle:focus-visible {
+    border-color: var(--color-primary-500);
+    color: var(--color-text-strong);
+  }
 
-.theme-toggle.is-dark {
-  color: var(--color-text-strong);
-}
+  .theme-toggle span { display: inline-flex; }
+  .theme-toggle span[hidden] { display: none; }
 
-.theme-toggle__indicator {
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 30% 30%, var(--color-gold-300), var(--color-accent-500));
-  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-accent-500) 15%, transparent);
-}
-
-.theme-toggle__label {
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
-.theme-toggle.is-dark .theme-toggle__indicator {
-  background:
-    radial-gradient(circle at 30% 30%, var(--color-gold-200), var(--color-ink-500));
-  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-gold-300) 16%, transparent);
-}
+  @media (max-width: 480px) {
+    .theme-toggle { width: 2.75rem; padding: 0; }
+    .theme-toggle [data-theme-label] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  }
 </style>

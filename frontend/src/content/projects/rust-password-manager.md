@@ -10,6 +10,8 @@ featuredRank: 9
 order: 7
 role: "Rust learning-project author"
 impact: "Explored local key derivation and encrypted persistence while exposing why security-sensitive prototypes require careful review."
+cardTags: ["Rust", "Cryptography", "CLI"]
+accent: "clay"
 audience: "technical"
 techStack:
   - Rust

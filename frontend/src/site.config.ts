@@ -24,52 +24,31 @@ export const siteConfig = {
   meta: {
     title: 'Ryan Rumana | Senior AI/ML Engineer',
     description:
-      'Portfolio and research by Ryan Rumana, a Senior AI/ML Engineer at Dais working across Rust, AI systems, and Kubernetes infrastructure.',
-    image: '/images/portfolio_light.png',
+      'Projects, research, and writing by Ryan Rumana, a Senior AI/ML Engineer at Dais who leads AI/ML implementation.',
+    image: '/images/social-card.png',
   },
   hero: {
-    eyebrow: 'Systems, platform, and ML engineering',
-    title: 'I build software in Rust, Kubernetes, and applied ML.',
+    eyebrow: 'AI/ML engineer, systems builder, curious human',
+    title: 'I build useful AI systems—and the software that keeps them working.',
     description:
-      'This portfolio collects the work I want to show publicly: production services, self-hosted infrastructure, WebAssembly demos, and technical writing that explains the tradeoffs clearly.',
-    primaryCta: { label: 'View projects', href: '/projects/' },
-    secondaryCta: { label: 'Download resume', href: '/assets/resume.pdf' },
+      'I’m Ryan, a Senior AI/ML Engineer at Dais, where I lead AI/ML implementation. Away from work I explore Rust, Kubernetes, the Game of Life, and whatever problem is interesting enough to keep pulling at the thread.',
+    primaryCta: { label: 'Explore my work', href: '/projects/' },
+    secondaryCta: { label: 'View resume', href: '/resume/' },
   },
   contact: {
     email: 'ryan.rumana@gmail.com',
-    resumeUrl: '/assets/resume.pdf',
+    resumeUrl: '/resume/',
+    resumeDownloadUrl: '/assets/resume.pdf',
   },
   navigation: {
     primary: [
       { href: '/', label: 'Home' },
       { href: '/projects/', label: 'Projects' },
-      { href: '/research/', label: 'Research' },
+      { href: '/research/', label: 'Research & writing' },
       { href: '/about/', label: 'About' },
     ],
   },
-  focusAreas: [
-    'Rust services and APIs',
-    'Kubernetes and self-hosted infrastructure',
-    'ML systems and deployment',
-    'Technical research and browser demos',
-  ],
-  homeMetrics: [
-    {
-      label: 'Current role',
-      value: 'Senior AI/ML Engineer',
-      detail: 'Leading AI/ML research and platform work at Dais.',
-    },
-    {
-      label: 'Flagship stack',
-      value: 'Rust + Kubernetes + WASM',
-      detail: 'Tools I use for backend systems, infrastructure, and interactive demos.',
-    },
-    {
-      label: 'Writing focus',
-      value: 'Research + case studies',
-      detail: 'Formal reports, reproducible artifacts, and practical engineering write-ups.',
-    },
-  ] satisfies Metric[],
+  homeFeatured: ['game-of-life', 'kubernetes-homelab', 'multi-camera-reid'],
   social: [
     { label: 'GitHub', href: 'https://github.com/rrumana' },
     { label: 'LinkedIn', href: 'https://linkedin.com/in/ryanrumana' },

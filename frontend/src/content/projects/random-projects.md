@@ -10,6 +10,8 @@ featuredRank: 10
 order: 8
 role: "Independent builder and maintainer"
 impact: "Surfaces the smaller work that sharpens day-to-day tooling, algorithm practice, and exploratory problem solving."
+cardTags: ["Rust", "Python", "Systems"]
+accent: "ochre"
 audience: "mixed"
 techStack:
   - Rust

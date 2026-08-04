@@ -1,228 +1,105 @@
-# Portfolio Website
+# Ryan Rumana Portfolio
 
-A high-performance, self-hosted portfolio website built entirely in Rust, showcasing advanced systems programming, web development, and computational problem-solving capabilities.
+Source for [rcrumana.xyz](https://rcrumana.xyz): an Astro 7 static frontend served by a small Rust/Axum runtime, with a Rust-to-WebAssembly Game of Life demonstration.
 
-## 🚀 Overview
+The current branch is the replacement frontend. It presents projects, complete and in-progress research, and long-form technical material through a restrained alpine editorial design. The site does not need visitor accounts, analytics, or public application APIs.
 
-This portfolio represents a comprehensive demonstration of modern Rust development across multiple domains:
+## Architecture
 
-- **Web Backend**: High-performance Axum-based server with custom middleware
-- **WebAssembly Integration**: Rust-compiled WASM for browser-based Game of Life simulation
-- **Advanced Algorithms**: SAT-based reverse Game of Life solver using constraint programming
-- **Systems Programming**: Custom SAT solver bindings and optimized cellular automaton engines
-- **DevOps**: Containerized deployment with multi-stage Docker builds
-- **Frontend**: Responsive design with SCSS compilation and minimal JavaScript
-
-## 🏗️ Architecture
-
-### Project Structure
-
-```
-portfolio/
-├── backend/           # Axum web server
-├── wasm_game_of_life/ # WebAssembly Game of Life engine
-├── static/            # Frontend assets (HTML, CSS, JS)
-└── Dockerfile         # Multi-stage containerized build
-
-External Dependencies:
-├── game_of_life/      # Core cellular automaton engine with SIMD optimizations
-├── game_of_life_reverse/ # SAT-based reverse solver
-├── text_to_input/     # ASCII art to cellular pattern converter
-└── parkissat-sys/     # Custom Rust bindings for ParKissat SAT solver
+```text
+frontend/             Astro 7 pages, content collections, components, and public assets
+wasm_game_of_life/    Browser-side Rust/WASM demonstration
+backend/              Axum static-file runtime and health/readiness probes
+static/dist/          Generated Astro output; do not author content here
+.github/workflows/    Validation and immutable staging-image publication
+docs/                 Quality, privacy, and release guidance
 ```
 
-### Core Components
+`npm run build` in `frontend/` generates a static site in `static/dist/`. The container build compiles that output, the WASM bundle, and the Axum binary into one runtime image. Axum serves the generated files and exposes `/healthz` and `/readyz` for the platform.
 
-#### 1. **Web Backend** ([`backend/`](backend/))
-- **Framework**: [Axum](https://github.com/tokio-rs/axum) for high-performance async web serving
-- **Features**: 
-  - Static file serving with custom middleware
-  - RESTful API endpoints for Game of Life simulation
-  - Request logging and error handling
-  - Sitemap generation
+The backend serves generated files, browser-local WASM, and the two platform probes. It does not issue visitor identifiers, ingest browser logs, or maintain shared Game-of-Life HTTP state.
 
-#### 2. **WebAssembly Engine** ([`wasm_game_of_life/`](wasm_game_of_life/))
-- **Purpose**: Browser-based Game of Life simulation with near-native performance
-- **Features**:
-  - SIMD-optimized cellular automaton engine compiled to WASM
-  - Interactive grid manipulation and pattern loading
-  - Text-to-pattern conversion using ASCII art
-  - Real-time simulation with configurable speed
-- **Build Target**: `wasm32-unknown-unknown` with [`wasm-pack`](https://rustwasm.github.io/wasm-pack/)
+## Content model
 
-#### 3. **Game of Life Engine** ([`game_of_life/`](../game_of_life/))
-- **Multiple Engine Implementations**:
-  - **Naive Engine**: Basic implementation for reference
-  - **SIMD Engine**: Vectorized operations using portable SIMD
-  - **Ultimate Engine**: Highly optimized with multiple boundary conditions
-- **Features**:
-  - Support for dead, wrap, and mirror boundary conditions
-  - Comprehensive benchmarking suite
-  - Pattern I/O with multiple formats
-  - Grid resizing and state management
+- Projects are case studies: what was built, the role, engineering decisions, impact, and current maintenance state.
+- Research entries are technical records: authorship, date, abstract, scope, evidence, artifacts, and related projects.
+- Research stage and availability are separate. Use **in-progress** or **complete** for the work, and **forthcoming** or **public** for availability.
+- Making a report available on this site does not by itself make it an academic publication. Do not describe work as peer reviewed, accepted, or published by a venue unless that is factually true.
 
-#### 4. **Reverse Game of Life Solver** ([`game_of_life_reverse/`](../game_of_life_reverse/))
-- **Problem**: NP-Complete reverse cellular automaton solving
-- **Approach**: Boolean Satisfiability (SAT) problem reduction
-- **SAT Solvers**: 
-  - [CaDiCaL](https://github.com/arminbiere/cadical) for single-threaded solving
-  - [ParKissat-RS](https://github.com/shaowei-cai-group/ParKissat-RS) for parallel solving
-- **Features**:
-  - Multi-generation predecessor finding
-  - Solution validation and analysis
-  - Configurable optimization levels
-  - Pattern recognition and quality analysis
+See [content authoring](frontend/docs/content-authoring.md) and the [design system](frontend/docs/design-system.md).
 
-#### 5. **Custom SAT Solver Bindings** ([`parkissat-sys/`](../parkissat-sys/))
-- **Purpose**: Safe Rust bindings for ParKissat-RS SAT solver
-- **Implementation**: FFI bindings with [`bindgen`](https://rust-lang.github.io/rust-bindgen/) and [`cc`](https://github.com/rust-lang/cc-rs)
-- **Features**: Memory-safe wrapper around C++ SAT solver
+## Local development
 
-#### 6. **Text Processing Utilities** ([`text_to_input/`](../text_to_input/))
-- **Purpose**: Convert text strings to Game of Life patterns
-- **Implementation**: It's a Hashmap...
-- **Integration**: Used by both WASM frontend and reverse solver
+Prerequisites are Node.js 24, npm, the Rust toolchain selected by `rust-toolchain.toml`, and the `wasm32-unknown-unknown` target. Docker is the most reproducible way to exercise the complete build.
 
-## 🛠️ Technical Features
-
-### Performance Optimizations
-
-- **SIMD Vectorization**: Portable SIMD for cross-platform performance
-- **Memory Layout**: Cache-friendly data structures for cellular automaton simulation
-- **WebAssembly**: Near-native performance in browsers
-- **Parallel SAT Solving**: Multi-threaded constraint satisfaction
-- **Link-Time Optimization**: Aggressive compiler optimizations for release builds
-
-## 🚀 Deployment
-
-### Docker Containerization
-
-The project uses a multi-stage Docker build:
-
-```dockerfile
-# Stage 1: Rust compilation with multiple targets
-FROM rust:latest AS builder
-RUN rustup target add x86_64-unknown-linux-musl wasm32-unknown-unknown
-
-# Stage 2: Minimal Alpine runtime
-FROM alpine:latest
-RUN apk add --no-cache ca-certificates
-```
-
-**Features**:
-- Multi-target compilation (native + WASM)
-- Static linking for minimal runtime dependencies
-- Optimized binary size with `musl` target
-- Automatic dependency cloning from GitHub
-
-### Self-Hosted Infrastructure
-
-- **Platform**: Arch Linux on AMD Ryzen 12-core mini-PC
-- **Storage**: BTRFS RAID 1 with automated snapshots
-- **Networking**: OPNsense firewall with Cloudflare integration
-- **Monitoring**: Custom dashboard with system metrics
-- **Security**: WireGuard VPN for remote access
-
-## 🏃‍♂️ Quick Start
-
-### Prerequisites
-
-- Rust 1.70+ with nightly toolchain
-- Node.js (for WASM tooling)
-- Docker (for containerized deployment)
-
-### Local Development
+Frontend development:
 
 ```bash
-# Clone the repository
-git clone https://github.com/rrumana/portfolio.git
-cd portfolio
-
-# Install required targets
-rustup target add wasm32-unknown-unknown
-
-# Build the project
-cargo build --release
-
-# Run the development server
-cargo run --bin portfolio
+cd frontend
+npm ci
+npm run dev
 ```
 
-### Docker Deployment
+Build the static frontend and run the Axum runtime:
 
 ```bash
-# Build the container
-docker build -t portfolio .
-
-# Run with port mapping
-docker run -p 8085:8085 portfolio
+cd frontend
+npm run build
+cd ..
+cargo run -p backend --bin portfolio
 ```
 
-### WASM Development
+Refresh the browser WASM bundle when its Rust source changes:
 
 ```bash
 cd wasm_game_of_life
-wasm-pack build --target web --out-dir ../static/wasm
+wasm-pack build --target web --out-dir ../frontend/public/wasm
 ```
 
-## 🧪 Testing
+The multi-stage container build pins the external Game-of-Life workspace revision used by the WASM and backend builds.
+
+## Quality checks
+
+Before a release, run the frontend type/build checks, Rust formatting/lint/tests, browser journeys, and axe accessibility assertions. The full command set and expected manual checks are in [docs/validation.md](docs/validation.md).
+
+The minimum local checks are:
 
 ```bash
-# Run all tests
-cargo test
+cd frontend
+npm ci
+npm audit --audit-level=high
+npm run check
+npm run build
 
-# Run with output
-cargo test -- --nocapture
-
-# Test specific components
-cargo test --package backend
-cargo test --package wasm_game_of_life
+cd ..
+cargo fmt --all -- --check
+cargo clippy --all-targets --all-features -- -D warnings
+cargo test --workspace
 ```
 
-## 🔧 Configuration
+## Deployment
 
-### Build Profiles
+The site runs on a six-node kubeadm Kubernetes cluster with Rook/Ceph storage. That high-level description is sufficient for public documentation; node identities, network layout, credentials, internal endpoints, and recovery secrets do not belong in this repository.
 
-```toml
-[profile.release]
-opt-level = "s"        # Optimize for size
-lto = true            # Link-time optimization
-debug = false         # Strip debug info
-panic = "abort"       # Smaller binary size
-```
+The staging workflow validates the frontend, backend, and WASM targets, then pushes a uniquely tagged Harbor image and records its immutable digest. It does not mutate the cluster. Deployment is GitOps-driven: update the staging manifest to the digest, let Argo CD reconcile it, validate staging, then promote the exact same digest to production.
 
-## 🤝 Contributing
+Staging must remain `noindex, nofollow`. Production cutover is blocked until the candidate passes staging accessibility, privacy, browser, and security QA and a known-good rollback digest is recorded. See the [release and rollback runbook](docs/release-runbook.md).
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+## Privacy and security
 
-## 📄 License
+The intended production posture is deliberately simple: no visitor tracking, analytics identifiers, fingerprinting, advertising pixels, or server-issued client IDs. A local theme preference is acceptable when it is not transmitted or used as an identifier. Operational logging must be minimized and short-lived.
 
-### Portfolio Project License
+The implementation and release criteria are documented in [docs/security-privacy.md](docs/security-privacy.md).
 
-This portfolio project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+## Documentation
 
-### Third-Party Dependencies
+- [Frontend guide](frontend/README.md)
+- [Content authoring](frontend/docs/content-authoring.md)
+- [Alpine editorial design system](frontend/docs/design-system.md)
+- [Security and privacy](docs/security-privacy.md)
+- [Validation and QA](docs/validation.md)
+- [Staging, production, and rollback](docs/release-runbook.md)
 
-This project incorporates several third-party libraries and tools, each with their own licensing terms.
+## License
 
-## 🙏 Acknowledgments
-
-- **John Conway** - Creator of Conway's Game of Life
-- **SAT Solving Community** - For efficient constraint satisfaction algorithms
-- **Rust Community** - For exceptional tooling and ecosystem
-- **WebAssembly Working Group** - For enabling high-performance web applications
-
-## 📚 Related Projects
-
-- [Game of Life Engine](https://github.com/rrumana/game_of_life) - Core cellular automaton implementation
-- [Reverse Game of Life](https://github.com/rrumana/game_of_life_reverse) - SAT-based predecessor finding
-- [ParKissat-RS Bindings](https://github.com/rrumana/parkissat-sys) - Custom SAT solver integration
-- [Rust Lecture Series](https://github.com/rrumana/rust_lecture) - Educational Rust content
-
-## 🌐 Live Demo
-
-Visit the live portfolio at [https://rcrumana.xyz](https://rcrumana.xyz) to see the project in action, including the interactive Game of Life simulation powered by WebAssembly.
+The repository is licensed under the [MIT License](LICENSE). Research documents and third-party assets may carry separate terms; do not infer that the repository license changes their rights.

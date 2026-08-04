@@ -19,6 +19,7 @@ permissions:
 env:
   IMAGE_REPOSITORY: harbor.rcrumana.xyz/apps-private/portfolio
   BUILDKIT_PROGRESS: plain
+  ASTRO_TELEMETRY_DISABLED: "1"
 
 jobs:
   validate-frontend:
@@ -50,6 +51,14 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: npm run build
+
+      - name: Install Playwright browser
+        working-directory: frontend
+        run: npm exec -- playwright install chromium
+
+      - name: Run browser and accessibility checks
+        working-directory: frontend
+        run: npm run test:e2e
 
   validate-rust:
     name: Validate ${{ matrix.component }}

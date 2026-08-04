@@ -10,6 +10,8 @@ featuredRank: 5
 order: 4
 role: "Technical author and curriculum designer"
 impact: "Structured a technical introduction to Rust for developers bringing experience from C++, Java, Python, and similar languages."
+cardTags: ["Rust", "Teaching", "Systems"]
+accent: "clay"
 audience: "technical"
 techStack:
   - Rust

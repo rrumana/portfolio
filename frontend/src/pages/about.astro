@@ -1,138 +1,78 @@
 ---
+import Icon from '../components/ui/Icon.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteConfig } from '../site.config';
 ---
-<BaseLayout
-  title="About | Ryan Rumana"
-  description="Background, engineering principles, and current technical focus for Ryan Rumana."
->
+<BaseLayout title="About | Ryan Rumana" description="About Ryan Rumana, a Senior AI/ML Engineer who builds applied AI systems, software, and infrastructure.">
   <main id="main-content">
-    <section class="section-shell">
-      <div class="container about-grid">
-        <div class="about-copy">
-          <p class="eyebrow">About</p>
-          <h1>I build AI systems, software platforms, and infrastructure with a bias for clarity.</h1>
-          <p>
-            I am a Senior AI/ML Engineer at Dais, where I lead machine-learning research and development across
-            Rust-based context systems and durable agent platforms. My broader background spans applied ML, systems
-            software, medical-data tooling, and Kubernetes infrastructure.
-          </p>
-          <p>
-            This site is the public version of that work. It is organized around case studies, technical writing, and
-            smaller experiments that show how I approach platform design, distributed systems, WebAssembly, applied ML,
-            and reproducible research.
-          </p>
+    <section class="section-shell about-hero">
+      <div class="container about-hero__grid">
+        <div class="about-hero__copy">
+          <p class="eyebrow">About me</p>
+          <h1>I like making difficult systems easier to understand.</h1>
+          <p>I’m Ryan Rumana, a Senior AI/ML Engineer at Dais, where I lead AI/ML implementation. My work sits where applied machine learning meets the less glamorous—but essential—software that makes it usable.</p>
+          <p>I’m drawn to problems that cross boundaries: models and deployment, algorithms and interfaces, research and reproducibility. Rust, Kubernetes, WebAssembly, and computer vision appear often in my projects because they make those boundaries tangible.</p>
         </div>
+        <figure class="about-portrait">
+          <img src="/images/profile.webp" alt="Ryan Rumana outdoors in the mountains" width="906" height="1085" />
+        </figure>
+      </div>
+    </section>
 
-        <div class="surface-panel about-sidebar">
-          <p class="eyebrow">Current snapshot</p>
-          <dl>
-            <div>
-              <dt>Role</dt>
-              <dd>{siteConfig.role}</dd>
-            </div>
-            <div>
-              <dt>Core tools</dt>
-              <dd>AI/ML systems, Rust, Kubernetes, self-hosted infrastructure</dd>
-            </div>
-            <div>
-              <dt>Outside work</dt>
-              <dd>Homelab maintenance, technical writing, endurance training</dd>
-            </div>
-          </dl>
+    <section class="section-shell about-story">
+      <div class="container story-grid">
+        <div><p class="eyebrow">The through line</p><h2>Curiosity first, rigor close behind.</h2></div>
+        <div class="story-copy">
+          <p>I studied engineering at the Colorado School of Mines, an environment that rewarded getting close to the physical problem and being honest about the constraints. That instinct still shapes how I work: understand the whole system, test the assumptions, and leave behind something another person can inspect.</p>
+          <p>It is why a cellular-automata question can become a complexity paper and a browser demo. It is why a homelab can grow into a six-node Kubernetes platform. And it is why I care as much about documentation and operations as I do about the interesting core of an implementation.</p>
         </div>
       </div>
     </section>
 
     <section class="section-shell">
       <div class="container section-grid">
-        <div>
-          <p class="eyebrow">How I work</p>
-          <h2>I aim for systems that remain understandable after they are deployed.</h2>
-        </div>
+        <div class="principles-heading"><p class="eyebrow">How I work</p><h2>A few durable preferences.</h2></div>
         <div class="principles-grid">
-          <article class="surface-panel principle">
-            <h3>Operational discipline</h3>
-            <p>Typed interfaces, observability, and failure modes matter as much as raw throughput.</p>
-          </article>
-          <article class="surface-panel principle">
-            <h3>Platform thinking</h3>
-            <p>I prefer systems that make change safer: GitOps, automation, reproducible builds, and clear ownership boundaries.</p>
-          </article>
-          <article class="surface-panel principle">
-            <h3>Writing as engineering</h3>
-            <p>Documentation and technical explanation are part of the product, especially when the work includes proofs, benchmarks, or tradeoffs.</p>
-          </article>
+          <article class="principle"><span>01</span><h3>Make the problem legible.</h3><p>Clear framing beats a pile of terminology. I want readers and collaborators to know what matters before they meet the implementation.</p></article>
+          <article class="principle"><span>02</span><h3>Own the path to production.</h3><p>A model or service is only useful when it can be built, deployed, observed, and changed without heroics.</p></article>
+          <article class="principle"><span>03</span><h3>Show the limits.</h3><p>Benchmarks, proofs, demos, and case studies are strongest when they are specific about what they do not establish.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="section-shell">
-      <div class="container about-site surface-panel">
+    <section class="section-shell life-section">
+      <div class="container life-band surface-panel">
+        <div><p class="eyebrow">Away from work</p><h2>Long efforts, open air, new questions.</h2></div>
         <div>
-          <p class="eyebrow">Why rebuild the site</p>
-          <h2>The previous site worked, but it was harder to extend than it needed to be.</h2>
+          <p>I live in Tallahassee and spend my off-hours training, getting outside, maintaining the cluster, and chasing whatever technical rabbit hole has earned my attention. Endurance sports and engineering scratch a similar itch: patient progress, useful feedback, and a tolerance for occasionally discovering that the hill is longer than it looked.</p>
+          <div class="life-actions"><a class="text-link" href="/projects/">Explore projects <Icon name="arrow" size={17} /></a><a class="text-link" href={siteConfig.contact.resumeUrl}>Read my resume <Icon name="arrow" size={17} /></a></div>
         </div>
-        <p>
-          This version is built as a more deliberate editorial system: clearer navigation, stronger project framing,
-          better case-study layouts, and enough structure to support code, formulas, and interactive demos without
-          breaking the page flow.
-        </p>
       </div>
     </section>
   </main>
 </BaseLayout>
 
 <style>
-.about-grid {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-  align-items: start;
-}
-
-.about-copy {
-  display: grid;
-  gap: 1rem;
-}
-
-.about-sidebar {
-  padding: 1.25rem;
-}
-
-.about-sidebar dl {
-  display: grid;
-  gap: 1rem;
-}
-
-.about-sidebar dt {
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-text-subtle);
-}
-
-.about-sidebar dd {
-  margin: 0.3rem 0 0;
-  color: var(--color-text-strong);
-}
-
-.principles-grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.principle,
-.about-site {
-  padding: 1.25rem;
-  display: grid;
-  gap: 0.8rem;
-}
-
-@media (max-width: 900px) {
-  .about-grid {
-    grid-template-columns: 1fr;
-  }
-}
+  .about-hero__grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.55fr); gap: clamp(2rem, 7vw, 7rem); align-items: center; }
+  .about-hero__copy { display: grid; gap: 1.15rem; }
+  .about-hero__copy > p:not(.eyebrow) { color: var(--color-text-muted); font-size: var(--font-size-lg); }
+  .about-portrait { overflow: hidden; border-radius: 50% 50% var(--radius-lg) var(--radius-lg); border: 1px solid var(--color-border-muted); box-shadow: var(--shadow-soft); }
+  .about-portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 34% center; }
+  .about-story { background: color-mix(in srgb, var(--color-surface-strong) 65%, transparent); border-block: 1px solid var(--color-border-subtle); }
+  .story-grid { display: grid; grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr); gap: clamp(2rem, 7vw, 7rem); }
+  .story-grid > div, .story-copy, .principles-heading { display: grid; gap: 1rem; align-content: start; }
+  .story-copy { color: var(--color-text-muted); font-size: var(--font-size-lg); }
+  .principles-heading { max-width: 42rem; }
+  .principles-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--color-border-muted); }
+  .principle { display: grid; gap: 0.75rem; align-content: start; padding: 1.5rem; }
+  .principle + .principle { border-left: 1px solid var(--color-border-muted); }
+  .principle span { color: var(--color-accent-warm); font-family: var(--font-family-mono); font-size: var(--font-size-xs); }
+  .principle p { color: var(--color-text-muted); }
+  .life-section { padding-top: 0; }
+  .life-band { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr); gap: 2rem; padding: clamp(1.5rem, 4vw, 3.5rem); border-top: 3px solid var(--color-accent-pine); }
+  .life-band > div { display: grid; gap: 1rem; align-content: center; }
+  .life-band > div:last-child { color: var(--color-text-muted); }
+  .life-actions { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; }
+  .text-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--color-link); font-weight: 700; }
+  @media (max-width: 860px) { .about-hero__grid, .story-grid, .life-band { grid-template-columns: 1fr; } .about-portrait { width: min(24rem, 80%); margin-inline: auto; } .principles-grid { grid-template-columns: 1fr; } .principle + .principle { border-left: 0; border-top: 1px solid var(--color-border-muted); } }
 </style>

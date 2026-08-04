@@ -1,44 +1,36 @@
 use axum::{
     body::Body,
-    extract::ConnectInfo,
     http::{
-        HeaderMap, Request,
-        header::{CACHE_CONTROL, COOKIE, HeaderName, HeaderValue, SET_COOKIE},
+        Request,
+        header::{
+            CACHE_CONTROL, CONTENT_SECURITY_POLICY, HeaderName, HeaderValue, REFERRER_POLICY,
+            X_CONTENT_TYPE_OPTIONS, X_FRAME_OPTIONS,
+        },
     },
     middleware::Next,
     response::IntoResponse,
 };
 use serde_json::json;
-use std::net::SocketAddr;
 use std::time::Instant;
 use uuid::Uuid;
 
-const CLIENT_COOKIE: &str = "portfolio_client_id";
-const CLIENT_HEADER: &str = "x-client-id";
 const REQUEST_HEADER: &str = "x-request-id";
 const IMMUTABLE_CACHE: &str = "public, max-age=31536000, immutable";
 const REVALIDATE_CACHE: &str = "no-cache";
 const NO_STORE_CACHE: &str = "no-store";
 const ROBOTS_HEADER: &str = "x-robots-tag";
+const PERMISSIONS_POLICY_HEADER: &str = "permissions-policy";
+const COOP_HEADER: &str = "cross-origin-opener-policy";
+const CONTENT_SECURITY_POLICY_VALUE: &str = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'";
+const PERMISSIONS_POLICY_VALUE: &str = "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), usb=()";
 
-/// Context captured for each request so downstream handlers can enrich logs.
-#[derive(Clone, Debug)]
-pub struct RequestContext {
-    pub request_id: String,
-    pub client_id: String,
-    pub path: String,
-    pub user_agent: String,
-    pub referer: String,
-    pub ip: String,
-}
-
-/// Applies cache policy based on the kind of resource being requested.
+/// Applies security and cache policy to every response.
 ///
 /// Astro's `_astro` output uses content-hashed filenames and can be cached
 /// indefinitely. HTML and stable WASM filenames must be revalidated so a new
 /// deployment cannot leave clients pinned to an older build. Dynamic endpoints
 /// are never stored.
-pub async fn set_cache_policy(request: Request<Body>, next: Next) -> impl IntoResponse {
+pub async fn set_response_headers(request: Request<Body>, next: Next) -> impl IntoResponse {
     let path = request.uri().path().to_owned();
     let mut response = next.run(request).await;
 
@@ -53,6 +45,28 @@ pub async fn set_cache_policy(request: Request<Body>, next: Next) -> impl IntoRe
     response
         .headers_mut()
         .insert(CACHE_CONTROL, HeaderValue::from_static(policy));
+    response.headers_mut().insert(
+        CONTENT_SECURITY_POLICY,
+        HeaderValue::from_static(CONTENT_SECURITY_POLICY_VALUE),
+    );
+    response
+        .headers_mut()
+        .insert(X_CONTENT_TYPE_OPTIONS, HeaderValue::from_static("nosniff"));
+    response
+        .headers_mut()
+        .insert(REFERRER_POLICY, HeaderValue::from_static("no-referrer"));
+    response.headers_mut().insert(
+        HeaderName::from_static(PERMISSIONS_POLICY_HEADER),
+        HeaderValue::from_static(PERMISSIONS_POLICY_VALUE),
+    );
+    response.headers_mut().insert(
+        HeaderName::from_static(COOP_HEADER),
+        HeaderValue::from_static("same-origin"),
+    );
+    response
+        .headers_mut()
+        .insert(X_FRAME_OPTIONS, HeaderValue::from_static("DENY"));
+
     if path.starts_with("/legacy/") {
         response.headers_mut().insert(
             HeaderName::from_static(ROBOTS_HEADER),
@@ -62,57 +76,26 @@ pub async fn set_cache_policy(request: Request<Body>, next: Next) -> impl IntoRe
     response
 }
 
-/// HTTP request logging middleware that captures comprehensive request/response data
-pub async fn log_requests(
-    ConnectInfo(addr): ConnectInfo<SocketAddr>,
-    mut request: Request<Body>,
-    next: Next,
-) -> impl IntoResponse {
+/// Emits a privacy-preserving access log and exposes a server-generated request ID.
+pub async fn log_requests(request: Request<Body>, next: Next) -> impl IntoResponse {
     let start = Instant::now();
 
     let method = request.method().to_string();
-    let uri = request.uri().to_string();
-    let headers = request.headers().clone();
-
-    let user_agent = extract_header_value(&headers, "user-agent");
-    let referer = extract_header_value(&headers, "referer");
+    let path = request.uri().path().to_owned();
     let request_id = Uuid::new_v4().to_string();
-    let (client_id, set_client_cookie) = extract_or_create_client_id(&headers);
-
-    // Make context available to handlers for richer application logs.
-    request.extensions_mut().insert(RequestContext {
-        request_id: request_id.clone(),
-        client_id: client_id.clone(),
-        path: uri.clone(),
-        user_agent: user_agent.clone(),
-        referer: referer.clone(),
-        ip: addr.ip().to_string(),
-    });
-
-    // Process the request
     let mut response = next.run(request).await;
 
     let status = response.status().as_u16();
-    let duration = start.elapsed();
     let access_log = json!({
         "event": "http_request",
         "request_id": request_id,
-        "client_id": client_id,
         "method": method,
-        "path": uri,
+        "path": path,
         "status": status,
-        "duration_ms": duration.as_millis(),
-        "user_agent": user_agent,
-        "referer": referer,
-        "ip": addr.ip().to_string()
+        "duration_ms": start.elapsed().as_millis(),
     });
 
     log::info!(target: "access", "{}", access_log);
-
-    if set_client_cookie && let Ok(header) = HeaderValue::from_str(&build_client_cookie(&client_id))
-    {
-        response.headers_mut().insert(SET_COOKIE, header);
-    }
 
     if let Ok(request_header) = HeaderValue::from_str(&request_id) {
         response
@@ -120,39 +103,5 @@ pub async fn log_requests(
             .insert(HeaderName::from_static(REQUEST_HEADER), request_header);
     }
 
-    if let Ok(client_header) = HeaderValue::from_str(&client_id) {
-        response
-            .headers_mut()
-            .insert(HeaderName::from_static(CLIENT_HEADER), client_header);
-    }
-
     response
-}
-
-/// Helper function to safely extract header values
-fn extract_header_value(headers: &HeaderMap, header_name: &str) -> String {
-    headers
-        .get(header_name)
-        .and_then(|value| value.to_str().ok())
-        .unwrap_or("-")
-        .to_string()
-}
-
-fn extract_or_create_client_id(headers: &HeaderMap) -> (String, bool) {
-    if let Some(cookie_header) = headers.get(COOKIE)
-        && let Ok(cookies) = cookie_header.to_str()
-    {
-        for cookie in cookies.split(';') {
-            let trimmed = cookie.trim();
-            if let Some(value) = trimmed.strip_prefix(&format!("{CLIENT_COOKIE}=")) {
-                return (value.to_string(), false);
-            }
-        }
-    }
-
-    (Uuid::new_v4().to_string(), true)
-}
-
-fn build_client_cookie(client_id: &str) -> String {
-    format!("{CLIENT_COOKIE}={client_id}; Path=/; Max-Age=31536000; SameSite=Lax")
 }
