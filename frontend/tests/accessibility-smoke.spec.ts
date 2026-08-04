@@ -109,6 +109,33 @@ test('theme choice persists across reloads and navigation', async ({ page }) => 
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });
 
+test('portrait framing is identical on the home and about pages', async ({ page }) => {
+  async function portraitPresentation(path: string) {
+    await page.goto(path);
+    const frame = page.locator('.portrait__frame');
+    const image = frame.locator('img');
+    await expect(frame).toBeVisible();
+
+    const box = await frame.boundingBox();
+    const styles = await image.evaluate((element) => {
+      const computed = getComputedStyle(element);
+      return { objectFit: computed.objectFit, objectPosition: computed.objectPosition };
+    });
+
+    expect(box).not.toBeNull();
+    return { box: box!, styles };
+  }
+
+  const home = await portraitPresentation('/');
+  const about = await portraitPresentation('/about/');
+
+  expect(Math.abs(home.box.width - about.box.width)).toBeLessThanOrEqual(0.5);
+  expect(Math.abs(home.box.height - about.box.height)).toBeLessThanOrEqual(0.5);
+  expect(home.box.width / home.box.height).toBeCloseTo(4 / 5, 2);
+  expect(about.box.width / about.box.height).toBeCloseTo(4 / 5, 2);
+  expect(home.styles).toEqual(about.styles);
+});
+
 test('research cards expose a named overview and PDF action', async ({ page }) => {
   await page.goto('/research/');
   const cards = page.locator('article.research-card');
