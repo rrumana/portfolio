@@ -24,7 +24,7 @@ env:
 jobs:
   validate-frontend:
     name: Validate frontend
-    runs-on: [self-hosted, portfolio-dev]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -62,7 +62,7 @@ jobs:
 
   validate-rust:
     name: Validate ${{ matrix.component }}
-    runs-on: [self-hosted, portfolio-dev]
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -94,7 +94,7 @@ jobs:
     needs:
       - validate-frontend
       - validate-rust
-    runs-on: [self-hosted, portfolio-dev]
+    runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.release.outputs.image_tag }}
       image_digest: ${{ steps.release.outputs.image_digest }}
