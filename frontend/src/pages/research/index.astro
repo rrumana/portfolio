@@ -26,13 +26,13 @@ const propsFor = (paper: CollectionEntry<'research'>) => ({
       <div class="container research-intro__grid">
         <div class="research-intro__copy">
           <p class="eyebrow">Research & writing</p>
-          <h1>Papers, reports, and talks.</h1>
-          <p>This is a home for technical work that benefits from more space than a project page: the question, the evidence, the limitations, and the artifacts needed to inspect the result.</p>
+          <h1>Papers and technical reports.</h1>
+          <p>This is where I collect my research papers and reports, along with PDFs, source code, and presentation material.</p>
         </div>
         <aside class="research-note surface-panel">
           <p class="eyebrow">A note on status</p>
-          <p><strong>Complete</strong> means the document is finished and publicly available here. It does not imply peer review or publication in an academic venue.</p>
-          <p>Conference presentations and course context are identified separately when they apply.</p>
+          <h2>What "complete" means.</h2>
+          <p>A complete document is finished and available to read here. It may not be peer reviewed or published by an academic venue. Presentation and course details are listed separately.</p>
         </aside>
       </div>
     </section>
@@ -40,7 +40,7 @@ const propsFor = (paper: CollectionEntry<'research'>) => ({
     {inProgress.length > 0 && (
       <section class="section-shell research-progress">
         <div class="container section-grid">
-          <div class="research-heading"><p class="eyebrow">On the desk</p><h2>Work in progress.</h2><p>Active questions, current state, and the next milestone—without pretending unfinished work is finished.</p></div>
+          <div class="research-heading"><p class="eyebrow">On the desk</p><h2>New ideas / projects.</h2><p>These documents are works in progress. Related code and presentation details are included when available but may be out of date.</p></div>
           <div class="research-list">{inProgress.map((paper) => <ResearchCard {...propsFor(paper)} />)}</div>
         </div>
       </section>
@@ -48,7 +48,7 @@ const propsFor = (paper: CollectionEntry<'research'>) => ({
 
     <section class="section-shell">
       <div class="container section-grid">
-        <div class="research-heading"><p class="eyebrow">Complete work</p><h2>Finished and publicly available.</h2><p>{complete.length} {complete.length === 1 ? 'document' : 'documents'}, with source material and presentation context where available.</p></div>
+        <div class="research-heading"><p class="eyebrow">Complete work</p><h2>Finished and publicly available.</h2><p>These documents are finished and available to read. Related code and presentation details are included when available.</p></div>
         <div class="research-list">{complete.map((paper) => <ResearchCard {...propsFor(paper)} />)}</div>
       </div>
     </section>
@@ -61,6 +61,7 @@ const propsFor = (paper: CollectionEntry<'research'>) => ({
   .research-intro__copy, .research-note, .research-heading { display: grid; gap: 1rem; }
   .research-intro__copy > p:last-child, .research-heading > p:last-child { color: var(--color-text-muted); font-size: var(--font-size-lg); }
   .research-note { padding: 1.35rem; border-top: 3px solid var(--color-accent-warm); }
+  .research-note h2 { font-size: var(--font-size-xl); line-height: 1.15; }
   .research-note p { color: var(--color-text-muted); }
   .research-note strong { color: var(--color-text-strong); }
   .research-progress { background: color-mix(in srgb, var(--color-surface-strong) 62%, transparent); border-block: 1px solid var(--color-border-subtle); }

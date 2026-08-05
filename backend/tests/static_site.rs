@@ -26,7 +26,10 @@ impl TestSite {
         let wasm_dir = root.join("wasm");
 
         fs::create_dir_all(static_dir.join("projects/example")).unwrap();
+        fs::create_dir_all(static_dir.join("projects/.draft")).unwrap();
         fs::create_dir_all(static_dir.join("_astro")).unwrap();
+        fs::create_dir_all(static_dir.join(".well-known")).unwrap();
+        fs::create_dir_all(static_dir.join(".git")).unwrap();
         fs::create_dir_all(&wasm_dir).unwrap();
         fs::write(static_dir.join("index.html"), b"<h1>Home</h1>").unwrap();
         fs::write(
@@ -42,6 +45,18 @@ impl TestSite {
         fs::write(
             static_dir.join("_astro/app.A1B2C3D4.js"),
             b"console.log('hashed');",
+        )
+        .unwrap();
+        fs::write(static_dir.join(".gitkeep"), b"should not be public").unwrap();
+        fs::write(static_dir.join(".git/config"), b"should not be public").unwrap();
+        fs::write(
+            static_dir.join("projects/.draft/index.html"),
+            b"should not be public",
+        )
+        .unwrap();
+        fs::write(
+            static_dir.join(".well-known/security.txt"),
+            b"Contact: mailto:security@example.com",
         )
         .unwrap();
         fs::create_dir_all(static_dir.join("legacy")).unwrap();
@@ -165,6 +180,28 @@ async fn unknown_routes_return_the_404_page_with_a_real_404_status() {
     let body = body_text(response).await;
     assert!(body.contains("Custom page not found"));
     assert!(!body.contains("Home"));
+}
+
+#[tokio::test]
+async fn hidden_paths_are_rejected_except_for_the_security_contact() {
+    let site = TestSite::new();
+
+    for uri in ["/.gitkeep", "/.git/config", "/projects/.draft/"] {
+        let response = site.router().oneshot(request(uri)).await.unwrap();
+        assert_eq!(response.status(), StatusCode::NOT_FOUND);
+        assert_security_headers(&response);
+    }
+
+    let security_contact = site
+        .router()
+        .oneshot(request("/.well-known/security.txt"))
+        .await
+        .unwrap();
+    assert_eq!(security_contact.status(), StatusCode::OK);
+    assert_eq!(
+        body_text(security_contact).await,
+        "Contact: mailto:security@example.com"
+    );
 }
 
 #[tokio::test]

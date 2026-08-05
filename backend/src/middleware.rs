@@ -1,14 +1,14 @@
 use axum::{
     body::Body,
     http::{
-        Request,
+        Request, StatusCode,
         header::{
             CACHE_CONTROL, CONTENT_SECURITY_POLICY, HeaderName, HeaderValue, REFERRER_POLICY,
             X_CONTENT_TYPE_OPTIONS, X_FRAME_OPTIONS,
         },
     },
     middleware::Next,
-    response::IntoResponse,
+    response::{IntoResponse, Response},
 };
 use serde_json::json;
 use std::time::Instant;
@@ -23,6 +23,21 @@ const PERMISSIONS_POLICY_HEADER: &str = "permissions-policy";
 const COOP_HEADER: &str = "cross-origin-opener-policy";
 const CONTENT_SECURITY_POLICY_VALUE: &str = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'";
 const PERMISSIONS_POLICY_VALUE: &str = "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), usb=()";
+
+/// Rejects hidden files and directories before the static file service runs.
+/// The single RFC 9116 disclosure endpoint is the intentional exception.
+pub async fn reject_hidden_paths(request: Request<Body>, next: Next) -> Response {
+    let path = request.uri().path();
+    let contains_hidden_segment = path
+        .split('/')
+        .any(|segment| !segment.is_empty() && segment.starts_with('.'));
+
+    if contains_hidden_segment && path != "/.well-known/security.txt" {
+        return StatusCode::NOT_FOUND.into_response();
+    }
+
+    next.run(request).await
+}
 
 /// Applies security and cache policy to every response.
 ///

@@ -25,21 +25,21 @@ const card = (project: typeof projects[number]) => ({
   <main id="main-content">
     <section class="section-shell projects-intro">
       <div class="container projects-intro__grid">
-        <div><p class="eyebrow">Projects</p><h1>Work I can explain, inspect, and keep improving.</h1></div>
-        <p>These are not logo walls or keyword inventories. Each case study starts with the problem, shows what I did, and points to the code, paper, or artifact when one is public.</p>
+        <div><p class="eyebrow">Projects</p><h1>Things I've built.</h1></div>
+        <p>This is a collection of software, infrastructure, research tools, and experiments I have built over the years. Each page links to code or other source material when it is public.</p>
       </div>
     </section>
 
     <section class="section-shell projects-featured">
       <div class="container section-grid">
-        <div class="group-heading"><p class="eyebrow">Featured case studies</p><h2>The clearest view of how I work.</h2></div>
+        <div class="group-heading"><p class="eyebrow">Featured case studies</p><h2>A few highlights.</h2><p>These projects represent my favorite recent projects.</p></div>
         <div class="project-grid project-grid--featured">{featured.map((project, index) => <ProjectCard {...card(project)} lead={index === 0} />)}</div>
       </div>
     </section>
 
     <section class="section-shell">
       <div class="container section-grid">
-        <div class="group-heading"><p class="eyebrow">More work</p><h2>Tools, experiments, and earlier projects.</h2><p>Smaller in scope, but still useful context for the way I learn and build.</p></div>
+        <div class="group-heading"><p class="eyebrow">More work</p><h2>More projects.</h2><p>Smaller tools, experiments, and older work that I still want to keep available.</p></div>
         <div class="project-grid">{additional.map((project) => <ProjectCard {...card(project)} />)}</div>
       </div>
     </section>

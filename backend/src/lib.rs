@@ -64,6 +64,7 @@ pub fn app(static_dir: &str, wasm_dir: &str) -> Router {
         )
         .nest_service("/wasm", get_service(ServeDir::new(wasm_dir)))
         .fallback_service(static_service)
+        .layer(from_fn(middleware::reject_hidden_paths))
         .layer(CompressionLayer::new())
         .layer(from_fn(middleware::set_response_headers))
         .layer(from_fn(middleware::log_requests))

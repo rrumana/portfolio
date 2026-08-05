@@ -29,9 +29,9 @@ export const siteConfig = {
   },
   hero: {
     eyebrow: 'AI/ML engineer, systems builder, curious human',
-    title: 'I build useful AI systems—and the software that keeps them working.',
+    title: 'I build useful AI systems.',
     description:
-      'I’m Ryan, a Senior AI/ML Engineer at Dais, where I lead AI/ML implementation. Away from work I explore Rust, Kubernetes, the Game of Life, and whatever problem is interesting enough to keep pulling at the thread.',
+      "I'm Ryan, a Senior AI/ML Engineer at Dais, where I lead AI/ML implementation. Outside of work, I build projects in Rust, Kubernetes, computer vision, and computational time complexity.",
     primaryCta: { label: 'Explore my work', href: '/projects/' },
     secondaryCta: { label: 'View resume', href: '/resume/' },
   },

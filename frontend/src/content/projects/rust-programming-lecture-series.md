@@ -5,7 +5,7 @@ summaryShort: "Foundational Rust lecture materials for developers coming from ot
 kind: "project"
 status: "archive"
 year: 2024
-featured: true
+featured: false
 featuredRank: 5
 order: 4
 role: "Technical author and curriculum designer"
