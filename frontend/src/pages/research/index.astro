@@ -26,12 +26,11 @@ const propsFor = (paper: CollectionEntry<'research'>) => ({
       <div class="container research-intro__grid">
         <div class="research-intro__copy">
           <p class="eyebrow">Research & writing</p>
-          <h1>Papers and technical reports.</h1>
+          <h1>Papers and technical reports</h1>
           <p>This is where I collect my research papers and reports, along with PDFs, source code, and presentation material.</p>
         </div>
         <aside class="research-note surface-panel">
-          <p class="eyebrow">A note on status</p>
-          <h2>What "complete" means.</h2>
+          <h2>What "complete" means</h2>
           <p>A complete document is finished and available to read here. It may not be peer reviewed or published by an academic venue. Presentation and course details are listed separately.</p>
         </aside>
       </div>
@@ -40,7 +39,7 @@ const propsFor = (paper: CollectionEntry<'research'>) => ({
     {inProgress.length > 0 && (
       <section class="section-shell research-progress">
         <div class="container section-grid">
-          <div class="research-heading"><p class="eyebrow">On the desk</p><h2>New ideas / projects.</h2><p>These documents are works in progress. Related code and presentation details are included when available but may be out of date.</p></div>
+          <div class="research-heading"><p class="eyebrow">In progress</p><h2>New ideas / projects</h2><p>These documents are works in progress. Related code and presentation details are included when available but may be out of date.</p></div>
           <div class="research-list">{inProgress.map((paper) => <ResearchCard {...propsFor(paper)} />)}</div>
         </div>
       </section>
@@ -48,7 +47,7 @@ const propsFor = (paper: CollectionEntry<'research'>) => ({
 
     <section class="section-shell">
       <div class="container section-grid">
-        <div class="research-heading"><p class="eyebrow">Complete work</p><h2>Finished and publicly available.</h2><p>These documents are finished and available to read. Related code and presentation details are included when available.</p></div>
+        <div class="research-heading"><p class="eyebrow">Complete work</p><h2>Finished and publicly available</h2><p>These documents are finished and available to read. Related code and presentation details are included when available.</p></div>
         <div class="research-list">{complete.map((paper) => <ResearchCard {...propsFor(paper)} />)}</div>
       </div>
     </section>

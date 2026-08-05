@@ -29,7 +29,7 @@ export const siteConfig = {
   },
   hero: {
     eyebrow: 'AI/ML engineer, systems builder, curious human',
-    title: 'I build useful AI systems.',
+    title: 'I build useful AI systems',
     description:
       "I'm Ryan, a Senior AI/ML Engineer at Dais, where I lead AI/ML implementation. Outside of work, I build projects in Rust, Kubernetes, computer vision, and computational time complexity.",
     primaryCta: { label: 'Explore my work', href: '/projects/' },
