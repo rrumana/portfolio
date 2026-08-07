@@ -1,0 +1,72 @@
+---
+import SurfaceCard from '../ui/SurfaceCard.astro';
+
+export interface Props {
+  command: string;
+  description: string;
+  icon?: string;
+  class?: string;
+}
+
+const props = Astro.props as Props & { [key: string]: unknown };
+
+const {
+  command,
+  description,
+  icon = '⌨️',
+  class: className = '',
+  ...rest
+} = props;
+---
+<SurfaceCard variant="ghost" padding="md" class={`command-card ${className}`.trim()} {...rest}>
+  <div class="command-card__header">
+    <span class="command-card__icon" aria-hidden="true">{icon}</span>
+    <code class="command-card__command">{command}</code>
+  </div>
+  <p>{description}</p>
+</SurfaceCard>
+
+<style>
+.command-card {
+  gap: var(--space-sm, 0.75rem);
+}
+
+.command-card__header {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--space-xs, 0.5rem) var(--space-sm, 0.75rem);
+}
+
+.command-card__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.command-card__command {
+  font-family: var(--font-family-mono, 'Fira Code', monospace);
+  font-size: 0.95rem;
+  background: var(--color-fill-primary-soft);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm, 8px);
+  word-break: break-word;
+  white-space: pre-wrap;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.command-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm, 0.875rem);
+  overflow-wrap: anywhere;
+}
+
+html[data-theme='dark'] .command-card__command {
+  background: var(--color-fill-primary-strong);
+}
+
+html[data-theme='dark'] .command-card p {
+  color: var(--color-text-muted);
+}
+</style>

@@ -1,0 +1,35 @@
+{
+  "name": "portfolio-v2-frontend",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "packageManager": "npm@11.16.0",
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=9.6.5"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:a11y": "playwright test --grep @a11y",
+    "clean": "rm -rf node_modules .astro"
+  },
+  "dependencies": {
+    "@fontsource-variable/source-sans-3": "^5.3.0",
+    "@fontsource-variable/source-serif-4": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "astro": "^7.1.6",
+    "katex": "^0.18.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.12.1",
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.1.2",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,153 @@
+---
+import Container from '../shell/Container.astro';
+import Button from '../ui/Button.astro';
+import Text from '../ui/Text.astro';
+
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  description: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta?: { label: string; href: string };
+}
+
+const props = Astro.props as Props;
+
+const { eyebrow, title, description, primaryCta, secondaryCta } = props;
+---
+<section class="hero">
+  <Container class="hero__inner">
+    <div class="hero__copy">
+      {eyebrow && <p class="hero__eyebrow">{eyebrow}</p>}
+      <h1>{title}</h1>
+      <Text size="lg" tone="muted">{description}</Text>
+      <div class="hero__actions">
+        <Button href={primaryCta.href}>{primaryCta.label}</Button>
+        {secondaryCta && <Button href={secondaryCta.href} variant="secondary">{secondaryCta.label}</Button>}
+      </div>
+    </div>
+    <div class="hero__meta">
+      <div class="hero__card">
+        <p class="hero__card-title">Currently</p>
+        <p class="hero__card-body">Building reliable systems in Rust, Kubernetes, and homelab automation.</p>
+      </div>
+      <div class="hero__card">
+        <p class="hero__card-title">Focus Areas</p>
+        <ul>
+          <li>Machine Learning Engineering</li>
+          <li>Edge + Homelab Infrastructure</li>
+          <li>Rust, WASM, and performance tooling</li>
+        </ul>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+.hero {
+  padding-block: var(--space-3xl);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-accent-500) 68%, transparent),
+    color-mix(in srgb, var(--color-primary-500) 64%, transparent)
+  );
+}
+
+.hero__inner {
+  display: grid;
+  gap: var(--space-2xl);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  align-items: center;
+}
+
+@media (max-width: 720px) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.hero__copy {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.hero__eyebrow {
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.hero__copy h1 {
+  font-size: clamp(2.8rem, 6vw, 3.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text-default);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.hero__meta {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.hero__card {
+  background: var(--color-surface-100);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-subtle);
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.hero__card-title {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.hero__card-body,
+.hero__card ul {
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-normal);
+}
+
+.hero__card ul {
+  list-style: disc;
+  padding-left: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .hero__card ul {
+    padding-left: var(--space-md);
+  }
+}
+
+html[data-theme='dark'] .hero {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-accent-500) 76%, transparent),
+    color-mix(in srgb, var(--color-primary-500) 70%, transparent)
+  );
+}
+
+html[data-theme='dark'] .hero__card {
+  background: var(--color-surface-300);
+  border: 1px solid var(--color-border-muted);
+  color: var(--color-text-default);
+}
+
+html[data-theme='dark'] .hero__card-title {
+  color: var(--color-text-muted);
+}
+</style>

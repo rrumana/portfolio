@@ -1,59 +1,122 @@
 use axum::{
-    extract::ConnectInfo,
-    http::{Request, HeaderMap},
-    middleware::Next,
-    response::IntoResponse,
     body::Body,
+    http::{
+        Request, StatusCode,
+        header::{
+            CACHE_CONTROL, CONTENT_SECURITY_POLICY, HeaderName, HeaderValue, REFERRER_POLICY,
+            X_CONTENT_TYPE_OPTIONS, X_FRAME_OPTIONS,
+        },
+    },
+    middleware::Next,
+    response::{IntoResponse, Response},
 };
-use std::net::SocketAddr;
+use serde_json::json;
 use std::time::Instant;
+use uuid::Uuid;
 
-/// HTTP request logging middleware that captures comprehensive request/response data
-pub async fn log_requests(
-    ConnectInfo(addr): ConnectInfo<SocketAddr>,
-    request: Request<Body>,
-    next: Next,
-) -> impl IntoResponse {
-    let start = Instant::now();
-    
-    // Extract request information
-    let method = request.method().to_string();
-    let uri = request.uri().to_string();
-    let headers = request.headers().clone();
-    
-    // Extract user agent and referer from headers
-    let user_agent = extract_header_value(&headers, "user-agent");
-    let referer = extract_header_value(&headers, "referer");
-    
-    // Process the request
-    let response = next.run(request).await;
-    
-    // Extract response information
-    let status = response.status().as_u16();
-    let duration = start.elapsed();
-    
-    // Log the request with all captured information
-    // Using a dedicated logger target for access logs
-    log::info!(
-        target: "access",
-        "{} {} {} {} \"{}\" \"{}\" {}ms",
-        addr.ip(),
-        method,
-        uri,
-        status,
-        user_agent,
-        referer,
-        duration.as_millis()
+const REQUEST_HEADER: &str = "x-request-id";
+const IMMUTABLE_CACHE: &str = "public, max-age=31536000, immutable";
+const REVALIDATE_CACHE: &str = "no-cache";
+const NO_STORE_CACHE: &str = "no-store";
+const ROBOTS_HEADER: &str = "x-robots-tag";
+const PERMISSIONS_POLICY_HEADER: &str = "permissions-policy";
+const COOP_HEADER: &str = "cross-origin-opener-policy";
+const CONTENT_SECURITY_POLICY_VALUE: &str = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'";
+const PERMISSIONS_POLICY_VALUE: &str = "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), usb=()";
+
+/// Rejects hidden files and directories before the static file service runs.
+/// The single RFC 9116 disclosure endpoint is the intentional exception.
+pub async fn reject_hidden_paths(request: Request<Body>, next: Next) -> Response {
+    let path = request.uri().path();
+    let contains_hidden_segment = path
+        .split('/')
+        .any(|segment| !segment.is_empty() && segment.starts_with('.'));
+
+    if contains_hidden_segment && path != "/.well-known/security.txt" {
+        return StatusCode::NOT_FOUND.into_response();
+    }
+
+    next.run(request).await
+}
+
+/// Applies security and cache policy to every response.
+///
+/// Astro's `_astro` output uses content-hashed filenames and can be cached
+/// indefinitely. HTML and stable WASM filenames must be revalidated so a new
+/// deployment cannot leave clients pinned to an older build. Dynamic endpoints
+/// are never stored.
+pub async fn set_response_headers(request: Request<Body>, next: Next) -> impl IntoResponse {
+    let path = request.uri().path().to_owned();
+    let mut response = next.run(request).await;
+
+    let policy = if path == "/healthz" || path == "/readyz" || path.starts_with("/api/") {
+        NO_STORE_CACHE
+    } else if path.starts_with("/_astro/") && response.status().is_success() {
+        IMMUTABLE_CACHE
+    } else {
+        REVALIDATE_CACHE
+    };
+
+    response
+        .headers_mut()
+        .insert(CACHE_CONTROL, HeaderValue::from_static(policy));
+    response.headers_mut().insert(
+        CONTENT_SECURITY_POLICY,
+        HeaderValue::from_static(CONTENT_SECURITY_POLICY_VALUE),
     );
-    
+    response
+        .headers_mut()
+        .insert(X_CONTENT_TYPE_OPTIONS, HeaderValue::from_static("nosniff"));
+    response
+        .headers_mut()
+        .insert(REFERRER_POLICY, HeaderValue::from_static("no-referrer"));
+    response.headers_mut().insert(
+        HeaderName::from_static(PERMISSIONS_POLICY_HEADER),
+        HeaderValue::from_static(PERMISSIONS_POLICY_VALUE),
+    );
+    response.headers_mut().insert(
+        HeaderName::from_static(COOP_HEADER),
+        HeaderValue::from_static("same-origin"),
+    );
+    response
+        .headers_mut()
+        .insert(X_FRAME_OPTIONS, HeaderValue::from_static("DENY"));
+
+    if path.starts_with("/legacy/") {
+        response.headers_mut().insert(
+            HeaderName::from_static(ROBOTS_HEADER),
+            HeaderValue::from_static("noindex, nofollow"),
+        );
+    }
     response
 }
 
-/// Helper function to safely extract header values
-fn extract_header_value(headers: &HeaderMap, header_name: &str) -> String {
-    headers
-        .get(header_name)
-        .and_then(|value| value.to_str().ok())
-        .unwrap_or("-")
-        .to_string()
+/// Emits a privacy-preserving access log and exposes a server-generated request ID.
+pub async fn log_requests(request: Request<Body>, next: Next) -> impl IntoResponse {
+    let start = Instant::now();
+
+    let method = request.method().to_string();
+    let path = request.uri().path().to_owned();
+    let request_id = Uuid::new_v4().to_string();
+    let mut response = next.run(request).await;
+
+    let status = response.status().as_u16();
+    let access_log = json!({
+        "event": "http_request",
+        "request_id": request_id,
+        "method": method,
+        "path": path,
+        "status": status,
+        "duration_ms": start.elapsed().as_millis(),
+    });
+
+    log::info!(target: "access", "{}", access_log);
+
+    if let Ok(request_header) = HeaderValue::from_str(&request_id) {
+        response
+            .headers_mut()
+            .insert(HeaderName::from_static(REQUEST_HEADER), request_header);
+    }
+
+    response
 }

@@ -1,0 +1,91 @@
+---
+export interface Props {
+  caption?: string;
+  credit?: string;
+  bleed?: boolean;
+  class?: string;
+}
+
+const props = Astro.props as Props & { [key: string]: unknown };
+
+const {
+  caption,
+  credit,
+  bleed = false,
+  class: className = '',
+  ...rest
+} = props;
+---
+<figure class={`media-frame ${bleed ? 'media-frame--bleed' : ''} ${className}`.trim()} {...rest}>
+  <div class="media-frame__media">
+    <slot />
+  </div>
+  {(caption || credit) && (
+    <figcaption class="media-frame__caption">
+      {caption && <span class="media-frame__caption-text">{caption}</span>}
+      {credit && <span class="media-frame__caption-credit">{credit}</span>}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+.media-frame {
+  position: relative;
+  display: grid;
+  gap: var(--space-sm, 0.75rem);
+  padding: var(--space-sm, 0.75rem);
+  border-radius: var(--radius-lg, 18px);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-100);
+  box-shadow: var(--shadow-sm);
+}
+
+.media-frame--bleed {
+  padding: 0;
+}
+
+.media-frame__media {
+  border-radius: calc(var(--radius-lg, 18px) - var(--space-2xs, 0.25rem));
+  overflow: hidden;
+  background: var(--color-surface-200);
+  border: 1px solid color-mix(in srgb, var(--color-border-subtle) 68%, transparent);
+}
+
+.media-frame__media :global(img),
+.media-frame__media :global(video),
+.media-frame__media :global(canvas),
+.media-frame__media :global(picture),
+.media-frame__media img,
+.media-frame__media video,
+.media-frame__media canvas,
+.media-frame__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-frame__caption {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-muted);
+  display: flex;
+  gap: var(--space-xs, 0.5rem);
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.media-frame__caption-credit {
+  font-style: italic;
+}
+
+html[data-theme='dark'] .media-frame {
+  background: var(--color-surface-300);
+  border: 1px solid var(--color-border-muted);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .media-frame__media {
+  background: var(--color-surface-200);
+  border-color: var(--color-border-muted);
+}
+</style>

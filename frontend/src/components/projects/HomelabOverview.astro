@@ -1,0 +1,180 @@
+---
+import SectionShell from '../layout/SectionShell.astro';
+
+export interface Props {
+  id?: string;
+  class?: string;
+}
+
+const props = Astro.props as Props & { [key: string]: unknown };
+const { id, class: className = '', ...rest } = props;
+
+const platformGroups = [
+  {
+    eyebrow: 'Hardware',
+    title: 'Two physical planes',
+    description: 'Scheduling policy keeps general compute separate from the storage and I/O path without creating a second cluster.',
+    services: [
+      '3× Ryzen AI 9 HX 370 control/compute nodes',
+      '3× Ryzen 7 7745HX storage nodes',
+      '12 dedicated NVMe Ceph OSDs',
+      '2.5 GbE compute and 10 GbE storage links',
+    ],
+  },
+  {
+    eyebrow: 'Network',
+    title: 'A narrow, explicit edge',
+    description: 'OPNsense and admission-controlled ingress separate public, private, and Cloudflare-proxied traffic before it reaches workloads.',
+    services: [
+      'OPNsense WAN policy and split DNS',
+      'MetalLB + HAProxy',
+      'Direct and Cloudflare exposure profiles',
+      'Cilium + Hubble',
+      'Linkerd identity, mTLS, and telemetry',
+    ],
+  },
+  {
+    eyebrow: 'Data',
+    title: 'Storage and shared state',
+    description: 'Dedicated storage nodes and shared operators keep persistent concerns separate from application deployments.',
+    services: [
+      'Rook/Ceph block storage',
+      'CephFS shared filesystems',
+      'CloudNativePG',
+      'Valkey',
+    ],
+  },
+  {
+    eyebrow: 'Delivery',
+    title: 'Reconciliation, artifacts, and secrets',
+    description: 'Git, immutable images, and external secret authority define what enters the cluster and how it is reconciled.',
+    services: [
+      'Argo CD root application',
+      'Harbor registry',
+      'Vault',
+      'External Secrets',
+      'Immutable image releases',
+    ],
+  },
+  {
+    eyebrow: 'Observability',
+    title: 'Metrics, flows, and logs',
+    description: 'The platform exposes service health and behavior through shared metrics, network visibility, and centralized logs.',
+    services: [
+      'Prometheus + Grafana',
+      'Hubble flow visibility',
+      'Fluent Bit + Data Prepper',
+      'OpenSearch',
+    ],
+  },
+  {
+    eyebrow: 'Workloads',
+    title: 'A platform with real users',
+    description: 'The cluster supports varied workloads without turning the public portfolio into a map of private services.',
+    services: [
+      'AI gateways and local inference',
+      'Media and photo libraries',
+      'Productivity services',
+      'Public production and staging sites',
+    ],
+  },
+];
+---
+<section id={id} class={`homelab-overview ${className}`.trim()} {...rest}>
+  <SectionShell title="Platform Map" accent class="service-inventory-shell">
+    <div class="service-grid">
+      {platformGroups.map((group) => (
+        <article class="service-card">
+          <p class="service-card__eyebrow">{group.eyebrow}</p>
+          <h3>{group.title}</h3>
+          <p class="service-card__description">{group.description}</p>
+          <ul class="service-list">
+            {group.services.map((service) => (
+              <li>{service}</li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </SectionShell>
+</section>
+
+<style>
+.homelab-overview {
+  display: grid;
+  gap: calc(var(--space-2xl) + 0.5rem);
+}
+
+.service-card {
+  display: grid;
+  gap: var(--space-sm);
+  background: var(--color-surface-300);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.service-card__eyebrow {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-subtle);
+}
+
+.service-card__description {
+  color: var(--color-text-muted);
+  max-width: none;
+}
+
+.service-grid {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.service-card h3 {
+  font-size: 1.4rem;
+}
+
+.service-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.service-list li {
+  max-width: none;
+  color: var(--color-text-default);
+  padding-left: 0.9rem;
+  position: relative;
+}
+
+.service-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72rem;
+  width: 0.32rem;
+  height: 0.32rem;
+  border-radius: 999px;
+  background: var(--color-accent-500);
+}
+
+.service-inventory-shell {
+  margin-top: 2rem;
+}
+
+html[data-theme='dark'] .service-card {
+  background: var(--color-surface-100);
+  border-color: var(--color-border-muted);
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

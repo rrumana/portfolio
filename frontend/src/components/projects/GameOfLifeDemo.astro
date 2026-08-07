@@ -1,0 +1,232 @@
+---
+import gameOfLifeScriptUrl from '../../scripts/game_of_life.js?url';
+
+export interface Props {
+  id?: string;
+}
+
+const props = Astro.props as Props;
+const { id = 'playground' } = props;
+---
+<section id={id} class="gol-demo section-grid">
+  <div>
+    <p class="eyebrow">Browser demo</p>
+    <h2>Interactive playground</h2>
+    <p>
+      This is still the most tactile part of the site: a Rust + WASM Game of Life sandbox for stepping,
+      rewinding, importing patterns, and exporting runs. The control surface is intentionally explicit so
+      the demo feels like a tool, not a marketing animation.
+    </p>
+  </div>
+
+  <div class="gol-demo__layout">
+    <div class="surface-panel gol-demo__canvas">
+      <div class="gol-demo__viewport">
+        <canvas
+          id="lifeCanvas"
+          width="400"
+          height="400"
+          aria-label="Game of Life grid"
+          aria-describedby="lifeCanvasInstructions"
+          tabindex="0"
+        ></canvas>
+        <p id="lifeCanvasInstructions" class="visually-hidden">
+          Use the arrow keys to move between cells and Space or Enter to toggle the selected cell.
+        </p>
+      </div>
+
+      <dl class="gol-demo__stats">
+        <div>
+          <dt>Grid</dt>
+          <dd><span id="gridSizeDisplay">Grid: 20x20</span></dd>
+        </div>
+        <div>
+          <dt>Live cells</dt>
+          <dd><span id="liveCellsDisplay" aria-live="polite">Live cells: 0</span></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="gol-demo__controls">
+      <section class="surface-panel gol-demo__panel">
+        <h3>Simulation controls</h3>
+        <div class="gol-buttons">
+          <button id="stepBtn" class="button-link button-link--ghost" type="button">Step forward</button>
+          <button id="backBtn" class="button-link button-link--ghost" type="button">Step back</button>
+          <button id="resetBtn" class="button-link button-link--ghost" type="button">Reset</button>
+          <button id="multiStepBtn" class="button-link button-link--ghost" type="button">Multi-step</button>
+          <button id="recordBtn" class="button-link button-link--ghost" type="button">Record GIF</button>
+        </div>
+        <div class="gol-input">
+          <label for="speedRange">Frame delay</label>
+          <input type="range" id="speedRange" min="50" max="1000" value="200" />
+          <span id="delayDisplay">Frame Delay: 200ms</span>
+        </div>
+        <div class="gol-input">
+          <label for="genInput">Generations per step</label>
+          <input type="number" id="genInput" min="1" max="100" value="1" />
+        </div>
+      </section>
+
+      <section class="surface-panel gol-demo__panel">
+        <h3>Pattern tools</h3>
+        <div class="gol-input">
+          <label for="textInput">Generate from text</label>
+          <input type="text" id="textInput" placeholder="Enter text to convert" />
+        </div>
+        <div class="gol-input">
+          <label for="bufferSizeSlider">Buffer size</label>
+          <input type="range" id="bufferSizeSlider" min="1" max="10" value="2" />
+          <span id="bufferDisplay">2</span>
+        </div>
+        <button id="generateTextBtn" class="button-link button-link--ghost" type="button">Generate pattern</button>
+      </section>
+
+      <section class="surface-panel gol-demo__panel">
+        <h3>Import and export</h3>
+        <div class="gol-file">
+          <input type="file" id="fileInput" accept=".txt" hidden />
+          <button id="fileUploadBtn" class="button-link button-link--ghost" type="button">Upload pattern</button>
+          <span id="fileName">No file selected</span>
+        </div>
+        <div
+          id="dragDropArea"
+          class="gol-drop"
+          role="button"
+          aria-label="Upload a pattern by file picker or drag and drop"
+          tabindex="0"
+        >
+          Drag and drop pattern files here
+        </div>
+        <button id="downloadBtn" class="button-link button-link--ghost" type="button">Download pattern</button>
+      </section>
+    </div>
+  </div>
+</section>
+
+<script is:inline type="module" src={gameOfLifeScriptUrl}></script>
+
+<style>
+.gol-demo__layout {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.gol-demo__controls {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+}
+
+.gol-demo__canvas {
+  padding: 1.2rem;
+  width: min(100%, 880px);
+  margin-inline: auto;
+}
+
+.gol-demo__viewport {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border-subtle);
+  background: color-mix(in srgb, var(--color-navy-950) 12%, var(--color-surface-strong));
+}
+
+.gol-demo__viewport canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.gol-demo__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.gol-demo__stats div {
+  display: grid;
+  gap: var(--space-2xs, 0.25rem);
+}
+
+.gol-demo__stats dt {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-subtle);
+}
+
+.gol-demo__stats dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-text-strong);
+}
+
+.gol-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.gol-input {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.gol-input label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.gol-input input[type='text'],
+.gol-input input[type='number'],
+.gol-input input[type='range'] {
+  width: 100%;
+}
+
+.gol-file {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.gol-file span {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.gol-drop {
+  border: 1px dashed var(--color-border-muted);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  transition: border 180ms ease, background 180ms ease;
+}
+
+.gol-drop:focus-visible,
+.gol-drop:hover {
+  border-color: color-mix(in srgb, var(--color-accent-500) 38%, transparent);
+  background: color-mix(in srgb, var(--color-accent-500) 10%, transparent);
+}
+
+.gol-demo__panel {
+  padding: 1.2rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+@media (max-width: 980px) {
+  .gol-demo__controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .gol-demo__controls {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

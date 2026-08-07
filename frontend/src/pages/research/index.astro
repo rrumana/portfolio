@@ -1,0 +1,70 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import ResearchCard from '../../components/cards/ResearchCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const papers = [...await getCollection('research')].sort((a, b) => a.data.featuredRank - b.data.featuredRank || b.data.lastUpdated.getTime() - a.data.lastUpdated.getTime());
+const inProgress = papers.filter((paper) => paper.data.stage === 'in-progress');
+const complete = papers.filter((paper) => paper.data.stage === 'complete');
+const propsFor = (paper: CollectionEntry<'research'>) => ({
+  title: paper.data.shortTitle,
+  summary: paper.data.summary,
+  href: `/research/${paper.id}/`,
+  format: paper.data.format,
+  stage: paper.data.stage,
+  availability: paper.data.availability,
+  displayDate: paper.data.displayDate,
+  authors: paper.data.authors.map((author) => author.name),
+  topics: paper.data.topics,
+  artifacts: paper.data.artifacts,
+  presentation: paper.data.presentation ? { event: paper.data.presentation.event } : undefined,
+});
+---
+<BaseLayout title="Research & Writing | Ryan Rumana" description="Independent papers, course reports, talks, and reproducible artifacts by Ryan Rumana.">
+  <main id="main-content">
+    <section class="section-shell research-intro">
+      <div class="container research-intro__grid">
+        <div class="research-intro__copy">
+          <p class="eyebrow">Research & writing</p>
+          <h1>Papers and technical reports</h1>
+          <p>This is where I collect my research papers and reports, along with PDFs, source code, and presentation material.</p>
+        </div>
+        <aside class="research-note surface-panel">
+          <h2>What "complete" means</h2>
+          <p>A complete document is finished and available to read here. It may not be peer reviewed or published by an academic venue. Presentation and course details are listed separately.</p>
+        </aside>
+      </div>
+    </section>
+
+    {inProgress.length > 0 && (
+      <section class="section-shell research-progress">
+        <div class="container section-grid">
+          <div class="research-heading"><p class="eyebrow">In progress</p><h2>New ideas / projects</h2><p>These documents are works in progress. Related code and presentation details are included when available but may be out of date.</p></div>
+          <div class="research-list">{inProgress.map((paper) => <ResearchCard {...propsFor(paper)} />)}</div>
+        </div>
+      </section>
+    )}
+
+    <section class="section-shell">
+      <div class="container section-grid">
+        <div class="research-heading"><p class="eyebrow">Complete work</p><h2>Finished and publicly available</h2><p>These documents are finished and available to read. Related code and presentation details are included when available.</p></div>
+        <div class="research-list">{complete.map((paper) => <ResearchCard {...propsFor(paper)} />)}</div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .research-intro__grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(290px, 0.65fr); gap: clamp(2rem, 6vw, 6rem); align-items: end; }
+  .research-intro { padding-bottom: clamp(2.75rem, 5vw, 4.5rem); }
+  .research-intro__copy, .research-note, .research-heading { display: grid; gap: 1rem; }
+  .research-intro__copy > p:last-child, .research-heading > p:last-child { color: var(--color-text-muted); font-size: var(--font-size-lg); }
+  .research-note { padding: 1.35rem; border-top: 3px solid var(--color-accent-warm); }
+  .research-note h2 { font-size: var(--font-size-xl); line-height: 1.15; }
+  .research-note p { color: var(--color-text-muted); }
+  .research-note strong { color: var(--color-text-strong); }
+  .research-progress { background: color-mix(in srgb, var(--color-surface-strong) 62%, transparent); border-block: 1px solid var(--color-border-subtle); }
+  .research-heading { max-width: 50rem; }
+  .research-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  @media (max-width: 860px) { .research-intro__grid, .research-list { grid-template-columns: 1fr; } }
+</style>

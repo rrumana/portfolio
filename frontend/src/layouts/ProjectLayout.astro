@@ -1,0 +1,101 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Container from '../components/shell/Container.astro';
+import TechStackList from '../components/patterns/TechStackList.astro';
+import type { ProjectSection } from '../components/projects';
+
+export interface Action { label: string; href: string }
+export interface Props {
+  title: string;
+  description: string;
+  year: number;
+  status: string;
+  heroImage?: string;
+  heroImageDark?: string;
+  heroAlt?: string;
+  techStack?: string[];
+  actions?: Action[];
+  navLinks?: readonly { href: string; label: string }[];
+  sections?: ProjectSection[];
+  toc?: { id: string; label: string }[];
+}
+
+const { title, description, year, status, heroImage, heroImageDark, heroAlt, techStack = [], actions = [], navLinks = [], sections = [], toc = [] } = Astro.props as Props;
+const sectionMap = new Map<string, string>();
+if (toc.length === 0) sectionMap.set('case-study', 'Overview');
+for (const item of toc) sectionMap.set(item.id, item.label);
+for (const section of sections) {
+  sectionMap.set(section.id, section.label);
+  for (const anchor of section.anchors ?? []) sectionMap.set(anchor.id, anchor.label);
+}
+const sidebarItems = Array.from(sectionMap, ([id, label]) => ({ href: `#${id}`, label }));
+const statusLabel = status === 'archive' ? 'Archived' : status === 'completed' ? 'Complete' : status === 'incubating' ? 'In development' : 'Active';
+---
+<BaseLayout title={`${title} | Ryan Rumana`} description={description} navLinks={navLinks}>
+  <main id="main-content">
+    <article>
+      <header class="section-shell project-hero">
+        <Container class="project-hero__container">
+          <div class="project-hero__grid">
+            <div class="project-hero__copy"><p class="eyebrow">Case study</p><h1>{title}</h1><p>{description}</p></div>
+            <aside class="project-meta surface-panel">
+              <dl><div><dt>Status</dt><dd>{statusLabel}</dd></div><div><dt>Started</dt><dd>{year}</dd></div></dl>
+              {actions.length > 0 && <div class="project-actions">{actions.map((action, index) => <a class:list={['button-link', { 'button-link--ghost': index > 0 }]} href={action.href} target={action.href.startsWith('http') ? '_blank' : undefined} rel={action.href.startsWith('http') ? 'noreferrer' : undefined}>{action.label}</a>)}</div>}
+            </aside>
+          </div>
+
+          {heroImage && <figure class="project-hero__media">
+            {heroImageDark ? <><img src={heroImage} alt={heroAlt ?? ''} class="project-image project-image--light" /><img src={heroImageDark} alt={heroAlt ?? ''} class="project-image project-image--dark" /></> : <img src={heroImage} alt={heroAlt ?? ''} class="project-image" />}
+          </figure>}
+        </Container>
+      </header>
+
+      <section class="section-shell project-body-section">
+        <Container class="project-body-grid">
+          <div class="project-content prose">
+            <section id={toc.length === 0 ? 'case-study' : undefined} class="section-grid"><slot /></section>
+            {sections.map((section) => { const SectionComponent = section.component; return <SectionComponent {...(section.props ?? {})} />; })}
+          </div>
+          {(sidebarItems.length > 1 || techStack.length > 0) && <aside class="project-rail">
+            {sidebarItems.length > 1 && <nav class="surface-panel rail-panel" aria-label="On this page"><p class="rail-label">On this page</p><ul>{sidebarItems.map((item) => <li><a href={item.href}>{item.label}</a></li>)}</ul></nav>}
+            {techStack.length > 0 && <section class="surface-panel rail-panel"><p class="rail-label">Tools & technologies</p><TechStackList items={techStack} /></section>}
+            <a class="project-back" href="/projects/">← All projects</a>
+          </aside>}
+        </Container>
+      </section>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .project-hero { padding-bottom: clamp(2.5rem, 5vw, 4.5rem); border-bottom: 1px solid var(--color-border-subtle); }
+  .project-hero__container { display: grid; gap: clamp(2rem, 4vw, 3.5rem); }
+  .project-hero__grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.45fr); gap: clamp(2rem, 6vw, 6rem); align-items: end; }
+  .project-hero__copy { display: grid; gap: 1.15rem; }
+  .project-hero__copy p:last-child { max-width: 46rem; color: var(--color-text-muted); font-size: clamp(1.12rem, 0.5vw + 1rem, 1.32rem); }
+  .project-meta { display: grid; gap: 1.1rem; padding: 1.15rem; border-top: 3px solid var(--color-accent-warm); }
+  .project-meta dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .project-meta dt, .rail-label { color: var(--color-text-subtle); font-family: var(--font-family-mono); font-size: var(--font-size-2xs); letter-spacing: 0.08em; text-transform: uppercase; }
+  .project-meta dd { margin: 0.25rem 0 0; color: var(--color-text-strong); }
+  .project-actions { display: grid; gap: 0.65rem; }
+  .project-actions .button-link { width: 100%; }
+  .project-hero__media { overflow: hidden; border: 1px solid var(--color-border-muted); border-radius: var(--radius-lg); background: var(--color-surface); box-shadow: var(--shadow-sm); }
+  .project-image { width: 100%; max-height: 36rem; aspect-ratio: 16 / 7; object-fit: contain; }
+  .project-image--dark { display: none; }
+  html[data-theme='dark'] .project-image--light { display: none; }
+  html[data-theme='dark'] .project-image--dark { display: block; }
+  .project-body-section { padding-top: clamp(2.5rem, 5vw, 4.5rem); }
+  .project-body-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 0.3fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; }
+  .project-content { min-width: 0; max-width: 52rem; }
+  .project-content section { scroll-margin-top: 2rem; }
+  .project-content :global(h2) { font-size: clamp(1.8rem, 2.2vw, 2.8rem); }
+  .project-rail { display: grid; gap: 1rem; position: sticky; top: 7rem; }
+  .rail-panel { display: grid; gap: 0.85rem; padding: 1.1rem; }
+  .rail-panel ul { display: grid; gap: 0.15rem; padding: 0; list-style: none; }
+  .rail-panel nav { display: contents; }
+  .rail-panel a { display: block; padding-block: 0.35rem; color: var(--color-text-muted); }
+  .rail-panel a:hover, .rail-panel a:focus-visible { color: var(--color-link); }
+  .project-back { color: var(--color-link); text-decoration: underline; text-underline-offset: 0.2em; }
+  @media (max-width: 900px) { .project-hero__grid, .project-body-grid { grid-template-columns: 1fr; } .project-rail { position: static; } }
+  @media (max-width: 520px) { .project-meta dl { grid-template-columns: 1fr; } .project-image { aspect-ratio: 4 / 3; } }
+</style>

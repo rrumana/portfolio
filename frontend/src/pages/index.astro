@@ -1,0 +1,136 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from '../components/cards/ProjectCard.astro';
+import ResearchCard from '../components/cards/ResearchCard.astro';
+import Portrait from '../components/patterns/Portrait.astro';
+import Icon from '../components/ui/Icon.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../site.config';
+
+const allProjects = await getCollection('projects');
+const projects = siteConfig.homeFeatured
+  .map((id) => allProjects.find((project) => project.id === id))
+  .filter((project): project is NonNullable<typeof project> => Boolean(project));
+const research = (await getCollection('research'))
+  .sort((left, right) => left.data.stage === right.data.stage
+    ? left.data.featuredRank - right.data.featuredRank
+    : left.data.stage === 'in-progress' ? -1 : 1)
+  .slice(0, 3);
+---
+<BaseLayout>
+  <main id="main-content">
+    <section class="section-shell home-hero">
+      <div class="container home-hero__grid">
+        <div class="home-hero__copy">
+          <p class="eyebrow">{siteConfig.hero.eyebrow}</p>
+          <h1>{siteConfig.hero.title}</h1>
+          <p class="home-hero__lede">{siteConfig.hero.description}</p>
+          <div class="home-hero__actions">
+            <a class="button-link" href={siteConfig.hero.primaryCta.href}>{siteConfig.hero.primaryCta.label}</a>
+            <a class="button-link button-link--ghost" href={siteConfig.hero.secondaryCta.href}>{siteConfig.hero.secondaryCta.label}</a>
+          </div>
+          <p class="home-hero__note">AI/ML implementation · systems software · self-hosted infrastructure</p>
+        </div>
+
+        <Portrait caption="Usually happier outside, especially when a mountain is involved" priority />
+      </div>
+    </section>
+
+    <section class="section-shell home-projects">
+      <div class="container section-grid">
+        <div class="section-heading">
+          <div><p class="eyebrow">Projects</p><h2>Selected projects</h2></div>
+          <p>A few projects I'm especially proud of, with code and longer write-ups where available.</p>
+        </div>
+        <div class="project-list">
+          {projects.map((project, index) => (
+            <ProjectCard
+              title={project.data.title}
+              summary={project.data.summaryShort}
+              href={`/projects/${project.id}/`}
+              year={project.data.year}
+              status={project.data.status}
+              impact={project.data.impact}
+              cardTags={project.data.cardTags}
+              media={project.data.heroImage}
+              mediaDark={project.data.heroImageDark}
+              mediaAlt={project.data.heroAlt}
+              repoUrl={project.data.repoUrl}
+              accent={project.data.accent}
+              lead={index === 0}
+            />
+          ))}
+        </div>
+        <a class="text-link" href="/projects/">See every project <Icon name="arrow" size={17} /></a>
+      </div>
+    </section>
+
+    <section class="section-shell home-research">
+      <div class="container research-block">
+        <div class="research-block__intro">
+          <p class="eyebrow">Research & writing</p>
+          <h2>Papers and technical reports</h2>
+          <p>My research and technical writing, with PDFs, code, and presentation material when available.</p>
+          <a class="text-link" href="/research/">Papers, reports, and talks <Icon name="arrow" size={17} /></a>
+        </div>
+        <div class="research-list">
+          {research.map((paper) => (
+            <ResearchCard
+              title={paper.data.shortTitle}
+              summary={paper.data.summary}
+              href={`/research/${paper.id}/`}
+              format={paper.data.format}
+              stage={paper.data.stage}
+              availability={paper.data.availability}
+              displayDate={paper.data.displayDate}
+              authors={paper.data.authors.map((author) => author.name)}
+              topics={paper.data.topics}
+              artifacts={paper.data.artifacts}
+              presentation={paper.data.presentation ? { event: paper.data.presentation.event } : undefined}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell home-personal">
+      <div class="container personal-band surface-panel">
+        <div><p class="eyebrow">Beyond the terminal</p><h2>Engineer, tinkerer, endurance athlete</h2></div>
+        <div class="personal-band__copy">
+          <p>Originally from Tallahassee, Florida, I now live in the Bay Area. In my free time I like to get outside, cook, maintain my Kubernetes cluster, and follow whatever technical problem has caught my attention.</p>
+          <a class="text-link" href="/about/">More about me <Icon name="arrow" size={17} /></a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .home-hero { overflow: hidden; }
+  .home-hero__grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.7fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .home-hero__copy { display: grid; gap: 1.35rem; max-width: 50rem; }
+  .home-hero__lede { max-width: 43rem; color: var(--color-text-muted); font-size: clamp(1.13rem, 0.6vw + 1rem, 1.38rem); }
+  .home-hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .home-hero__note { font-family: var(--font-family-mono); font-size: var(--font-size-xs); color: var(--color-text-subtle); }
+  .section-heading { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.65fr); gap: 2rem; align-items: end; }
+  .section-heading > div { display: grid; gap: 0.85rem; }
+  .section-heading > p { color: var(--color-text-muted); }
+  .project-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem; }
+  .project-list :global(.project-card--lead) { grid-column: 1 / -1; }
+  .text-link { display: inline-flex; width: fit-content; align-items: center; gap: 0.4rem; color: var(--color-link); font-weight: 700; }
+  .text-link:hover, .text-link:focus-visible { color: var(--color-text-strong); }
+  .home-research { background: color-mix(in srgb, var(--color-surface-strong) 72%, transparent); border-block: 1px solid var(--color-border-subtle); }
+  .research-block { display: grid; grid-template-columns: minmax(260px, 0.65fr) minmax(0, 1.35fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .research-block__intro { display: grid; gap: 1rem; position: sticky; top: 7rem; }
+  .research-block__intro p { color: var(--color-text-muted); }
+  .research-list { display: grid; gap: 1rem; }
+  .personal-band { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr); gap: 2rem; padding: clamp(1.5rem, 4vw, 3.5rem); border-top: 3px solid var(--color-accent-pine); }
+  .personal-band > div { display: grid; gap: 0.85rem; }
+  .personal-band__copy { align-content: center; color: var(--color-text-muted); }
+
+  @media (max-width: 900px) {
+    .home-hero__grid, .section-heading, .research-block, .personal-band { grid-template-columns: 1fr; }
+    .research-block__intro { position: static; }
+  }
+  @media (max-width: 680px) { .project-list { grid-template-columns: 1fr; } }
+</style>

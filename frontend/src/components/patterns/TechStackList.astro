@@ -1,0 +1,50 @@
+---
+import TechLogo from './TechLogo.astro';
+
+export interface Props {
+  items: string[];
+}
+
+const props = Astro.props as Props;
+const { items = [] } = props;
+---
+<ul class="tech-stack-list" aria-label="Technology stack">
+  {items.map((item) => (
+    <li class="tech-stack-list__item">
+      <span class="tech-stack-list__icon">
+        <TechLogo name={item} />
+      </span>
+      <span class="tech-stack-list__label">{item}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+.tech-stack-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.tech-stack-list__item {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.tech-stack-list__icon {
+  width: 1.85rem;
+  height: 1.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.tech-stack-list__label {
+  color: var(--color-text-default);
+  font-size: var(--font-size-sm);
+}
+</style>

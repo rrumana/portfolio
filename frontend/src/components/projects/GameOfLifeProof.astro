@@ -1,0 +1,1002 @@
+---
+import SectionShell from '../layout/SectionShell.astro';
+import AccordionGroup from '../patterns/AccordionGroup.astro';
+import Accordion from '../patterns/Accordion.astro';
+import SurfaceCard from '../ui/SurfaceCard.astro';
+import CommandCard from '../patterns/CommandCard.astro';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+
+const inlineMath = (tex: string) =>
+  `<span class="math-term">${katex.renderToString(tex, { throwOnError: false })}</span>`;
+
+const blockMath = (tex: string) =>
+  `<div class="formula"><div class="formula__scroll">${katex.renderToString(tex, {
+    displayMode: true,
+    throwOnError: false,
+  })}</div></div>`;
+
+const optimizationSections = [
+  {
+    title: 'Engine Overview',
+    content: `<p>This represents the best version yet of my Game of Life engine, delivering a <strong>~10,000x performance improvement</strong> over the first naive implementation through bit manipulation and hardware-accelerated computation. Benchmarks regularly hit <strong>158 billion cell updates per second</strong> on a laptop-class CPU, and there is still room to experiment.</p>
+      <p>The engine automatically detects hardware capabilities and picks the optimal SIMD configuration, supporting widths of 4, 8, or 16 parallel operations. It uses configurable generic parameters <code class="code-snippet">UltimateEngine&lt;const N: usize&gt;</code> where N represents the SIMD lane count, allowing compile-time optimization for specific targets.</p>`
+  },
+  {
+    title: 'Bit-Packed Representation',
+    content: `<p>The engine stores 64 cells per u64 integer, achieving <strong>8x memory efficiency</strong> compared to byte-per-cell representations. This bit-packing strategy dramatically improves cache performance and enables vectorized operations on large cell groups simultaneously.</p>
+      <p>Grid layout uses MSB-first bit ordering with strategic padding which eliminates boundary checks during computation, while SIMD alignment ensures optimal memory access patterns. Pre-computed boundary masks handle edge cases efficiently without conditional branching in the hot path.</p>`
+  },
+  {
+    title: 'SIMD Vectorization',
+    content: `<p>The engine leverages Rust's portable SIMD to process multiple 64-bit words simultaneously. Custom shift operations <code class="code-snippet">shl()</code> and <code class="code-snippet">shr()</code> handle cross-lane bit propagation using <code class="code-snippet">rotate_elements_left/right</code> with pre-selected masks to maintain bit continuity across SIMD lanes. Using 8 SIMD lanes represents a <strong>512x</strong> speedup compared to byte-per-cell representations.</p>
+      <p>Memory prefetching on x86_64 architectures uses <code class="code-snippet">_mm_prefetch</code> with <code class="code-snippet">_MM_HINT_T0</code> to load next rows into L1 cache before processing, reducing memory latency. The engine processes columns in SIMD-aligned chunks, maximizing instruction-level parallelism and minimizing cache misses.</p>`
+  },
+  {
+    title: 'Neighbor Counting Algorithm',
+    content: `<p>The core <code class="code-snippet">sub_step()</code> function implements an optimized full/half adder algorithm for counting neighbors. Rather than iterating through 8 neighbors individually, it uses a two-stage binary tree reduction to compute neighbor counts for all 64 cells in parallel.</p>
+      <p>Neighbors are grouped into pairs using XOR for sum bits and AND for carry bits and then combined. The Game of Life rules are applied using bitwise operations: <code class="code-snippet">center |= ab; center &= b3 ^ b4; center &= !c0;</code> eliminating conditional branching in the hotpath, allowing the vectorization to remain efficient.</p>`
+  },
+  {
+    title: 'Parallel Processing',
+    content: `<p>Workloads are divided into row blocks that can be processed independently across threads. The scheduler balances work dynamically to avoid idle cores during uneven workloads.</p>
+      <p>Prefetch distance is tuned per architecture to maximize cache utilization; block sizes are chosen to maintain cache locality while minimizing synchronization overhead between worker threads.</p>`
+  },
+  {
+    title: 'WebAssembly Integration',
+    content: `<p>Wasm SIMD is used when supported, providing significant performance improvements in modern browsers. The engine gracefully handles hardware limitations with automatic fallback to scalar implementations, ensuring compatibility across all platforms while maximizing performance on capable hardware.</p>
+      <p>Because the UI is powered by wasm-bindgen, the same Rust codebase drives both the native solver and the interactive web experience.</p>`
+  },
+  {
+    title: 'Future Work',
+    content: `<p>Several optimization vectors remain unexplored. Current benchmarks show memory bandwidth saturation as the primary bottleneck, with CPU utilization plateauing at roughly 50% because of DRAM throughput. Future work includes experimenting with alternative memory layouts, smarter software prefetching, and adaptive block sizes tuned per architecture.</p>
+      <p>The scalar build already handled ~12 million cell updates per second—which is more than enough for the web demo—but this project is an excuse to chase theoretical limits. GPU-backed variants and distributed solving strategies are on the roadmap.</p>`
+  }
+];
+
+const proofSections = [
+  {
+    title: 'Definitions & Setup',
+    content: [
+      `<p>Let ${inlineMath('\\Sigma = \\{0,1\\}')}.
+      For a finite grid of size ${inlineMath('N \\times N')}, a configuration is a function:</p>`,
+      blockMath('c : \\{0,1,\\dots,N-1\\}^2 \\to \\{0,1\\}'),
+      '<p>The Game of Life update rule is represented as:</p>',
+      blockMath('f : \\{0,1\\}^{N \\times N} \\to \\{0,1\\}^{N \\times N}'),
+      `<p>For each cell ${inlineMath('(i,j)')}:</p>`,
+      blockMath(
+        'f(c)_{i,j} = \\begin{cases} 1 & \\text{if } c_{i,j} = 1 \\text{ and } n(i,j) \\in \\{2,3\\}, \\\\ 1 & \\text{if } c_{i,j} = 0 \\text{ and } n(i,j) = 3, \\\\ 0 & \\text{otherwise}. \\end{cases}'
+      ),
+      '<p>where the neighbor count is:</p>',
+      blockMath(
+        'n(i,j) = \\sum_{(d_1,d_2) \\in \\{-1,0,1\\}^2 \\setminus \\{(0,0)\\}} c(i+d_1,j+d_2)'
+      ),
+    ].join(''),
+  },
+  {
+    title: 'Main Theorem',
+    content: [
+      '<p><strong>Theorem:</strong> The decision problem REV-GOL is NP-Complete.</p>',
+      blockMath(
+        '\\text{REV-GOL} = \\{\\, c \\in \\{0,1\\}^{N \\times N} \\mid \\exists\\, p \\in \\{0,1\\}^{N \\times N} \\text{ such that } f(p)=c \\,\\}'
+      ),
+      `<p>In other words, REV-GOL asks: "Given a Game of Life configuration ${inlineMath('c')}, does there exist a predecessor configuration ${inlineMath('p')} such that applying one step of the Game of Life rules to ${inlineMath('p')} produces ${inlineMath('c')}?"</p>`,
+    ].join(''),
+  },
+  {
+    title: 'NP Membership',
+    content: [
+      `<p><strong>REV-GOL ${inlineMath('\\in')} NP:</strong> A nondeterministic algorithm can guess a candidate predecessor ${inlineMath('p')} and verify in ${inlineMath('O(N^2)')} time that ${inlineMath('f(p) = c')}.</p>`,
+      '<p>The verification process simply applies the Game of Life rules to each cell in the guessed configuration and checks if the result matches the given configuration.</p>',
+    ].join(''),
+  },
+  {
+    title: 'NP-Hardness',
+    content:
+      '<p>We reduce from 3-SAT. Each boolean variable is modeled using paired wires that encode its true/false states, and clause gadgets ensure at least one incident literal satisfies the clause.</p><p>The reduction ensures the constructed configuration has a predecessor if and only if the original 3-SAT formula is satisfiable.</p>',
+  },
+  {
+    title: 'Gadget Construction',
+    content: [
+      '<p>Variable gadgets propagate signals along synchronized wires so clauses receive consistent timing. Clause gadgets OR the incoming literals and feed a verification grid.</p>',
+      blockMath('G = \\left( \\bigcup_{i=1}^n V_i \\right) \\cup \\left( \\bigcup_{i=1}^m G_{C_i} \\right) \\cup (\\text{background})'),
+      '<p>Additional supporting gadgets handle carry propagation and enforce the timing constraints needed for reversible evolution.</p>',
+    ].join(''),
+  },
+  {
+    title: 'Concrete Example',
+    content: [
+      '<p>Consider the 3-SAT formula:</p>',
+      blockMath('\\varphi = (x_1 \\lor \\neg x_2 \\lor x_3) \\land (\\neg x_1 \\lor x_2 \\lor \\neg x_3)'),
+      `<p><strong>Clause 1:</strong> ${inlineMath('(x_1 \\lor \\neg x_2 \\lor x_3)')} is satisfied when at least one of:</p>`,
+      blockMath(
+        'x_1 \\text{ is True } (P_{1,T}), \\\n+        x_2 \\text{ is False } (P_{2,F}), \\\n+        x_3 \\text{ is True } (P_{3,T})'
+      ),
+      `<p><strong>Clause 2:</strong> ${inlineMath('(\\neg x_1 \\lor x_2 \\lor \\neg x_3)')} is satisfied when at least one of:</p>`,
+      blockMath(
+        'x_1 \\text{ is False } (P_{1,F}), \\\n+        x_2 \\text{ is True } (P_{2,T}), \\\n+        x_3 \\text{ is False } (P_{3,F})'
+      ),
+    ].join(''),
+  },
+  {
+    title: 'Conclusion',
+    content: [
+      `<p>Thus, ${inlineMath('c_\\varphi')} has a predecessor if and only if ${inlineMath('\\varphi')} is satisfiable. Since 3-SAT is NP-complete and REV-GOL ${inlineMath('\\in')} NP, it follows that <strong>REV-GOL is NP-complete</strong>.</p>`,
+      '<p>All progress will be posted on my GitHub first before making its way here.</p>',
+    ].join(''),
+  },
+];
+
+const solverCliCommands = [
+  {
+    command: 'cargo run -- solve --config config/examples/simple.yaml',
+    description: 'Find predecessor states using configuration file with customizable solver backends and optimization levels'
+  },
+  {
+    command: 'cargo run -- solve --target input/target_states/glider.txt --generations 3 --max-solutions 5',
+    description: 'Find multiple predecessor states for a given target configuration with custom parameters'
+  },
+  {
+    command: 'cargo run -- setup --directory . --force',
+    description: 'Initialize project structure with example configurations and target states'
+  },
+  {
+    command: 'cargo run -- analyze --target input/target_states/blinker.txt',
+    description: 'Analyze target state solvability and complexity estimates before attempting to solve'
+  },
+  {
+    command: 'cargo run -- validate --predecessor p.txt --target t.txt --show-evolution',
+    description: 'Validate that a predecessor correctly evolves to the target with complete evolution visualization'
+  }
+];
+
+const systemComponents = [
+  {
+    icon: 'fa fa-sitemap',
+    title: 'Configuration Management',
+    description: 'YAML-based configuration system supporting flexible parameter tuning for grid size, generations, solver backends, optimization levels, and output formats.'
+  },
+  {
+    icon: 'fa fa-cubes',
+    title: 'Game of Life Engine',
+    description: 'Core cellular automaton implementation with grid representation, rule application, I/O operations, and support for multiple boundary conditions (dead, wrap, mirror).'
+  },
+  {
+    icon: 'fa fa-project-diagram',
+    title: 'SAT Encoding & Solving',
+    description: 'Converts Game of Life constraints into SAT problems with support for multiple backends: CaDiCaL (single-threaded) and ParKissat-RS (multithreaded) solvers.'
+  },
+  {
+    icon: 'fa fa-magic',
+    title: 'Reverse Problem Solving',
+    description: 'Handles problem definition, solution extraction, validation through forward simulation, and comprehensive output formatting with pattern analysis.'
+  },
+  {
+    icon: 'fa fa-eye',
+    title: 'Utility & Display',
+    description: 'Provides display utilities, output formatting, benchmarking tools, and comprehensive logging for performance analysis and debugging.'
+  }
+];
+
+const encodingSteps = [
+  {
+    number: '1',
+    title: 'Primary Variables',
+    description: `Boolean variable ${inlineMath('cell(x,y,t)')} for each cell at each time step`,
+    formula: '\\text{Variables: } \\{cell(i,j,t) \\mid 0 \\leq i < W, 0 \\leq j < H, 0 \\leq t \\leq G\\}'
+  },
+  {
+    number: '2',
+    title: 'Auxiliary Variables',
+    description: 'Helper variables for neighbor counts and state transitions to reduce constraint complexity',
+    formula: '\\text{Neighbor count: } n(i,j,t) = \\sum_{(d_x,d_y) \\in N} cell(i+d_x, j+d_y, t)'
+  },
+  {
+    number: '3',
+    title: 'Game of Life Constraints',
+    description: "Conway's rules encoded as SAT clauses linking consecutive time steps",
+    formula:
+      'cell(i,j,t+1) \\iff (cell(i,j,t) \\land n(i,j,t) \\in \\{2,3\\}) \\lor (\\neg cell(i,j,t) \\land n(i,j,t) = 3)'
+  }
+];
+
+const keyFeatures = [
+  {
+    icon: 'fa fa-microchip',
+    title: 'Multiple SAT Backends',
+    description: 'Supports both CaDiCaL (single-threaded) and ParKissat-RS (multithreaded) solvers for optimal performance across different problem sizes'
+  },
+  {
+    icon: 'fa fa-tasks',
+    title: 'Multithreaded Solving',
+    description: 'ParKissat-RS backend provides parallel SAT solving capabilities for complex problems with large grids and multiple generations'
+  },
+  {
+    icon: 'fa fa-cogs',
+    title: 'Multiple Solution Finding',
+    description: 'Discovers all valid predecessor states up to a configurable limit using iterative SAT solving with hybrid encoding strategies'
+  },
+  {
+    icon: 'fa fa-check-circle',
+    title: 'Solution Validation',
+    description: 'Verifies found solutions by forward simulation to ensure correctness and detects known Game of Life patterns'
+  },
+  {
+    icon: 'fa fa-chart-line',
+    title: 'Comprehensive Benchmarking',
+    description: 'Built-in performance analysis tools to compare solver backends and optimization strategies across different problem complexities'
+  },
+  {
+    icon: 'fa fa-file-export',
+    title: 'Multiple Output Formats',
+    description: 'Supports text, JSON, and visual representations with evolution path visualization and pattern analysis'
+  }
+];
+
+const crateSections = [
+  {
+    id: 'game-of-life-crate',
+    navLabel: '1. Game of Life Engine',
+    title: 'Game of Life Engine',
+    paragraphs: [
+      `A highly optimized Conway's Game of Life simulator featuring advanced SIMD parallelism and automatic hardware detection. The engine delivers 10,000x performance improvements through bit-packed representation (64 cells per u64), vectorized operations, and multi-threading with Rayon.`,
+      `<strong>Key Features:</strong> Automatic SIMD width selection, memory prefetching, boundary optimization with ghost cells, and support for multiple input formats.`
+    ],
+    commands: [
+      {
+        command: 'cargo run --release',
+        description: 'Run visual simulation with default settings'
+      },
+      {
+        command: 'cargo run --release -- --input my_pattern.txt --generations 20',
+        description: 'Custom pattern simulation with specified generations'
+      }
+    ],
+    repository: 'https://github.com/rrumana/game_of_life'
+  },
+  {
+    id: 'reverse-solver-crate',
+    navLabel: '2. Reverse SAT Solver',
+    title: 'Reverse SAT Solver',
+    paragraphs: [
+      `A Rust implementation that solves the NP-Complete problem of reversing Conway's Game of Life by converting it into boolean satisfiability (SAT) problems. Supports both CaDiCaL (single-threaded) and ParKissat-RS (multithreaded) solver backends for optimal performance across different problem sizes.`,
+      `<strong>Key Features:</strong> Multiple SAT backends, hybrid encoding strategies, configurable parameters via YAML, comprehensive benchmarking tools, pattern analysis, and multiple output formats (text, JSON, visual).`
+    ],
+    commands: [
+      {
+        command: 'cargo run -- solve --config config/examples/simple.yaml',
+        description: 'Solve using configuration file with custom solver settings'
+      },
+      {
+        command: 'cargo run -- analyze --target input/target_states/blinker.txt',
+        description: 'Analyze target state solvability before attempting to solve'
+      }
+    ],
+    repository: 'https://github.com/rrumana/Reverse_Game_Of_Life'
+  },
+  {
+    id: 'parkissat-crate',
+    navLabel: '3. ParKissat-RS Bindings',
+    title: 'ParKissat-RS Bindings',
+    paragraphs: [
+      `Safe Rust bindings for the ParKissat-RS parallel SAT solver, winner of SAT Competition 2022. Provides a memory-safe, idiomatic Rust API while maintaining high performance through minimal overhead FFI calls. Combines Kissat solver efficiency with parallel processing capabilities. Multithreaded may be a bit of a stretch since parallelizing SAT solving is very difficult, but some problems will be able to utilize multiple cores.`,
+      `<strong>Key Features:</strong> Multi-threaded SAT solving, DIMACS format support, configurable solver parameters, comprehensive error handling, interruption support.`
+    ],
+    commands: [
+      {
+        command: 'let mut solver = ParkissatSolver::new()?;',
+        description: 'Create solver instance with safe Rust API'
+      },
+      {
+        command: 'solver.load_dimacs("problem.cnf")?;',
+        description: 'Load SAT problems from standard DIMACS format files'
+      }
+    ],
+    repository: 'https://github.com/rrumana/parkissat-rs'
+  },
+  {
+    id: 'text-to-input-crate',
+    navLabel: '4. Text-to-ASCII Converter',
+    title: 'Text-to-ASCII Converter',
+    paragraphs: [
+      `A Rust crate that converts text input into pixel art using 1s and 0s with a sophisticated variable-width font system. Supports A-Z uppercase, a-z lowercase, and space characters with optimal spacing through 1-5 pixel wide characters for compact, readable output.`,
+      `<strong>Key Features:</strong> Variable-width font optimization, automatic buffer generation, case-sensitive rendering, graceful error handling without unwrap() calls, and performance optimization with pre-allocated collections.`
+    ],
+    commands: [
+      {
+        command: 'cargo run',
+        description: 'Interactive text-to-pixel art conversion with error messages'
+      },
+      {
+        command: 'use text_to_input::text_to_pixel_art;',
+        description: 'Library usage with comprehensive error handling'
+      }
+    ],
+    repository: 'https://github.com/rrumana/text_to_input'
+  }
+];
+
+const chaosSteps = [
+  {
+    id: 'step-generate',
+    navLabel: '1. Generate ASCII Pattern',
+    title: 'Generate ASCII Pattern',
+    body: [
+      `Create your text pattern using either the website functionality above or the text_to_input crate. You can also manually draw on the grid with your mouse if you prefer custom patterns.`,
+      `<strong>Website Method:</strong> Enter your name in the text input above, adjust the buffer size, and click "Generate from Text". Then use the download button to save your pattern.`,
+      `<strong>CLI Method:</strong> Use the text_to_input crate for more control:`,
+      `<strong>Important:</strong> No matter which method you use, you must download/save the pattern file for the next steps.`
+    ],
+    commands: [
+      {
+        command: 'cd text_to_input && cargo run',
+        description: 'Interactive text-to-ASCII conversion with custom settings'
+      }
+    ]
+  },
+  {
+    id: 'step-setup',
+    navLabel: '2. Setup Reverse Solver',
+    title: 'Setup Reverse Solver',
+    body: [
+      `Clone and set up the reverse Game of Life crate. This is the only crate not implemented on the website because running a SAT solver in the browser is not advisable.`,
+      `<strong>Prerequisites:</strong> You must have Rust installed on your system. Check the crate documentation for additional requirements.`,
+      `<strong>Repository Link:</strong> <a href="https://github.com/rrumana/text_to_input" target="_blank" rel="noopener noreferrer">Link</a>`
+    ],
+    commands: [
+      {
+        command: 'git clone https://github.com/rrumana/Reverse_Game_Of_Life',
+        description: 'Clone the reverse Game of Life repository'
+      },
+      {
+        command: 'cd game_of_life_reverse && cargo run -- setup',
+        description: 'Initialize the project structure and dependencies'
+      }
+    ]
+  },
+  {
+    id: 'step-solve',
+    navLabel: '3. Find Predecessor State',
+    title: 'Find Predecessor State',
+    body: [
+      `Move your generated pattern file into the input area of the reverse Game of Life crate, then run the solver to find a predecessor state.`,
+      `<strong>Performance Guide:</strong> For a first name, 3-4 generations will take on the order of minutes, whereas 10 generations took about 12 hours on my laptop.`
+    ],
+    commands: [
+      {
+        command: 'cp your_pattern.txt game_of_life_reverse/input/target_states/',
+        description: 'Move your pattern file to the input directory'
+      },
+      {
+        command: 'cargo run -- solve --target input/target_states/your_pattern.txt --generations 4',
+        description: 'Run the reverse solver with your pattern and desired generations'
+      }
+    ]
+  },
+  {
+    id: 'step-visualize',
+    navLabel: '4. Visualize the Magic',
+    title: 'Visualize the Magic',
+    body: [
+      `Take the new file from the reverse solver and upload it to the website above, or load it into the game_of_life crate. The initial state will look like random static - this is expected!`,
+      `<strong>File Location:</strong> The solver will output a predecessor state file in the output directory. This file will contain multiple generations - this is completely normal! The one labelled generation 0 is the one you want, <strong>copy this into a new text file for upload.</strong>`
+    ],
+    commands: [
+      {
+        command: 'Upload the solution file using the file upload button above',
+        description: 'Load the predecessor state into the web simulation'
+      },
+      {
+        command: 'Set Multi-Step generations ≥ the number used in CLI',
+        description: 'Configure the simulation to run enough generations'
+      },
+      {
+        command: 'cargo run --release -- --input solution_file.txt --generations 4',
+        description: 'Alternative: Use the game_of_life crate CLI for visualization'
+      }
+    ]
+  },
+  {
+    id: 'step-success',
+    navLabel: '5. Watch Name Emerge',
+    title: 'Watch Name Emerge',
+    body: [
+      `Click the Multi-Step button and watch as your name emerges from the apparent chaos! The seemingly random initial state will evolve through the deterministic rules of Conway's Game of Life to reveal your text pattern.`
+    ]
+  },
+  {
+    id: 'step-gif',
+    navLabel: '6. Create GIF',
+    title: 'Create GIF',
+    body: [
+      `<strong>Now Available:</strong> GIF recording is live. Use the <em>Record GIF</em> button above to capture your evolution and download an animated GIF.`,
+      `Tip: Start recording before running Multi-Step so the full emergence is captured. Higher generation counts mean longer GIFs.`
+    ]
+  },
+  {
+    id: 'step-tips',
+    navLabel: '7. Tips & Tricks',
+    title: 'Tips & Tricks',
+    body: [
+      `<strong>No Solutions Found?</strong> If your name has no solutions, try adding a bigger buffer to the pattern. This increases the search space and makes it more likely to find a solution, though it will also increase computation time.`,
+      `<strong>Performance Optimization:</strong> Start with fewer generations (3-4) for initial testing. You can always increase the generation count for more dramatic emergence effects once you've confirmed the pattern works.`,
+      `<strong>Pattern Design:</strong> Simpler patterns with more spacing tend to have more solutions. Complex, tightly-packed text may require longer solve times or larger buffers.`
+    ]
+  }
+];
+
+const resultsSections = [
+  {
+    id: 'results-section',
+    navLabel: '1. Performance Results',
+    title: 'Performance Results',
+    paragraphs: [
+      `The project successfully demonstrates the feasibility of using SAT solving to reverse-engineer Conway's Game of Life states. By encoding cellular automaton rules and constraints into boolean logic clauses, the system can efficiently discover predecessor states that would evolve into a given target configuration.`,
+      `<strong>Performance Benchmarks:</strong> The system reveals impressive scalability for practical use cases: a 300-cell grid can be traced back 4 generations in under a second, while more ambitious reverse-engineering tasks like 6 generations require 8 minutes and 10 generations complete in approximately 2 hours. Even computationally intensive 20-generation lookbacks finish within 48 hours, anthough your results may vary, bigger grids will result in much longer search times.`
+    ]
+  },
+  {
+    id: 'lessons-section',
+    navLabel: '2. Key Lessons Learned',
+    title: 'Key Lessons Learned',
+    paragraphs: [
+      `The most significant challenge encountered was SAT encoding optimization, where initial implementations generated an excessive number of clauses that severely degraded solver performance. This experience highlighted how the formulation of constraints can dramatically impact computational efficiency, even when the underlying logical relationships remain equivalent.`,
+      `<strong>Optimization Success:</strong> Through careful pruning I was able to reduce the number of clauses by a factor of 10 without compromising the encoding accuracy. When it comes to problems with exponential runtime complexity, pre-compute optimization becomes increasingly important for practical applications.`
+    ]
+  },
+  {
+    id: 'future-work-section',
+    navLabel: '3. Future Work',
+    title: 'Future Work',
+    paragraphs: [
+      `The next phase will focus on leveraging parallelization to further enhance performance, specifically investigating multithreaded SAT solvers with robust Rust bindings for seamless integration into the existing codebase. The ParKissat-RS integration represents a significant step in this direction.`,
+      `<strong>Additional Opportunities:</strong> Optimizing auxiliary algorithms and data structures presents opportunities for incremental improvements, though these optimizations will likely yield diminishing returns given that core SAT solving dominates the computational workload for large-scale problems. While I do not anticipate much more active development, I will post any breakthroughs here.`
+    ]
+  }
+];
+
+
+
+---
+<SectionShell
+  id="optimizations"
+  title="Optimizing The Simulation"
+  description="Performance notes brought over from the original write-up, organized into a reusable accordion pattern."
+  accent
+>
+  <div class="accordion-header">
+    <h3 class="accordion-title">Engine Architecture</h3>
+    <button class="accordion-toggle" data-target="optimizations" data-state="close">Open all</button>
+  </div>
+  <AccordionGroup>
+    {optimizationSections.map((section, index) => (
+      <Accordion title={section.title} number={index + 1}>
+        <div class="section-text" set:html={section.content}></div>
+      </Accordion>
+    ))}
+  </AccordionGroup>
+</SectionShell>
+
+<SectionShell
+  id="proof"
+  title="Proving Reverse GOL Is NP-Complete"
+  description="The original MathJax-heavy proof has been migrated as-is using the new accordion components."
+  accent
+>
+  <div class="accordion-header">
+    <h3 class="accordion-title">Proof Structure</h3>
+    <button class="accordion-toggle" data-target="proof" data-state="close">Open all</button>
+  </div>
+  <AccordionGroup>
+    {proofSections.map((section, index) => (
+      <Accordion title={section.title} number={index + 1}>
+        <div class="section-text" set:html={section.content}></div>
+      </Accordion>
+    ))}
+  </AccordionGroup>
+</SectionShell>
+
+<script>
+  if (typeof document !== 'undefined') {
+    const toggleAccordions = (rootId: string, action: 'open' | 'close') => {
+      const root = document.getElementById(rootId);
+      if (!root) return;
+      const details = root.querySelectorAll<HTMLDetailsElement>('details.accordion');
+      details.forEach((el) => {
+        el.open = action === 'open';
+      });
+    };
+
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (!target.classList.contains('accordion-toggle')) return;
+      const rootId = target.dataset.target;
+      const state = target.dataset.state as 'open' | 'close' | undefined;
+      if (!rootId || !state) return;
+      const nextState = state === 'open' ? 'close' : 'open';
+      toggleAccordions(rootId, nextState);
+      target.dataset.state = nextState;
+      target.textContent = nextState === 'open' ? 'Close all' : 'Open all';
+    });
+  }
+</script>
+
+<SectionShell id="implementation" title="Implementation: SAT-Based Reverse Solver" accent>
+<SurfaceCard padding="lg" class="implementation-card">
+    <h3>System Architecture</h3>
+    <p class="implementation-text">
+      The implementation is structured as a modular Rust application with the following core components:
+    </p>
+    <div class="architecture-grid">
+      {systemComponents.map((item) => (
+        <div class="architecture-component">
+          <span class={`feature-icon ${item.icon}`} aria-hidden="true"></span>
+          <div class="feature-copy">
+            <h4>{item.title}</h4>
+            <p>{item.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </SurfaceCard>
+
+<SurfaceCard padding="lg" class="implementation-card">
+    <h3>SAT Encoding Strategy</h3>
+    <p class="implementation-text">
+      The solver employs a hybrid encoding approach that balances constraint complexity with solving efficiency:
+    </p>
+    <div class="encoding-strategy">
+      {encodingSteps.map((step) => (
+        <div class="encoding-step">
+          <div class="encoding-step__number">{step.number}</div>
+          <div class="encoding-step__body">
+            <h4>{step.title}</h4>
+            <p set:html={step.description}></p>
+            <div set:html={blockMath(step.formula)}></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </SurfaceCard>
+
+<SurfaceCard padding="lg" class="implementation-card">
+    <h3>Key Features</h3>
+    <div class="features-grid">
+      {keyFeatures.map((feature) => (
+        <div class="feature-item">
+          <span class={`feature-icon ${feature.icon}`} aria-hidden="true"></span>
+          <div class="feature-copy">
+            <h4>{feature.title}</h4>
+            <p>{feature.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </SurfaceCard>
+
+<SurfaceCard padding="lg" class="implementation-card">
+    <h3>Command Line Interface</h3>
+    <p class="implementation-text">
+      The solver provides a comprehensive CLI with multiple commands for different use cases:
+    </p>
+    <div class="cli-grid cli-grid--single">
+      {solverCliCommands.map((cmd) => (
+        <CommandCard command={cmd.command} description={cmd.description} />
+      ))}
+    </div>
+  </SurfaceCard>
+</SectionShell>
+
+<SectionShell id="crates" title="Crates and Command Line Interface" accent>
+  <div class="stacked-content">
+    {crateSections.map((section) => (
+      <SurfaceCard id={section.id} padding="lg" class="implementation-panel">
+        <h3>{section.title}</h3>
+        {section.paragraphs.map((paragraph) => (
+          <p class="implementation-text" set:html={paragraph}></p>
+        ))}
+        {section.commands && section.commands.length > 0 && (
+          <div class="cli-grid cli-grid--single">
+            {section.commands.map((cmd) => (
+              <CommandCard command={cmd.command} description={cmd.description} />
+            ))}
+          </div>
+        )}
+        <p class="implementation-text">
+          <strong>Repository Link:</strong>{' '}
+          <a href={section.repository} target="_blank" rel="noopener noreferrer">Link</a>
+        </p>
+      </SurfaceCard>
+    ))}
+  </div>
+</SectionShell>
+
+<SectionShell id="chaos-emergence" title="Make Your Name Emerge From Chaos" accent>
+  <div class="stacked-content">
+    {chaosSteps.map((step) => (
+      <SurfaceCard id={step.id} padding="lg" class="guide-panel">
+        <h3>{step.title}</h3>
+        {step.body.map((paragraph) => (
+          <p class="implementation-text" set:html={paragraph}></p>
+        ))}
+        {step.commands && step.commands.length > 0 && (
+          <div class="cli-grid cli-grid--single">
+            {step.commands.map((cmd) => (
+              <CommandCard command={cmd.command} description={cmd.description} />
+            ))}
+          </div>
+        )}
+      </SurfaceCard>
+    ))}
+  </div>
+</SectionShell>
+
+<SectionShell id="results-analysis" title="Results and Analysis" accent>
+  <div class="stacked-content">
+    {resultsSections.map((section) => (
+      <SurfaceCard id={section.id} padding="lg" class="results-panel">
+        <h3>{section.title}</h3>
+        {section.paragraphs.map((paragraph) => (
+          <p class="implementation-text" set:html={paragraph}></p>
+        ))}
+      </SurfaceCard>
+    ))}
+  </div>
+</SectionShell>
+
+<style>
+.section-text {
+  display: grid;
+  gap: var(--space-sm, 0.75rem);
+  min-width: 0;
+}
+
+.section-text p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+:global(.formula) {
+  font-family: 'STIX Two Math', 'Cambria Math', 'Times New Roman', serif;
+  font-size: clamp(0.9rem, 1.1vw + 0.6rem, 1.15rem);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm, 8px);
+  padding: 0;
+  margin: var(--space-sm, 0.75rem) 0;
+  display: block;
+  color: var(--color-text-default);
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+:global(.formula__scroll) {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  padding: var(--space-xs, 0.5rem) clamp(0.5rem, 1vw, 1rem);
+}
+
+:global(.math-term) {
+  font-family: 'STIX Two Math', 'Cambria Math', 'Times New Roman', serif;
+  background: var(--color-fill-neutral-soft);
+  color: var(--color-text-default);
+  padding: 0.05rem 0.35rem;
+  border-radius: var(--radius-xs, 4px);
+  display: inline;
+  line-height: 1.25;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.implementation-text {
+  color: var(--color-text-muted);
+  margin: 0;
+  font-size: var(--font-size-md, 1rem);
+  line-height: var(--line-height-normal);
+  overflow-wrap: anywhere;
+}
+
+:global(.cli-grid) {
+  display: grid;
+  gap: var(--space-sm, 0.75rem);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+:global(.cli-grid--single) {
+  grid-template-columns: 1fr;
+}
+
+.implementation-card {
+  display: grid;
+  gap: var(--space-md, 1rem);
+}
+
+.architecture-grid {
+  display: grid;
+  gap: var(--space-lg, 1.5rem);
+  grid-template-columns: 1fr;
+}
+
+.architecture-component {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-sm, 0.75rem);
+  align-items: start;
+}
+
+.architecture-component .feature-icon {
+  background: var(--color-fill-primary-soft);
+}
+
+.architecture-component .feature-copy {
+  display: grid;
+  gap: var(--space-2xs, 0.25rem);
+}
+
+.encoding-strategy {
+  display: grid;
+  gap: var(--space-md, 1rem);
+}
+
+.encoding-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-sm, 0.75rem);
+  align-items: start;
+  min-width: 0;
+}
+
+.encoding-step__number {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--color-fill-primary-soft);
+  font-weight: 700;
+}
+
+.encoding-step__body {
+  min-width: 0;
+}
+
+.encoding-step__body h4 {
+  margin: 0 0 var(--space-2xs, 0.25rem);
+}
+
+.encoding-step__body p {
+  margin: 0 0 var(--space-2xs, 0.25rem);
+}
+
+.features-grid {
+  display: grid;
+  gap: var(--space-lg, 1.5rem);
+  grid-template-columns: 1fr;
+}
+
+.feature-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-sm, 0.75rem);
+  align-items: start;
+}
+
+.feature-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: var(--color-fill-primary-soft);
+  color: var(--color-text-default);
+  font-size: 1rem;
+}
+
+.feature-copy {
+  display: grid;
+  gap: var(--space-2xs, 0.25rem);
+}
+
+.stacked-content {
+  display: grid;
+  gap: var(--space-xl, 2rem);
+  min-width: 0;
+}
+
+.implementation-layout,
+.guide-layout,
+.results-layout {
+  display: grid;
+  gap: var(--space-xl, 2rem);
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+}
+
+.implementation-nav,
+.guide-nav,
+.results-nav {
+  display: grid;
+  gap: var(--space-md, 1rem);
+  position: sticky;
+  top: clamp(5rem, 8vw, 6.5rem);
+  align-self: start;
+}
+
+.implementation-nav ul,
+.guide-nav ul,
+.results-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-xs, 0.5rem);
+}
+
+.implementation-nav li a,
+.guide-nav li a,
+.results-nav li a {
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.implementation-nav li a:hover,
+.implementation-nav li a:focus-visible,
+.guide-nav li a:hover,
+.guide-nav li a:focus-visible,
+.results-nav li a:hover,
+.results-nav li a:focus-visible {
+  color: var(--color-text-default);
+}
+
+.implementation-content,
+.guide-content,
+.results-content {
+  display: grid;
+  gap: var(--space-xl, 2rem);
+  min-width: 0;
+}
+
+.implementation-panel,
+.guide-panel,
+.results-panel {
+  display: grid;
+  gap: var(--space-md, 1rem);
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  .encoding-step {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'number'
+      'body';
+  }
+
+  .encoding-step__number {
+    width: 2.25rem;
+    height: 2.25rem;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 900px) {
+  .implementation-layout,
+  .guide-layout,
+  .results-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .implementation-nav,
+  .guide-nav,
+  .results-nav {
+    position: relative;
+    top: auto;
+  }
+}
+
+html[data-theme='dark'] :global(.math-term) {
+  background: var(--color-fill-neutral-muted);
+  color: var(--color-text-default);
+}
+
+html[data-theme='dark'] .encoding-step__number {
+  background: var(--color-fill-primary-strong);
+}
+
+:global(.accordion-actions) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+:global(.accordion-toggle) {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xs) var(--space-sm);
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+:global(.accordion-toggle:hover),
+:global(.accordion-toggle:focus-visible) {
+  color: var(--color-text-default);
+  border-color: var(--color-border-strong);
+}
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.accordion-title {
+  margin: 0;
+}
+
+.accordion-header :global(.accordion-toggle) {
+  position: absolute;
+  top: clamp(1rem, 2vw, 2rem);
+  right: clamp(1rem, 2vw, 2rem);
+}
+
+
+:global(.formula__scroll .katex-display) {
+  display: inline-flex;
+  margin: 0;
+  width: auto;
+  min-width: max-content;
+}
+
+:global(.formula__scroll .katex-display > .katex) {
+  display: inline-flex;
+  min-width: max-content;
+}
+
+:global(.math-term .katex) {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+  :global(.formula) {
+    font-size: clamp(0.8rem, 2.4vw + 0.2rem, 1rem);
+  }
+
+  :global(.formula__scroll .katex-display > .katex) {
+    font-size: 0.95em;
+  }
+}
+
+@media (max-width: 480px) {
+  :global(.formula__scroll .katex-display > .katex) {
+    font-size: 0.9em;
+  }
+}
+
+:global(.code-snippet) {
+  font-family: 'Fira Code', monospace;
+  background: var(--color-fill-primary-soft);
+  padding: 0 0.25rem;
+  border-radius: 4px;
+}
+
+html[data-theme='dark'] :global(.code-snippet) {
+  background: var(--color-fill-primary-strong);
+}
+</style>

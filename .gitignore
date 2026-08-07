@@ -2,4 +2,16 @@
 
 /logs
 
+/static
+
+.playwright-mcp/
+.screenshots/
+
 OPTIMIZATION_WISHLIST.md
+
+frontend/node_modules
+
+# Local review inputs and session notes
+/SESSION_CHANGES.md
+/temp_images/
+/updated_materials/

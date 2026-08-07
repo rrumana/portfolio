@@ -1,0 +1,111 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Icon from '../../components/ui/Icon.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('research')).map((paper) => ({ params: { slug: paper.id }, props: { paper } }));
+}
+
+interface Props { paper: CollectionEntry<'research'> }
+const { paper } = Astro.props as Props;
+const { Content } = await render(paper);
+const data = paper.data;
+const formatLabel = { 'independent-paper': 'Independent paper', 'course-report': 'Course report', 'working-paper': 'Working paper' }[data.format];
+const availabilityLabel = data.stage === 'in-progress' ? 'In progress' : data.availability === 'public' ? 'Complete · publicly available' : 'Complete · forthcoming';
+const pdf = data.artifacts.find((artifact) => artifact.kind === 'pdf');
+---
+
+<BaseLayout title={`${data.shortTitle} | Ryan Rumana`} description={data.summary}>
+  <main id="main-content">
+    <article>
+      <header class="section-shell research-hero">
+        <div class="container research-hero__grid">
+          <div class="research-hero__copy">
+            <p class="eyebrow">{formatLabel} · {data.displayDate}</p>
+            <h1>{data.title}</h1>
+            <p class="research-hero__summary">{data.summary}</p>
+            <div class="research-hero__actions">
+              {pdf && <a class="button-link" href={pdf.url}><Icon name="pdf" size={18} /> {pdf.label}</a>}
+              {data.artifacts.filter((artifact) => artifact.kind !== 'pdf').map((artifact) => (
+                <a class="button-link button-link--ghost" href={artifact.url} target={artifact.url.startsWith('http') ? '_blank' : undefined} rel={artifact.url.startsWith('http') ? 'noreferrer' : undefined}>
+                  {artifact.kind === 'repository' ? <Icon name="github" size={18} /> : <Icon name="external" size={18} />} {artifact.label}
+                </a>
+              ))}
+              {data.relatedProjectUrl && <a class="button-link button-link--ghost" href={data.relatedProjectUrl}>Related case study</a>}
+            </div>
+          </div>
+
+          <aside class="research-facts surface-panel" aria-label="Document details">
+            <dl>
+              <div><dt>Authors</dt><dd>{data.authors.map((author, index) => <>{index > 0 && ', '}{author.url ? <a href={author.url}>{author.name}</a> : author.name}</>)}</dd></div>
+              <div><dt>Status</dt><dd>{availabilityLabel}</dd></div>
+              {data.venue && <div><dt>Context</dt><dd>{data.venue}</dd></div>}
+              {data.presentation && <div><dt>Presentation</dt><dd>{data.presentation.url ? <a href={data.presentation.url}>{data.presentation.event}</a> : data.presentation.event}{data.presentation.date ? ` · ${data.presentation.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}` : ''}</dd></div>}
+              {(data.version || data.pageCount) && <div><dt>Document</dt><dd>{[data.version, data.pageCount ? `${data.pageCount} pages` : undefined].filter(Boolean).join(' · ')}</dd></div>}
+              <div><dt>Last updated</dt><dd>{data.lastUpdated.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </header>
+
+      {data.stage === 'in-progress' && data.progress && (
+        <section class="section-shell progress-section">
+          <div class="container progress-grid">
+            <div><p class="eyebrow">Research question</p><h2>{data.progress.question}</h2></div>
+            <dl class="progress-details surface-panel">
+              <div><dt>Current state</dt><dd>{data.progress.currentState}</dd></div>
+              <div><dt>Next milestone</dt><dd>{data.progress.nextMilestone}</dd></div>
+            </dl>
+          </div>
+        </section>
+      )}
+
+      <section class="section-shell research-body-section">
+        <div class="container research-body-grid">
+          <div class="research-body">
+            {data.abstract && <section class="research-abstract"><p class="eyebrow">Abstract</p><p>{data.abstract}</p></section>}
+            <div class="research-content prose"><Content /></div>
+          </div>
+          <aside class="research-rail">
+            <section class="surface-panel research-rail__panel"><p class="eyebrow">Topics</p><ul class="pill-list">{data.topics.map((topic) => <li>{topic}</li>)}</ul></section>
+            {data.citation && <section class="surface-panel research-rail__panel"><p class="eyebrow">Suggested citation</p><p class="research-citation">{data.citation}</p></section>}
+            {data.sha256 && <details class="surface-panel research-checksum"><summary>Document checksum</summary><code>{data.sha256}</code></details>}
+            <a class="research-back" href="/research/">← All research & writing</a>
+          </aside>
+        </div>
+      </section>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .research-hero { border-bottom: 1px solid var(--color-border-subtle); }
+  .research-hero__grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(270px, 0.55fr); gap: clamp(2rem, 6vw, 6rem); align-items: end; }
+  .research-hero__copy { display: grid; gap: 1.25rem; }
+  .research-hero h1 { max-width: 18ch; font-size: clamp(2.65rem, 5vw, 5rem); }
+  .research-hero__summary { color: var(--color-text-muted); font-size: clamp(1.12rem, 0.5vw + 1rem, 1.32rem); }
+  .research-hero__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .research-facts { padding: 1.3rem; border-top: 3px solid var(--color-accent-warm); }
+  .research-facts dl, .research-facts dl > div { display: grid; gap: 0.25rem; }
+  .research-facts dl { gap: 1rem; }
+  .research-facts dt, .progress-details dt { color: var(--color-text-subtle); font-family: var(--font-family-mono); font-size: var(--font-size-2xs); letter-spacing: 0.08em; text-transform: uppercase; }
+  .research-facts dd, .progress-details dd { margin: 0; color: var(--color-text-strong); }
+  .research-facts a { color: var(--color-link); text-decoration: underline; text-underline-offset: 0.18em; }
+  .progress-section { background: color-mix(in srgb, var(--color-surface-strong) 65%, transparent); border-bottom: 1px solid var(--color-border-subtle); }
+  .progress-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(290px, 0.7fr); gap: 2rem; align-items: start; }
+  .progress-grid > div, .progress-details { display: grid; gap: 0.85rem; }
+  .progress-details { padding: 1.25rem; }
+  .progress-details > div { display: grid; gap: 0.3rem; }
+  .research-body-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(250px, 0.32fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .research-body, .research-content, .research-rail, .research-rail__panel { display: grid; gap: 1rem; }
+  .research-abstract { display: grid; gap: 0.85rem; padding-bottom: 2rem; border-bottom: 1px solid var(--color-border-subtle); font-family: var(--font-family-display); font-size: var(--font-size-lg); color: var(--color-text-strong); }
+  .research-content :global(h2) { font-size: clamp(1.8rem, 2.2vw, 2.8rem); }
+  .research-rail { position: sticky; top: 7rem; }
+  .research-rail__panel, .research-checksum { padding: 1.1rem; }
+  .research-citation { overflow-wrap: anywhere; font-family: var(--font-family-mono); font-size: var(--font-size-xs); }
+  .research-checksum summary { cursor: pointer; color: var(--color-text-muted); }
+  .research-checksum code { display: block; margin-top: 0.8rem; overflow-wrap: anywhere; font-size: var(--font-size-2xs); }
+  .research-back { color: var(--color-link); text-decoration: underline; text-underline-offset: 0.2em; }
+  @media (max-width: 900px) { .research-hero__grid, .progress-grid, .research-body-grid { grid-template-columns: 1fr; } .research-rail { position: static; } }
+</style>

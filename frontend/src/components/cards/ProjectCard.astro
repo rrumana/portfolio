@@ -1,0 +1,125 @@
+---
+import Icon from '../ui/Icon.astro';
+
+export interface Props {
+  title: string;
+  summary: string;
+  href: string;
+  year: number;
+  status: string;
+  impact: string;
+  cardTags?: readonly string[];
+  media?: string;
+  mediaDark?: string;
+  mediaAlt?: string;
+  repoUrl?: string;
+  accent?: 'sky' | 'ochre' | 'pine' | 'clay';
+  lead?: boolean;
+}
+
+const {
+  title,
+  summary,
+  href,
+  year,
+  status,
+  impact,
+  cardTags = [],
+  media,
+  mediaDark,
+  mediaAlt,
+  repoUrl,
+  accent = 'sky',
+  lead = false,
+} = Astro.props as Props;
+
+const statusLabel = status === 'archive' ? 'Archived' : status === 'completed' ? 'Complete' : status === 'incubating' ? 'In development' : 'Active';
+---
+<article class:list={['project-card', 'surface-panel', `project-card--${accent}`, { 'project-card--lead': lead }]}>
+  {media && (
+    <a class="project-card__media" href={href} aria-label={`Read the ${title} case study`}>
+      {mediaDark ? (
+        <picture>
+          <img src={media} alt={mediaAlt ?? ''} loading="lazy" class="project-card__image project-card__image--light" />
+          <img src={mediaDark} alt={mediaAlt ?? ''} loading="lazy" class="project-card__image project-card__image--dark" />
+        </picture>
+      ) : (
+        <img src={media} alt={mediaAlt ?? ''} loading="lazy" class="project-card__image" />
+      )}
+    </a>
+  )}
+
+  <div class="project-card__content">
+    <p class="project-card__meta"><span>{statusLabel}</span><span aria-hidden="true">·</span><time>{year}</time></p>
+    <div class="project-card__body">
+      <h3><a href={href}>{title}</a></h3>
+      <p class="project-card__summary">{summary}</p>
+      <p class="project-card__impact">{impact}</p>
+    </div>
+
+    {cardTags.length > 0 && (
+      <ul class="pill-list" aria-label="Key technologies">
+        {cardTags.slice(0, 3).map((item) => <li>{item}</li>)}
+      </ul>
+    )}
+
+    <div class="project-card__actions">
+      <a class="project-card__primary" href={href}>Read case study <Icon name="arrow" size={16} /></a>
+      {repoUrl && (
+        <a class="project-card__repo" href={repoUrl} target="_blank" rel="noreferrer">
+          <Icon name="github" size={17} /> Repository <span class="visually-hidden">(opens in a new tab)</span>
+        </a>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    --card-accent: var(--color-primary-500);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+    min-width: 0;
+    align-content: start;
+    border-top: 3px solid var(--card-accent);
+  }
+
+  .project-card--ochre { --card-accent: var(--color-accent-warm); }
+  .project-card--pine { --card-accent: var(--color-accent-pine); }
+  .project-card--clay { --card-accent: #a65f59; }
+
+  .project-card__media {
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-strong);
+  }
+
+  .project-card__media picture { display: contents; }
+  .project-card__image { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 260ms ease; }
+  .project-card__media:hover .project-card__image { transform: scale(1.025); }
+  .project-card__image--dark { display: none; }
+  html[data-theme='dark'] .project-card__image--light { display: none; }
+  html[data-theme='dark'] .project-card__image--dark { display: block; }
+
+  .project-card__content { display: grid; gap: 1rem; padding: clamp(1.1rem, 2vw, 1.45rem); align-content: start; }
+  .project-card__meta { display: flex; gap: 0.5rem; color: var(--color-text-subtle); font-family: var(--font-family-mono); font-size: var(--font-size-2xs); letter-spacing: 0.08em; text-transform: uppercase; }
+  .project-card__body { display: grid; gap: 0.65rem; }
+  .project-card h3 { font-family: var(--font-family-display); font-size: clamp(1.55rem, 1.4vw, 2.15rem); line-height: 1.08; }
+  .project-card h3 a:hover, .project-card h3 a:focus-visible { color: var(--card-accent); }
+  .project-card__summary { color: var(--color-text-default); }
+  .project-card__impact { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+  .project-card__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.9rem 1.1rem; margin-top: auto; padding-top: 0.15rem; }
+  .project-card__primary, .project-card__repo { display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 700; }
+  .project-card__primary { color: var(--color-link); }
+  .project-card__repo { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+  .project-card__primary:hover, .project-card__primary:focus-visible, .project-card__repo:hover, .project-card__repo:focus-visible { color: var(--color-text-strong); }
+
+  @media (min-width: 900px) {
+    .project-card--lead { grid-template-columns: minmax(0, 1.15fr) minmax(290px, 0.85fr); grid-template-rows: 1fr; }
+    .project-card--lead .project-card__media { aspect-ratio: auto; min-height: 100%; border-bottom: 0; border-right: 1px solid var(--color-border-subtle); }
+    .project-card--lead .project-card__content { padding: clamp(1.4rem, 2.5vw, 2rem); }
+    .project-card--lead h3 { font-size: clamp(2rem, 2.7vw, 3rem); }
+  }
+</style>

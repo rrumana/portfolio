@@ -1,0 +1,101 @@
+---
+export interface Props {
+  title?: string;
+  variant?: 'info' | 'success' | 'warning' | 'danger';
+  icon?: string;
+  class?: string;
+}
+
+const variantIcon: Record<NonNullable<Props['variant']>, string> = {
+  info: 'ℹ️',
+  success: '✅',
+  warning: '⚠️',
+  danger: '⛔',
+};
+
+const props = Astro.props as Props & { [key: string]: unknown };
+
+const {
+  title,
+  variant = 'info',
+  icon,
+  class: className = '',
+  ...rest
+} = props;
+
+const resolvedIcon = icon ?? variantIcon[variant];
+---
+<aside
+  class={`callout callout--${variant} ${className}`.trim()}
+  role="note"
+  {...rest}
+>
+  <div class="callout__icon" aria-hidden="true">{resolvedIcon}</div>
+  <div class="callout__body">
+    {title && <h3>{title}</h3>}
+    <div class="callout__content">
+      <slot />
+    </div>
+  </div>
+</aside>
+
+<style>
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-md, 1rem);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border-radius: var(--radius-lg, 18px);
+  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--color-surface-100) 94%, transparent);
+  box-shadow: var(--shadow-xs);
+}
+
+.callout__icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.callout__body {
+  display: grid;
+  gap: var(--space-xs, 0.5rem);
+}
+
+.callout__body h3 {
+  margin: 0;
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+}
+
+.callout__content {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm, 0.875rem);
+  display: grid;
+  gap: var(--space-xs, 0.5rem);
+}
+
+.callout--info {
+  border-color: color-mix(in srgb, var(--color-primary-400) 32%, transparent);
+}
+
+.callout--success {
+  border-color: color-mix(in srgb, var(--color-success-500) 32%, transparent);
+}
+
+.callout--warning {
+  border-color: color-mix(in srgb, var(--color-warning-500) 36%, transparent);
+}
+
+.callout--danger {
+  border-color: color-mix(in srgb, var(--color-danger-500) 34%, transparent);
+}
+
+html[data-theme='dark'] .callout {
+  background: color-mix(in srgb, var(--color-surface-300) 88%, transparent);
+  border-color: var(--color-border-muted);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .callout__content {
+  color: var(--color-text-muted);
+}
+</style>

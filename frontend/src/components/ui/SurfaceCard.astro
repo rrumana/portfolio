@@ -1,0 +1,81 @@
+---
+export interface Props {
+  as?: keyof HTMLElementTagNameMap;
+  variant?: 'solid' | 'ghost' | 'outline';
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const props = Astro.props as Props;
+
+const {
+  as = 'article',
+  variant = 'solid',
+  padding = 'md',
+  class: className = '',
+  ...rest
+} = props;
+
+const Tag = as as keyof HTMLElementTagNameMap;
+---
+<Tag class={`surface-card surface-card--${variant} surface-card--pad-${padding} ${className}`.trim()} {...rest}>
+  <slot />
+</Tag>
+
+<style>
+.surface-card {
+  border-radius: var(--radius-lg, 18px);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-100);
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  gap: var(--space-md, 1rem);
+  transition: border 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  width: 100%;
+  min-width: 0;
+}
+
+.surface-card--ghost {
+  background: color-mix(in srgb, var(--color-surface-200) 55%, transparent);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: none;
+}
+
+.surface-card--outline {
+  background: transparent;
+  border: 1px dashed var(--color-border-muted);
+  box-shadow: none;
+}
+
+.surface-card--pad-none {
+  padding: 0;
+}
+
+.surface-card--pad-sm {
+  padding: var(--space-sm, 0.75rem);
+}
+
+.surface-card--pad-md {
+  padding: var(--space-lg, 1.5rem);
+}
+
+.surface-card--pad-lg {
+  padding: clamp(1.75rem, 2.2vw, 2.5rem);
+}
+
+html[data-theme='dark'] .surface-card {
+  background: var(--color-surface-300);
+  border: 1px solid var(--color-border-muted);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] .surface-card--ghost {
+  background: color-mix(in srgb, var(--color-surface-200) 65%, transparent);
+  border: 1px solid var(--color-border-muted);
+}
+
+html[data-theme='dark'] .surface-card--outline {
+  border-color: var(--color-border-strong);
+}
+</style>

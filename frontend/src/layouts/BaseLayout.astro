@@ -1,0 +1,64 @@
+---
+import '../styles/globals.css';
+import '@fontsource-variable/source-sans-3/wght.css';
+import '@fontsource-variable/source-serif-4/wght.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/ibm-plex-mono/latin-500.css';
+import 'katex/dist/katex.min.css';
+import SiteHeader from '../components/shell/SiteHeader.astro';
+import SiteFooter from '../components/shell/SiteFooter.astro';
+import { siteConfig, defaultNavLinks } from '../site.config';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  lang?: string;
+  navLinks?: readonly { href: string; label: string }[];
+  image?: string;
+}
+
+const props = Astro.props as Props;
+
+const {
+  title = siteConfig.meta.title,
+  description = siteConfig.meta.description,
+  lang = 'en',
+  navLinks = defaultNavLinks,
+  image = siteConfig.meta.image,
+} = props;
+
+const canonical = new URL(Astro.url.pathname, siteConfig.domain).toString();
+const socialImage = new URL(image, siteConfig.domain).toString();
+---
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={siteConfig.name} />
+    <meta name="theme-color" content="#f4f1ea" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <script is:inline src="/scripts/theme.js"></script>
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content="Ryan Rumana's engineering portfolio" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <SiteHeader navLinks={navLinks} />
+    <slot />
+    <SiteFooter />
+  </body>
+</html>

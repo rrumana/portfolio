@@ -6,7 +6,7 @@ echo "Building WASM Game of Life module..."
 cd wasm_game_of_life
 
 # Build with wasm-pack using release profile and web target
-wasm-pack build --target web --release
+wasm-pack build --target web --release . --locked
 
 # Copy generated files to static/wasm directory
 echo "Copying WASM files to static/wasm..."

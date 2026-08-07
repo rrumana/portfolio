@@ -1,0 +1,68 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import { projectContentMap } from '../../components/projects/index';
+import { siteConfig } from '../../site.config';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { entryId: project.id },
+  }));
+}
+
+const { slug } = Astro.params;
+const { entryId } = Astro.props as { entryId: string };
+
+if (!slug) {
+  throw new Error('Project slug missing');
+}
+
+const project = await getEntry('projects', entryId);
+
+if (!project) {
+  throw new Error(`Project with slug ${slug} not found`);
+}
+
+const { Content } = await render(project);
+
+const actions = [project.data.primaryAction, project.data.secondaryAction]
+  .filter(Boolean)
+  .filter((action) => action!.href !== '/projects/' && action!.label.toLowerCase() !== 'back to projects')
+  .map((action) => ({
+    label: action!.label,
+    href: action!.href,
+  }));
+
+if (project.data.repoUrl && !actions.find((action) => action.href === project.data.repoUrl)) {
+  actions.push({ label: 'Repository', href: project.data.repoUrl });
+}
+
+const sections = projectContentMap[project.id] ?? [];
+---
+<ProjectLayout
+  title={project.data.title}
+  description={project.data.summary}
+  year={project.data.year}
+  status={project.data.status}
+  heroImage={project.data.heroImage}
+  heroImageDark={project.data.heroImageDark}
+  heroAlt={project.data.heroAlt}
+  techStack={project.data.techStack}
+  actions={actions}
+  navLinks={siteConfig.navigation.primary}
+  sections={sections}
+  toc={project.data.toc}
+>
+  <section class="project-section">
+    <Content />
+  </section>
+</ProjectLayout>
+
+<style>
+.project-section {
+  display: grid;
+  gap: var(--space-xl);
+}
+</style>

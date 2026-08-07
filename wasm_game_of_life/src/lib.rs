@@ -1,16 +1,38 @@
-use wasm_bindgen::prelude::*;
-use js_sys::Array;
-use web_sys::console;
-use serde::Serialize;
-use game_of_life::engines::{UltimateEngine, GameOfLifeEngine};
-use game_of_life::grid::{StandardGrid, Grid};
-use text_to_input::text_to_pixel_art;
-use log::info;
 use gif::{Encoder, Frame, Repeat};
+use gol::engines::{GameOfLifeEngine, UltimateEngine};
+use gol::grid::{Grid, StandardGrid};
+use js_sys::{Array, Function};
+use log::Level;
+use serde::Serialize;
+use std::cell::RefCell;
+use text_to_input::text_to_pixel_art;
+use wasm_bindgen::prelude::*;
+use web_sys::console;
 
 // Default grid dimensions for backward compatibility
 const DEFAULT_WIDTH: usize = 20;
 const DEFAULT_HEIGHT: usize = 20;
+
+thread_local! {
+    static JS_LOGGER: RefCell<Option<Function>> = RefCell::new(None);
+}
+
+fn forward_log(level: Level, message: &str) {
+    JS_LOGGER.with(|logger| {
+        if let Some(callback) = logger.borrow().as_ref() {
+            let _ = callback.call2(
+                &JsValue::NULL,
+                &JsValue::from_str(level.as_str()),
+                &JsValue::from_str(message),
+            );
+        }
+    });
+}
+
+fn log_with_level(level: Level, message: String) {
+    log::log!(level, "{}", message);
+    forward_log(level, &message);
+}
 
 #[wasm_bindgen]
 extern "C" {
@@ -20,7 +42,17 @@ extern "C" {
 #[wasm_bindgen]
 pub fn init_logging() {
     console_log::init_with_level(log::Level::Info).expect("Failed to initialize console_log");
-    info!("WASM logging initialized with UltimateEngine");
+    log_with_level(
+        Level::Info,
+        "WASM logging initialized with UltimateEngine".to_string(),
+    );
+}
+
+#[wasm_bindgen]
+pub fn set_log_hook(callback: Function) {
+    JS_LOGGER.with(|logger| {
+        *logger.borrow_mut() = Some(callback);
+    });
 }
 
 /// Game of Life WASM wrapper that maintains compatibility with existing interface
@@ -36,7 +68,13 @@ impl GameOfLifeWasm {
     #[wasm_bindgen(constructor)]
     pub fn new(width: usize, height: usize) -> GameOfLifeWasm {
         let engine = UltimateEngine::new(width, height);
-        info!("Created new GameOfLifeWasm with dimensions {}x{}", width, height);
+        log_with_level(
+            Level::Info,
+            format!(
+                "Created new GameOfLifeWasm with dimensions {}x{}",
+                width, height
+            ),
+        );
         GameOfLifeWasm {
             engine,
             width,
@@ -69,17 +107,17 @@ impl GameOfLifeWasm {
         if row < self.height && col < self.width {
             // Create a new grid with the updated cell
             let mut grid = StandardGrid::new(self.width, self.height);
-            
+
             // Copy current state
             for r in 0..self.height {
                 for c in 0..self.width {
                     grid.set_cell(r, c, self.engine.get_cell(r, c));
                 }
             }
-            
+
             // Set the new cell
             grid.set_cell(row, col, alive);
-            
+
             // Update the engine
             self.engine.set_grid(&grid);
         }
@@ -115,12 +153,17 @@ impl GameOfLifeWasm {
         self.engine = UltimateEngine::new(width, height);
         self.width = width;
         self.height = height;
-        info!("Resized grid to {}x{}", width, height);
+        log_with_level(Level::Info, format!("Resized grid to {}x{}", width, height));
     }
 
     /// Load grid from a flat array
     #[wasm_bindgen]
-    pub fn load_from_array(&mut self, data: &[u8], width: usize, height: usize) -> Result<(), JsValue> {
+    pub fn load_from_array(
+        &mut self,
+        data: &[u8],
+        width: usize,
+        height: usize,
+    ) -> Result<(), JsValue> {
         if data.len() != width * height {
             return Err(JsValue::from_str("Data length doesn't match dimensions"));
         }
@@ -140,7 +183,13 @@ impl GameOfLifeWasm {
         }
 
         self.engine.set_grid(&grid);
-        info!("Loaded grid from array with dimensions {}x{}", width, height);
+        log_with_level(
+            Level::Info,
+            format!(
+                "Loaded grid from array with dimensions {}x{}",
+                width, height
+            ),
+        );
         Ok(())
     }
 
@@ -187,7 +236,12 @@ impl GifRecorder {
 
     /// Start recording with specified dimensions and frame delay
     #[wasm_bindgen]
-    pub fn start_recording(&mut self, width: usize, height: usize, frame_delay_ms: u16) -> Result<(), JsValue> {
+    pub fn start_recording(
+        &mut self,
+        width: usize,
+        height: usize,
+        frame_delay_ms: u16,
+    ) -> Result<(), JsValue> {
         if self.is_recording {
             return Err(JsValue::from_str("Already recording"));
         }
@@ -199,7 +253,13 @@ impl GifRecorder {
         self.frames = Vec::new();
         self.is_recording = true;
 
-        info!("Started GIF recording: {}x{} at {}ms per frame", width, height, frame_delay_ms);
+        log_with_level(
+            Level::Info,
+            format!(
+                "Started GIF recording: {}x{} at {}ms per frame",
+                width, height, frame_delay_ms
+            ),
+        );
         Ok(())
     }
 
@@ -214,7 +274,10 @@ impl GifRecorder {
         if rgb_data.len() != expected_size {
             return Err(JsValue::from_str(&format!(
                 "RGB data size mismatch: expected {}x{}x3 = {}, got {}",
-                self.width, self.height, expected_size, rgb_data.len()
+                self.width,
+                self.height,
+                expected_size,
+                rgb_data.len()
             )));
         }
 
@@ -239,8 +302,9 @@ impl GifRecorder {
         self.buffer.clear();
         let mut encoder = Encoder::new(&mut self.buffer, self.width, self.height, &[])
             .map_err(|e| JsValue::from_str(&format!("Failed to create GIF encoder: {}", e)))?;
-        
-        encoder.set_repeat(Repeat::Infinite)
+
+        encoder
+            .set_repeat(Repeat::Infinite)
             .map_err(|e| JsValue::from_str(&format!("Failed to set repeat: {}", e)))?;
 
         // Convert frame delay from milliseconds to centiseconds
@@ -250,8 +314,9 @@ impl GifRecorder {
         for frame_pixels in &self.frames {
             let mut frame = Frame::from_rgb(self.width, self.height, frame_pixels);
             frame.delay = delay_centiseconds;
-            
-            encoder.write_frame(&frame)
+
+            encoder
+                .write_frame(&frame)
                 .map_err(|e| JsValue::from_str(&format!("Failed to write frame: {}", e)))?;
         }
 
@@ -260,12 +325,19 @@ impl GifRecorder {
 
         self.is_recording = false;
         let gif_data = self.buffer.clone();
-        
-        info!("Stopped GIF recording, generated {} bytes from {} frames", gif_data.len(), self.frames.len());
-        
+
+        log_with_level(
+            Level::Info,
+            format!(
+                "Stopped GIF recording, generated {} bytes from {} frames",
+                gif_data.len(),
+                self.frames.len()
+            ),
+        );
+
         // Clear frames to free memory
         self.frames.clear();
-        
+
         Ok(gif_data)
     }
 
@@ -282,17 +354,21 @@ impl GifRecorder {
     }
 }
 
-/// Backward compatibility functions that maintain the original interface
+impl Default for GifRecorder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 /// Legacy tick function for backward compatibility
 #[wasm_bindgen]
 pub fn tick(current: &[u8]) -> Vec<u8> {
-    info!("Using legacy tick function");
-    
+    log_with_level(Level::Info, "Using legacy tick function".to_string());
+
     // Assume default dimensions for legacy calls
     let width = DEFAULT_WIDTH;
     let height = DEFAULT_HEIGHT;
-    
+
     if current.len() != width * height {
         console::error_1(&"Invalid grid size for legacy tick function".into());
         return current.to_vec();
@@ -301,17 +377,17 @@ pub fn tick(current: &[u8]) -> Vec<u8> {
     // Create temporary engine and load data
     let mut engine = UltimateEngine::<4>::new(width, height);
     let mut grid = StandardGrid::new(width, height);
-    
+
     for row in 0..height {
         for col in 0..width {
             let idx = row * width + col;
             grid.set_cell(row, col, current[idx] != 0);
         }
     }
-    
+
     engine.set_grid(&grid);
     engine.step();
-    
+
     // Extract result
     let mut result = vec![0u8; width * height];
     for row in 0..height {
@@ -320,7 +396,7 @@ pub fn tick(current: &[u8]) -> Vec<u8> {
             result[idx] = if engine.get_cell(row, col) { 1 } else { 0 };
         }
     }
-    
+
     result
 }
 
@@ -328,17 +404,20 @@ pub fn tick(current: &[u8]) -> Vec<u8> {
 #[wasm_bindgen]
 pub fn sample_grid() -> Vec<u8> {
     let mut grid = vec![0; DEFAULT_WIDTH * DEFAULT_HEIGHT];
-    
+
     // Create a glider pattern at the same position as before
     let index = |row: usize, col: usize| row * DEFAULT_WIDTH + col;
-    
+
     grid[index(1, 0)] = 1;
     grid[index(2, 1)] = 1;
     grid[index(0, 2)] = 1;
     grid[index(1, 2)] = 1;
     grid[index(2, 2)] = 1;
-    
-    info!("Returning legacy sample grid with glider pattern");
+
+    log_with_level(
+        Level::Info,
+        "Returning legacy sample grid with glider pattern".to_string(),
+    );
     grid
 }
 
@@ -354,10 +433,12 @@ pub fn count_neighbors(grid: &[u8], row: usize, col: usize) -> u8 {
     let width = DEFAULT_WIDTH;
     let height = DEFAULT_HEIGHT;
     let mut count = 0;
-    
+
     for dr in [-1, 0, 1].iter() {
         for dc in [-1, 0, 1].iter() {
-            if *dr == 0 && *dc == 0 { continue; }
+            if *dr == 0 && *dc == 0 {
+                continue;
+            }
             let r = row as isize + dr;
             let c = col as isize + dc;
             if r >= 0 && r < height as isize && c >= 0 && c < width as isize {
@@ -399,7 +480,7 @@ pub fn text_to_grid_with_buffer(text: &str, buffer_size: usize) -> Result<JsValu
 
     // Create padded grid
     let mut grid = vec![0u8; total_width * total_height];
-    
+
     for (line_idx, line) in lines.iter().enumerate() {
         let target_row = line_idx + buffer_size;
         for (char_idx, ch) in line.chars().enumerate() {
@@ -432,7 +513,9 @@ pub fn text_to_grid_with_buffer(text: &str, buffer_size: usize) -> Result<JsValu
 /// Parse text file content and return grid data
 #[wasm_bindgen]
 pub fn parse_text_file(content: &str) -> Result<JsValue, JsValue> {
-    let lines: Vec<&str> = content.trim().lines()
+    let lines: Vec<&str> = content
+        .trim()
+        .lines()
         .filter(|line| !line.trim().is_empty())
         .collect();
 
@@ -442,9 +525,12 @@ pub fn parse_text_file(content: &str) -> Result<JsValue, JsValue> {
 
     // Validate format - should only contain 0s, 1s, and whitespace
     for (line_num, line) in lines.iter().enumerate() {
-        if !line.chars().all(|c| c == '0' || c == '1' || c.is_whitespace()) {
+        if !line
+            .chars()
+            .all(|c| c == '0' || c == '1' || c.is_whitespace())
+        {
             return Err(JsValue::from_str(&format!(
-                "Invalid character in line {}: expected only 0s and 1s", 
+                "Invalid character in line {}: expected only 0s and 1s",
                 line_num + 1
             )));
         }
@@ -452,7 +538,8 @@ pub fn parse_text_file(content: &str) -> Result<JsValue, JsValue> {
 
     // Calculate dimensions
     let height = lines.len();
-    let width = lines.iter()
+    let width = lines
+        .iter()
         .map(|line| line.replace(' ', "").len())
         .max()
         .unwrap_or(0);

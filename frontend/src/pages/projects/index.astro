@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from '../../components/cards/ProjectCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const projects = [...await getCollection('projects')].sort((a, b) => a.data.featuredRank - b.data.featuredRank || a.data.order - b.data.order);
+const featured = projects.filter((project) => project.data.featured);
+const additional = projects.filter((project) => !project.data.featured);
+const card = (project: typeof projects[number]) => ({
+  title: project.data.title,
+  summary: project.data.summaryShort,
+  href: `/projects/${project.id}/`,
+  year: project.data.year,
+  status: project.data.status,
+  impact: project.data.impact,
+  cardTags: project.data.cardTags,
+  media: project.data.heroImage,
+  mediaDark: project.data.heroImageDark,
+  mediaAlt: project.data.heroAlt,
+  repoUrl: project.data.repoUrl,
+  accent: project.data.accent,
+});
+---
+<BaseLayout title="Projects | Ryan Rumana" description="Case studies in AI/ML, systems software, Kubernetes, Rust, and WebAssembly by Ryan Rumana.">
+  <main id="main-content">
+    <section class="section-shell projects-intro">
+      <div class="container projects-intro__grid">
+        <div><p class="eyebrow">Projects</p><h1>Things I've built</h1></div>
+        <p>This is a collection of software, infrastructure, research tools, and experiments I have built over the years. Each page links to code or other source material when it is public.</p>
+      </div>
+    </section>
+
+    <section class="section-shell projects-featured">
+      <div class="container section-grid">
+        <div class="group-heading"><p class="eyebrow">Featured projects</p><h2>A few highlights</h2><p>These projects represent my favorite recent projects.</p></div>
+        <div class="project-grid project-grid--featured">{featured.map((project, index) => <ProjectCard {...card(project)} lead={index === 0} />)}</div>
+      </div>
+    </section>
+
+    <section class="section-shell">
+      <div class="container section-grid">
+        <div class="group-heading"><p class="eyebrow">Project archive</p><h2>More projects</h2><p>Smaller tools, experiments, and older work that I still want to keep available.</p></div>
+        <div class="project-grid">{additional.map((project) => <ProjectCard {...card(project)} />)}</div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .projects-intro__grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.65fr); gap: clamp(2rem, 6vw, 6rem); align-items: end; }
+  .projects-intro__grid > div, .group-heading { display: grid; gap: 0.9rem; }
+  .projects-intro__grid > p, .group-heading > p:last-child { color: var(--color-text-muted); }
+  .projects-featured { background: color-mix(in srgb, var(--color-surface-strong) 62%, transparent); border-block: 1px solid var(--color-border-subtle); }
+  .group-heading { max-width: 48rem; }
+  .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem; }
+  .project-grid--featured :global(.project-card--lead) { grid-column: 1 / -1; }
+  @media (max-width: 840px) { .projects-intro__grid, .project-grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,56 @@
+---
+import Icon from '../ui/Icon.astro';
+
+interface Artifact { kind: 'pdf' | 'repository' | 'slides' | 'video' | 'artifact'; label: string; url: string }
+export interface Props {
+  title: string;
+  summary: string;
+  href: string;
+  format: 'independent-paper' | 'course-report' | 'working-paper';
+  stage: 'in-progress' | 'complete';
+  availability: 'public' | 'forthcoming';
+  displayDate: string;
+  authors: readonly string[];
+  topics?: readonly string[];
+  artifacts?: readonly Artifact[];
+  presentation?: { event: string; date?: string; url?: string };
+}
+
+const { title, summary, href, format, stage, availability, displayDate, authors, topics = [], artifacts = [], presentation } = Astro.props as Props;
+const formatLabel = { 'independent-paper': 'Independent paper', 'course-report': 'Course report', 'working-paper': 'Working paper' }[format];
+const pdf = artifacts.find((artifact) => artifact.kind === 'pdf');
+const statusLabel = stage === 'in-progress' ? 'In progress' : availability === 'public' ? 'Publicly available' : 'Forthcoming';
+---
+
+<article class:list={['research-card', 'surface-panel', { 'research-card--progress': stage === 'in-progress' }]}>
+  <div class="research-card__meta">
+    <span>{formatLabel}</span><span aria-hidden="true">·</span><span>{statusLabel}</span><span aria-hidden="true">·</span><time>{displayDate}</time>
+  </div>
+  <div class="research-card__body">
+    <h3><a href={href}>{title}</a></h3>
+    <p class="research-card__authors">{authors.join(', ')}</p>
+    <p>{summary}</p>
+    {presentation && <p class="research-card__presentation">Presented at {presentation.event}</p>}
+  </div>
+  {topics.length > 0 && <ul class="pill-list" aria-label="Research topics">{topics.slice(0, 3).map((topic) => <li>{topic}</li>)}</ul>}
+  <div class="research-card__actions">
+    <a class="research-card__primary" href={href}>{stage === 'in-progress' ? 'Follow progress' : 'Read overview'} <Icon name="arrow" size={16} /></a>
+    {pdf && <a class="research-card__artifact" href={pdf.url}><Icon name="pdf" size={17} /> {pdf.label}</a>}
+  </div>
+</article>
+
+<style>
+  .research-card { display: grid; gap: 1rem; padding: clamp(1.2rem, 2vw, 1.6rem); align-content: start; border-left: 3px solid var(--color-primary-500); }
+  .research-card--progress { border-left-color: var(--color-accent-warm); background: color-mix(in srgb, var(--color-surface) 92%, var(--color-accent-warm)); }
+  .research-card__meta { display: flex; flex-wrap: wrap; gap: 0.4rem 0.55rem; color: var(--color-text-subtle); font-family: var(--font-family-mono); font-size: var(--font-size-2xs); letter-spacing: 0.07em; text-transform: uppercase; }
+  .research-card__body { display: grid; gap: 0.55rem; }
+  .research-card h3 { font-family: var(--font-family-display); font-size: clamp(1.6rem, 1.8vw, 2.35rem); line-height: 1.08; }
+  .research-card h3 a:hover, .research-card h3 a:focus-visible { color: var(--color-link); }
+  .research-card__authors, .research-card__presentation { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+  .research-card__presentation { font-style: italic; }
+  .research-card__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.25rem; }
+  .research-card__primary, .research-card__artifact { display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 700; }
+  .research-card__primary { color: var(--color-link); }
+  .research-card__artifact { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+  .research-card__primary:hover, .research-card__primary:focus-visible, .research-card__artifact:hover, .research-card__artifact:focus-visible { color: var(--color-text-strong); }
+</style>

@@ -1,0 +1,88 @@
+---
+import Container from './Container.astro';
+import PrimaryNav from '../navigation/PrimaryNav.astro';
+import ThemeToggle from '../ui/ThemeToggle.astro';
+import { siteConfig } from '../../site.config';
+
+export interface Props {
+  navLinks?: readonly { href: string; label: string }[];
+}
+
+const { navLinks = [] } = Astro.props as Props;
+---
+
+<header class="site-header">
+  <Container class="site-header__inner">
+    <a class="site-header__brand" href="/" aria-label="Ryan Rumana, home">
+      <strong>{siteConfig.name}</strong>
+      <small>{siteConfig.jobTitle}</small>
+    </a>
+    <div class="site-header__controls">
+      <PrimaryNav links={navLinks} />
+      <ThemeToggle />
+    </div>
+  </Container>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 20;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: color-mix(in srgb, var(--color-page) 92%, transparent);
+    backdrop-filter: blur(16px);
+  }
+
+  .site-header__inner,
+  .site-header__controls {
+    display: flex;
+    align-items: center;
+  }
+
+  .site-header__inner {
+    min-height: 4.75rem;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .site-header__controls { gap: 1.15rem; }
+
+  .site-header__brand {
+    display: grid;
+    gap: 0.12rem;
+    color: var(--color-text-strong);
+    line-height: 1;
+  }
+
+  .site-header__brand strong {
+    font-family: var(--font-family-display);
+    font-size: 1.42rem;
+    font-weight: 650;
+    letter-spacing: -0.035em;
+  }
+
+  .site-header__brand small {
+    font-family: var(--font-family-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  @media (max-width: 760px) {
+    .site-header__inner {
+      min-height: auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.75rem;
+      padding-block: 0.8rem;
+    }
+
+    .site-header__controls { display: contents; }
+    .site-header :global(.primary-nav) { grid-column: 1 / -1; grid-row: 2; }
+  }
+
+  @media (max-width: 380px) {
+    .site-header__brand small { letter-spacing: 0.08em; }
+  }
+</style>
