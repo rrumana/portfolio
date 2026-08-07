@@ -11,14 +11,25 @@ const { id, class: className = '', ...rest } = props;
 
 const platformGroups = [
   {
-    eyebrow: 'Platform',
-    title: 'Reconciliation and networking',
-    description: 'Declarative delivery and the network path from external traffic to authenticated service-to-service communication.',
+    eyebrow: 'Hardware',
+    title: 'Two physical planes',
+    description: 'Scheduling policy keeps general compute separate from the storage and I/O path without creating a second cluster.',
     services: [
-      'Argo CD',
-      'Cilium + Hubble',
+      '3× Ryzen AI 9 HX 370 control/compute nodes',
+      '3× Ryzen 7 7745HX storage nodes',
+      '12 dedicated NVMe Ceph OSDs',
+      '2.5 GbE compute and 10 GbE storage links',
+    ],
+  },
+  {
+    eyebrow: 'Network',
+    title: 'A narrow, explicit edge',
+    description: 'OPNsense and admission-controlled ingress separate public, private, and Cloudflare-proxied traffic before it reaches workloads.',
+    services: [
+      'OPNsense WAN policy and split DNS',
       'MetalLB + HAProxy',
-      'cert-manager + Cloudflare',
+      'Direct and Cloudflare exposure profiles',
+      'Cilium + Hubble',
       'Linkerd identity, mTLS, and telemetry',
     ],
   },
@@ -35,9 +46,10 @@ const platformGroups = [
   },
   {
     eyebrow: 'Delivery',
-    title: 'Artifacts and secrets',
-    description: 'Images and configuration move through controlled platform services instead of being embedded in workload manifests.',
+    title: 'Reconciliation, artifacts, and secrets',
+    description: 'Git, immutable images, and external secret authority define what enters the cluster and how it is reconciled.',
     services: [
+      'Argo CD root application',
       'Harbor registry',
       'Vault',
       'External Secrets',

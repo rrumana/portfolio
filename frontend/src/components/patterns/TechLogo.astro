@@ -79,6 +79,13 @@ const logos: Record<string, string> = {
       <path d="M7.7 10.6L10 12.8L7.7 15L5.5 12.8L7.7 10.6ZM16.3 10.6L18.5 12.8L16.3 15L14 12.8L16.3 10.6Z" fill="#2d3047" />
     </svg>
   `,
+  opnsense: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2.8L19 5.8V11.3C19 15.7 16.2 19.2 12 21.2C7.8 19.2 5 15.7 5 11.3V5.8L12 2.8Z" fill="#d94f16" />
+      <circle cx="12" cy="11.4" r="4.2" fill="#ffffff" />
+      <circle cx="12" cy="11.4" r="2.1" fill="#d94f16" />
+    </svg>
+  `,
   haproxy: `
     <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <rect x="4" y="6" width="16" height="12" rx="3" fill="#0f4b6e" />
@@ -123,6 +130,12 @@ const logos: Record<string, string> = {
       <path d="M9.8 9.2H14.2V14.8H9.8V9.2ZM11 10.4V13.6H13V10.4H11Z" fill="#60b932" />
     </svg>
   `,
+  vault: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3L20.2 7.2L17.1 18.9H6.9L3.8 7.2L12 3Z" fill="#f3c623" />
+      <path d="M8.1 8.2L12 15.8L15.9 8.2H13.7L12 12L10.3 8.2H8.1Z" fill="#1f2328" />
+    </svg>
+  `,
   python: `
     <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 4.2C8.4 4.2 8.5 6 8.5 8.2V10.1H15.2V11.4H5.4C3.4 11.4 2.2 13.1 2.2 15.2C2.2 17.4 3.5 19.1 5.4 19.1H7.4V16.3C7.4 13.9 8.9 12.5 11.4 12.5H15.6C17.7 12.5 19.5 10.8 19.5 8.7V7.3C19.5 5.2 17.8 4.2 15.8 4.2H12Z" fill="#3572a5" />
@@ -135,6 +148,83 @@ const logos: Record<string, string> = {
     <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 4.2V12L17.6 17.6" fill="none" stroke="#ee4c2c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
       <circle cx="12" cy="12" r="5.6" fill="none" stroke="#ee4c2c" stroke-width="2.2" stroke-dasharray="28 8" transform="rotate(-34 12 12)" />
+    </svg>
+  `,
+  'yolov8 nano': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="4" fill="#7c3aed" />
+      <path d="M7 7.5V11.2L9.2 13.5V16.5M17 7.5V11.2L14.8 13.5V16.5" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="12" cy="11.5" r="2" fill="none" stroke="#ffffff" stroke-width="1.6" />
+    </svg>
+  `,
+  'resnet-50': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="5" width="4" height="14" rx="1" fill="#4f86c6" />
+      <rect x="10" y="7" width="4" height="10" rx="1" fill="#6baed6" />
+      <rect x="17" y="9" width="4" height="6" rx="1" fill="#9ecae1" />
+      <path d="M7 8H9M14 10H16M7 16H9M14 14H16M5 4C5 2.8 19 2.8 19 8" fill="none" stroke="#79c0ff" stroke-width="1.4" stroke-linecap="round" />
+    </svg>
+  `,
+  'raspberry pi': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11.6 6.2C9.8 4.5 7.4 4.4 6 5.7C7.4 6.2 8.3 7.1 8.8 8.1C6.2 8.2 4.5 10.1 4.8 12.3C5.1 14.4 6.5 15.5 8 15.9C8 18.6 9.7 20.4 12 20.4C14.3 20.4 16 18.6 16 15.9C17.5 15.5 18.9 14.4 19.2 12.3C19.5 10.1 17.8 8.2 15.2 8.1C15.7 7.1 16.6 6.2 18 5.7C16.6 4.4 14.2 4.5 12.4 6.2H11.6Z" fill="#c51a4a" />
+      <path d="M12 6.2C10.6 4.4 10.8 2.8 12 2.2C13.2 2.8 13.4 4.4 12 6.2Z" fill="#75a928" />
+      <circle cx="9" cy="11" r="1.2" fill="#ffffff" opacity="0.65" /><circle cx="15" cy="11" r="1.2" fill="#ffffff" opacity="0.65" /><circle cx="12" cy="15.2" r="1.3" fill="#ffffff" opacity="0.65" />
+    </svg>
+  `,
+  'int8 quantization': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="18" height="18" rx="4" fill="#2da44e" />
+      <path d="M7.2 8V16M10.1 8H16.8M13.45 8V16" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" />
+      <path d="M16.8 12H13.5M16.8 16H13.5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" />
+    </svg>
+  `,
+  opencv: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="7" r="4" fill="none" stroke="#e53935" stroke-width="2.7" />
+      <circle cx="7.5" cy="15" r="4" fill="none" stroke="#43a047" stroke-width="2.7" />
+      <circle cx="16.5" cy="15" r="4" fill="none" stroke="#1e88e5" stroke-width="2.7" />
+    </svg>
+  `,
+  'portable simd': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="4" width="18" height="3" rx="1.2" fill="#dea584" />
+      <rect x="3" y="8.5" width="18" height="3" rx="1.2" fill="#c98b68" />
+      <rect x="3" y="13" width="18" height="3" rx="1.2" fill="#b56f4f" />
+      <rect x="3" y="17.5" width="18" height="3" rx="1.2" fill="#914f3b" />
+      <path d="M7 4V20.5M12 4V20.5M17 4V20.5" stroke="#ffffff" stroke-width="0.8" opacity="0.75" />
+    </svg>
+  `,
+  rayon: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="5.5" cy="12" r="2.2" fill="#dea584" />
+      <path d="M7.7 12H20M8 11L18.5 6M8 13L18.5 18M12 10L19 9M12 14L19 15" fill="none" stroke="#dea584" stroke-width="1.8" stroke-linecap="round" />
+    </svg>
+  `,
+  cadical: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="18" height="18" rx="4" fill="#0969da" />
+      <text x="12" y="14.7" text-anchor="middle" font-size="7" font-family="Arial, sans-serif" font-weight="700" fill="#ffffff">CD</text>
+    </svg>
+  `,
+  'parkissat-rs': `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5V19M5 8H11C13.2 8 14.5 9.2 14.5 11C14.5 12.8 13.2 14 11 14H5M14.5 11L19 7M14.5 11L19 15" fill="none" stroke="#f78166" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="19" cy="7" r="1.5" fill="#f78166" /><circle cx="19" cy="15" r="1.5" fill="#f78166" />
+    </svg>
+  `,
+  lrat: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 2.8H14L18.5 7.3V21.2H6V2.8Z" fill="#8250df" />
+      <path d="M14 2.8V7.3H18.5M8.5 12L10.7 14.2L15.8 9.1M8.5 17H16" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  `,
+  cakeml: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 10L12 5L20 10V18.5H4V10Z" fill="#d29922" />
+      <path d="M4 10H20L17 13H7L4 10Z" fill="#fff1b8" />
+      <path d="M12 5V2.8M9 4.2L8 2.5M15 4.2L16 2.5" stroke="#f78166" stroke-width="1.5" stroke-linecap="round" />
+      <text x="12" y="17.2" text-anchor="middle" font-size="5.4" font-family="Arial, sans-serif" font-weight="700" fill="#1f2328">ML</text>
     </svg>
   `,
   docker: `
